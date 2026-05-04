@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Panosu</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .pano-ozet-izgarasi {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            margin-top: 1rem;
+        }
+
+        .ozet-karti {
+            background-color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border-bottom: 4px solid #3498db;
+            transition: transform 0.3s;
+        }
+
+        .ozet-karti:hover {
+            transform: translateY(-5px);
+        }
+
+        .ozet-karti h3 {
+            margin: 0 0 0.5rem 0;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+        }
+
+        .ozet-karti p {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Özel Renklendirmeler */
+        .kasa-ciro {
+            border-color: #27ae60;
+        }
+
+        .kasa-ciro p {
+            color: #27ae60;
+        }
+
+        .bekleyen-ciro {
+            border-color: #f39c12;
+        }
+
+        .bekleyen-ciro p {
+            color: #f39c12;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="yonetici-kapsayici">
+        <aside class="yan-menu">
+            <div class="logo">Otel Yönetim</div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html" class="aktif">Pano</a></li>
+                    <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
+                    <li><a href="admin-odalar.html">Oda Durumları</a></li>
+                    <li><a href="admin-misafirler.html">Misafirler</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html">Ayarlar</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="ana-icerik">
+            <header class="ust-bilgi">
+                <h1>Finansal Durum ve Pano</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <!-- YENİ PATRON EKRANI (İSTATİSTİKLER) -->
+            <div class="pano-ozet-izgarasi">
+                <div class="ozet-karti">
+                    <h3>Toplam Rezervasyon</h3>
+                    <p id="toplamRezervasyon">0</p>
+                </div>
+                <div class="ozet-karti">
+                    <h3>Bugün Beklenen Giriş</h3>
+                    <p id="bugunGirisler">0</p>
+                </div>
+                <div class="ozet-karti kasa-ciro">
+                    <h3>Kasadaki Ciro (Onaylı)</h3>
+                    <p id="gunlukGelir">0 TL</p>
+                </div>
+                <div class="ozet-karti bekleyen-ciro">
+                    <h3>Beklenen Ödeme</h3>
+                    <p id="beklenenOdeme">0 TL</p>
+                </div>
+            </div>
+
+            <section class="tablo-alani">
+                <div class="tablo-baslik">
+                    <h2>Aktif İşlemler</h2>
+                </div>
+                <table id="panoTablosu">
+                    <thead>
+                        <tr>
+                            <th>Müşteri Adı</th>
+                            <th>Oda No</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabloGovdesi">
+                        <!-- Veriler JS ile gelecek -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="admin.js"></script>
+</body>
+
+</html>

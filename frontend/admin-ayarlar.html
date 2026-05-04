@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Panosu - Ayarlar</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .ayarlar-ana-kapsayici {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .ayarlar-izgarasi {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .form-grubu {
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-grubu input {
+            padding: 0.8rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .tehlikeli-alan {
+            border: 2px dashed #e74c3c;
+            background-color: #fadbd8;
+        }
+
+        .tehlikeli-alan h2 {
+            color: #c0392b;
+        }
+
+        .oda-ayarlari-tablosu {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .oda-ayarlari-tablosu th,
+        .oda-ayarlari-tablosu td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #ecf0f1;
+            text-align: left;
+        }
+
+        .oda-ayarlari-tablosu input {
+            width: 120px;
+            padding: 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="yonetici-kapsayici">
+        <aside class="yan-menu">
+            <div class="logo">Otel Yönetim</div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html">Pano</a></li>
+                    <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
+                    <li><a href="admin-odalar.html">Oda Durumları</a></li>
+                    <li><a href="admin-misafirler.html">Misafirler</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="ana-icerik">
+            <header class="ust-bilgi">
+                <h1>Sistem Ayarları</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <div class="ayarlar-ana-kapsayici">
+
+                <section class="tablo-alani">
+                    <div class="tablo-baslik">
+                        <h2>Oda Türü Fiyat ve Kapasite Yönetimi</h2>
+                    </div>
+                    <form id="odaAyarlariFormu">
+                        <table class="oda-ayarlari-tablosu">
+                            <thead>
+                                <tr>
+                                    <th>Oda Tipi</th>
+                                    <th>Fiyat (TL)</th>
+                                    <th>Kapasite (Kişi)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="odaAyarlariGovdesi">
+                            </tbody>
+                        </table>
+                        <button type="submit" class="islem-butonu"
+                            style="width: 100%; padding: 1rem; font-size: 1.1rem; background-color: #3498db; margin-top: 1rem;">Oda
+                            Türü Ayarlarını Kaydet</button>
+                    </form>
+                </section>
+
+                <div class="ayarlar-izgarasi">
+                    <section class="tablo-alani">
+                        <div class="tablo-baslik">
+                            <h2>Ekstra Hizmet Fiyatları (TL)</h2>
+                        </div>
+                        <form id="fiyatAyarlariFormu">
+                            <div class="form-grubu">
+                                <label for="saunaFiyati">Sauna Fiyatı:</label>
+                                <input type="number" id="saunaFiyati" min="0" required>
+                            </div>
+                            <div class="form-grubu">
+                                <label for="havuzFiyati">Havuz Fiyatı:</label>
+                                <input type="number" id="havuzFiyati" min="0" required>
+                            </div>
+                            <div class="form-grubu">
+                                <label for="masajFiyati">Masaj Fiyatı:</label>
+                                <input type="number" id="masajFiyati" min="0" required>
+                            </div>
+                            <div class="form-grubu">
+                                <label for="odaServisiFiyati">Oda Servisi Fiyatı:</label>
+                                <input type="number" id="odaServisiFiyati" min="0" required>
+                            </div>
+                            <div class="form-grubu">
+                                <label for="miniBarFiyati">Mini Bar Fiyatı:</label>
+                                <input type="number" id="miniBarFiyati" min="0" required>
+                            </div>
+                            <button type="submit" class="islem-butonu"
+                                style="width: 100%; padding: 1rem; font-size: 1.1rem; background-color: #27ae60;">Hizmet
+                                Fiyatlarını Güncelle</button>
+                        </form>
+                    </section>
+
+                    <section class="tablo-alani tehlikeli-alan">
+                        <div class="tablo-baslik">
+                            <h2>Sistem Sıfırlama</h2>
+                        </div>
+                        <p style="margin-bottom: 2rem;">Dikkat! Bu işlem sistemdeki tüm rezervasyon, misafir ve fatura
+                            kayıtlarını kalıcı olarak siler. Geri alınamaz.</p>
+                        <button id="sistemiSifirlaButonu" class="islem-butonu"
+                            style="width: 100%; padding: 1rem; font-size: 1.1rem; background-color: #c0392b;">Tüm
+                            Kayıtları Sil ve Sıfırla</button>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="admin-ayarlar.js"></script>
+</body>
+
+</html>

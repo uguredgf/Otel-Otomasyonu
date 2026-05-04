@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Panosu - İşlemler ve Fatura</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .islem-izgarasi {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .form-grubu {
+            margin-bottom: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-grubu select,
+        .form-grubu input {
+            padding: 0.8rem;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .fatura-alani {
+            background-color: #f8f9fa;
+            border: 2px dashed #7f8c8d;
+        }
+
+        .toplam-tutar {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 1.5rem;
+            color: #c0392b;
+            border-top: 2px solid #bdc3c7;
+            padding-top: 1rem;
+        }
+
+        .fatura-tablosu {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+        .fatura-tablosu th,
+        .fatura-tablosu td {
+            padding: 0.8rem;
+            border-bottom: 1px solid #ecf0f1;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="yonetici-kapsayici">
+        <aside class="yan-menu">
+            <div class="logo">Otel Yönetim</div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html">Pano</a></li>
+                    <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
+                    <li><a href="admin-odalar.html">Oda Durumları</a></li>
+                    <li><a href="admin-misafirler.html">Misafirler</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="ana-icerik">
+            <header class="ust-bilgi">
+                <h1>İşlemler ve Faturalandırma</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <div class="islem-izgarasi">
+                <section class="tablo-alani">
+                    <div class="tablo-baslik">
+                        <h2>Ekstra Hizmet Ekle</h2>
+                    </div>
+                    <div class="form-grubu">
+                        <label for="misafirSecimi">Oda ve Misafir Seçiniz:</label>
+                        <select id="misafirSecimi">
+                            <option value="">Misafir Seçiniz...</option>
+                        </select>
+                    </div>
+                    <div class="form-grubu">
+                        <label for="hizmetSecimi">Kullanılan Hizmet:</label>
+                        <select id="hizmetSecimi">
+                            <option value="Sauna">Sauna (800 TL)</option>
+                            <option value="Havuz">Havuz (500 TL)</option>
+                            <option value="Masaj">Masaj (1500 TL)</option>
+                            <option value="Oda Servisi">Oda Servisi (400 TL)</option>
+                            <option value="Mini Bar">Mini Bar (300 TL)</option>
+                        </select>
+                    </div>
+                    <div class="form-grubu">
+                        <label for="hizmetAdeti">Kullanım Sayısı / Adet:</label>
+                        <input type="number" id="hizmetAdeti" min="1" value="1">
+                    </div>
+                    <button id="hizmetEkleButonu" class="islem-butonu"
+                        style="width: 100%; padding: 1rem; font-size: 1.1rem;">Hizmeti Faturaya İşle</button>
+                </section>
+
+                <section class="tablo-alani fatura-alani">
+                    <div class="tablo-baslik">
+                        <h2>Anlık Fatura Dökümü</h2>
+                    </div>
+                    <table class="fatura-tablosu">
+                        <thead>
+                            <tr>
+                                <th>Hizmet Adı</th>
+                                <th>Adet</th>
+                                <th>Birim Fiyat</th>
+                                <th>Toplam</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faturaGovdesi">
+                        </tbody>
+                    </table>
+                    <div class="toplam-tutar">Genel Toplam: <span id="genelToplam">0 TL</span></div>
+                </section>
+            </div>
+        </main>
+    </div>
+    <script src="admin-islemler.js"></script>
+</body>
+
+</html>

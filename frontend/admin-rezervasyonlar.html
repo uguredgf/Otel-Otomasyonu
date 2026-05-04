@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Panosu - Rezervasyonlar</title>
+    <link rel="stylesheet" href="admin.css">
+</head>
+
+<body>
+    <div class="yonetici-kapsayici">
+        <aside class="yan-menu">
+            <div class="logo">Otel Yönetim</div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html">Pano</a></li>
+                    <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
+                    <li><a href="admin-odalar.html">Oda Durumları</a></li>
+                    <li><a href="admin-misafirler.html">Misafirler</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="ana-icerik">
+            <header class="ust-bilgi">
+                <h1>Tüm Rezervasyonlar</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <section class="tablo-alani">
+                <div class="tablo-baslik">
+                    <h2>Rezervasyon Yönetimi</h2>
+                </div>
+                <table id="rezervasyonTablosu">
+                    <thead>
+                        <tr>
+                            <th>Rez. ID</th>
+                            <th>Müşteri Adı</th>
+                            <th>Oda No</th>
+                            <th>Giriş</th>
+                            <th>Çıkış</th>
+                            <th>Durum</th>
+                            <th>İşlemler</th>
+                        </tr>
+                    </thead>
+                    <tbody id="rezervasyonGovdesi">
+                        <!-- Veriler buraya JS ile gelecek -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+    <script src="admin-rezervasyonlar.js"></script>
+</body>
+
+</html>

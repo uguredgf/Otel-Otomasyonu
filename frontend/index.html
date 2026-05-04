@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otel Otomasyon Projesi</title>
+    <link rel="stylesheet" href="stil.css">
+</head>
+
+<body>
+    <header>
+        <div class="logo">Otel Rezervasyon</div>
+        <nav>
+            <ul>
+                <li><a href="#">Ana Sayfa</a></li>
+                <li><a href="#hizmetlerimiz">Hizmetler</a></li>
+                <li><a href="#odalarimiz">Odalar</a></li>
+                <li><a href="#iletisim">İletişim</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="arama-kismi">
+            <h2>Rezervasyon Tarihinizi Seçiniz</h2>
+            <form id="aramaFormu">
+                <input type="date" id="girisTarihi" required>
+                <input type="date" id="cikisTarihi" required>
+                <button type="submit">Oda Ara</button>
+            </form>
+        </section>
+
+
+
+        <section id="odalarimiz" class="odalar-kismi">
+            <h2>Odalarımız</h2>
+            <div class="oda-izgarasi" id="odaListesi">
+            </div>
+        </section>
+    </main>
+    <section id="hizmetlerimiz" class="hizmetler-kismi">
+        <h2>Ekstra Hizmetlerimiz</h2>
+        <div class="hizmet-izgarasi">
+            <div class="hizmet-karti">
+                <h3>Sauna</h3>
+                <p>Günün yorgunluğunu atın ve rahatlayın.</p>
+            </div>
+            <div class="hizmet-karti">
+                <h3>Kapalı Havuz</h3>
+                <p>Dört mevsim yüzmenin keyfini çıkarın.</p>
+            </div>
+            <div class="hizmet-karti">
+                <h3>Masaj & Spa</h3>
+                <p>Uzman terapistlerimizle yenilenin.</p>
+            </div>
+            <div class="hizmet-karti">
+                <h3>7/24 Oda Servisi</h3>
+                <p>Lezzetler günün her saati kapınızda.</p>
+            </div>
+        </div>
+    </section>
+    <footer id="iletisim">
+        <div class="footer-icerik">
+            <div class="footer-sutun">
+                <h3>Bize Ulaşın</h3>
+                <p>Telefon: +90 424 237 00 00</p>
+                <p>E-posta: rezervasyon@otelotomasyon.com.tr</p>
+            </div>
+            <div class="footer-sutun">
+                <h3>Adresimiz</h3>
+                <p>Üniversite Mahallesi, Fırat Üniversitesi Kampüsü</p>
+                <p>Merkez / Elazığ</p>
+            </div>
+        </div>
+        <div class="footer-alt">
+            <p>&copy; 2026 Otel Otomasyon Projesi. Tüm hakları saklıdır.</p>
+        </div>
+    </footer>
+
+    <script src="islem.js"></script>
+</body>
+
+</html>

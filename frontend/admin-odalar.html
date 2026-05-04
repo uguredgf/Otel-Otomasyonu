@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yönetici Panosu - Oda Durumları</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .oda-durum-kapsayici {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .oda-kutu {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .oda-kutu h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .oda-kutu p {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .oda-bos {
+            border-top: 5px solid #27ae60;
+        }
+
+        .oda-bos p {
+            color: #27ae60;
+        }
+
+        .oda-dolu {
+            border-top: 5px solid #e74c3c;
+        }
+
+        .oda-dolu p {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="yonetici-kapsayici">
+        <aside class="yan-menu">
+            <div class="logo">Otel Yönetim</div>
+            <nav>
+                <ul>
+                    <li><a href="admin.html">Pano</a></li>
+                    <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
+                    <li><a href="admin-odalar.html">Oda Durumları</a></li>
+                    <li><a href="admin-misafirler.html">Misafirler</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="ana-icerik">
+            <header class="ust-bilgi">
+                <h1>Oda Durumları</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <section class="oda-durum-kapsayici" id="adminOdaListesi">
+            </section>
+        </main>
+    </div>
+    <script src="admin-odalar.js"></script>
+</body>
+
+</html>
