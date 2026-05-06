@@ -1,4 +1,5 @@
 -- Rezervasyon Tarih Kontrolü İçin Yazılan Trigger
+DROP TRIGGER IF EXISTS trg_tarih_kontrol;
 DELIMITER //
 
 CREATE TRIGGER trg_tarih_kontrol

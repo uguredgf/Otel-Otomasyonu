@@ -1,5 +1,6 @@
 -- Otelde Aktif  Bulunan Kişilerin Listesini Gösteren Sanal Tablo
 
+DROP VIEW IF EXISTS vw_aktif_musteriler;
 CREATE VIEW vw_aktif_musteriler AS
 SELECT 
     r.rezervasyon_id,

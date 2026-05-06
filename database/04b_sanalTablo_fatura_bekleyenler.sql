@@ -1,5 +1,6 @@
 -- Henüz faturası kesilmemiş müşterilerin bilgilerini gösteren sanal tablo  
 
+DROP VIEW IF EXISTS vw_fatura_bekleyenler;
 CREATE VIEW vw_fatura_bekleyenler AS
 SELECT 
     r.rezervasyon_id,
