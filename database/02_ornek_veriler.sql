@@ -2,12 +2,12 @@ USE otel_otomasyonu;
 
 -- 1. Oda Türleri (6 Çeşit)
 INSERT INTO Oda_Turleri (odaTur_id, odaTur_adi, odaTur_kapasite, odaTur_taban_fiyat, odaTur_aciklama) VALUES
-(01, 'Ekonomik Oda', 1, 800.00, 'Arka cephe, temel ihtiyaçlar için uygun ekonomik oda.'),
-(02, 'Standart Tek Kişilik', 1, 1200.00, 'Şehir manzaralı standart tek kişilik oda.'),
-(03, 'Standart Çift Kişilik', 2, 1800.00, 'Doğa manzaralı çift kişilik rahat oda.'),
-(04, 'Aile Süiti', 4, 3500.00, 'Çocuklu aileler için birbirine geçmeli 2 odalı süit.'),
-(05, 'Balayı Süiti', 2, 5000.00, 'Deniz manzaralı, özel dekorasyonlu balayı odası.'),
-(06, 'Kral Dairesi', 2, 9500.00, 'Özel jakuzili, teraslı, deniz manzaralı ultra lüks daire.');
+(1, 'Ekonomik Oda', 1, 800.00, 'Arka cephe, temel ihtiyaçlar için uygun ekonomik oda.'),
+(2, 'Standart Tek Kişilik', 1, 1200.00, 'Şehir manzaralı standart tek kişilik oda.'),
+(3, 'Standart Çift Kişilik', 2, 1800.00, 'Doğa manzaralı çift kişilik rahat oda.'),
+(4, 'Aile Süiti', 4, 3500.00, 'Çocuklu aileler için birbirine geçmeli 2 odalı süit.'),
+(5, 'Balayı Süiti', 2, 5000.00, 'Deniz manzaralı, özel dekorasyonlu balayı odası.'),
+(6, 'Kral Dairesi', 2, 9500.00, 'Özel jakuzili, teraslı, deniz manzaralı ultra lüks daire.');
 
 -- 2. Müşteriler (15 Kişi)
 INSERT INTO Musteriler (musteri_id, musteri_adi, musteri_soyadi, musteri_tc_no, musteri_telefon, musteri_email) VALUES
@@ -65,8 +65,8 @@ INSERT INTO Odalar (oda_id, oda_no, oda_kat, odaTur_id, oda_durumu) VALUES
 (21, '301', 3, 4, 'Boş'), (22, '302', 3, 2, 'Boş'), (23, '303', 3, 1, 'Boş'), (24, '304', 3, 4, 'Boş'), (25, '305', 3, 3, 'Boş'),
 (26, '306', 3, 2, 'Boş'), (27, '307', 3, 1, 'Boş'), (28, '308', 3, 4, 'Boş'), (29, '309', 3, 3, 'Boş'), (30, '310', 3, 2, 'Boş'),
 -- 4. KAT
-(31, '401', 4, 3, 'Boş'), (32, '402', 4, 4, 'Boş'), (33, '403', 4, 1, 'Boş'), (34, '404', 4, 4, 'Boş'), (35, '405', 4, 3, 'Boş'),
-(36, '406', 4, 4, 'Boş'), (37, '407', 4, 1, 'Boş'), (38, '408', 4, 4, 'Boş'), (39, '409', 4, 3, 'Boş'), (40, '410', 4, 4, 'Boş'),
+(31, '401', 4, 3, 'Boş'), (32, '402', 4, 2, 'Boş'), (33, '403', 4, 1, 'Boş'), (34, '404', 4, 4, 'Boş'), (35, '405', 4, 3, 'Boş'),
+(36, '406', 4, 2, 'Boş'), (37, '407', 4, 1, 'Boş'), (38, '408', 4, 3, 'Boş'), (39, '409', 4, 3, 'Boş'), (40, '410', 4, 1, 'Boş'),
 -- 5. KAT
 (41, '501', 5, 1, 'Boş'), (42, '502', 5, 2, 'Boş'), (43, '503', 5, 4, 'Boş'), (44, '504', 5, 4, 'Boş'), (45, '505', 5, 1, 'Boş'),
 (46, '506', 5, 2, 'Boş'), (47, '507', 5, 3, 'Boş'), (48, '508', 5, 4, 'Boş'), (49, '509', 5, 1, 'Boş'), (50, '510', 5, 2, 'Boş'),
@@ -79,9 +79,9 @@ INSERT INTO Odalar (oda_id, oda_no, oda_kat, odaTur_id, oda_durumu) VALUES
 -- 8. KAT (Lüks Odalar - Balayı Süitleri)
 (71, '801', 8, 5, 'Boş'), (72, '802', 8, 5, 'Boş'), (73, '803', 8, 5, 'Boş'), (74, '804', 8, 5, 'Boş'), (75, '805', 8, 5, 'Boş'),
 (76, '806', 8, 5, 'Boş'), (77, '807', 8, 5, 'Boş'), (78, '808', 8, 5, 'Boş'), (79, '809', 8, 5, 'Boş'), (80, '810', 8, 5, 'Boş'),
--- 9. KAT (Kral Daireleri)
-(81, '901', 9, 6, 'Boş'), (82, '902', 9, 6, 'Boş'), (83, '903', 9, 6, 'Boş'), (84, '904', 9, 6, 'Boş'), (85, '905', 9, 6, 'Boş'),
-(86, '906', 9, 6, 'Boş'), (87, '907', 9, 6, 'Boş'), (88, '908', 9, 6, 'Boş'), (89, '909', 9, 6, 'Boş'), (90, '910', 9, 6, 'Boş'),
+-- 9. KAT (Lüks odalar - Balayı Süitleri )
+(81, '901', 9, 5, 'Boş'), (82, '902', 9, 5, 'Boş'), (83, '903', 9, 5, 'Boş'), (84, '904', 9, 5, 'Boş'), (85, '905', 9, 5, 'Boş'),
+(86, '906', 9, 5, 'Boş'), (87, '907', 9, 5, 'Boş'), (88, '908', 9, 5, 'Boş'), (89, '909', 9, 5, 'Boş'), (90, '910', 9, 5, 'Boş'),
 -- 10. KAT (Kral Daireleri)
 (91, '1001', 10, 6, 'Boş'), (92, '1002', 10, 6, 'Boş'), (93, '1003', 10, 6, 'Boş'), (94, '1004', 10, 6, 'Boş'), (95, '1005', 10, 6, 'Boş'),
 (96, '1006', 10, 6, 'Boş'), (97, '1007', 10, 6, 'Boş'), (98, '1008', 10, 6, 'Boş'), (99, '1009', 10, 6, 'Boş'), (100, '1010', 10, 6, 'Boş');
@@ -121,7 +121,7 @@ INSERT INTO Faturalar (fatura_id, rezervasyon_id, fatura_toplam_tutar, fatura_od
 (4, 4, 32000.00, '2026-05-06 10:45:00', 'Kredi Kartı'),
 (5, 5, 68000.00, '2026-05-07 08:30:00', 'Nakit'),
 (6, 6, 18500.00, '2026-05-04 14:00:00', 'Kredi Kartı'), 
-(7, 9, 75000.00, '2026-05-06 12:00:00', 'Nakit'); 
+(7, 9, 40800.00, '2026-05-06 12:00:00', 'Nakit'); 
 
 -- 9. İşlem Kayıtları (Loglar)
 INSERT INTO Islem_Kayitlari (kayit_id, personel_id, kayit_islem_tipi, kayit_islem_tarihi, kayit_aciklama) VALUES
