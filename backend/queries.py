@@ -15,3 +15,12 @@ INSERT_YENI_MUSTERI = """
 GET_TUM_MUSTERILER = """
     SELECT * FROM Musteriler ORDER BY musteri_id DESC
 """
+
+GET_AKTIF_MUSTERILER = "SELECT * FROM vw_aktif_musteriler"
+GET_FATURA_BEKLEYENLER = "SELECT * FROM vw_fatura_bekleyenler"
+
+GET_PERSONEL_GIRIS = """
+    SELECT personel_id, personel_rol 
+    FROM Personeller 
+    WHERE personel_kullanici_adi = %s AND personel_sifre = %s
+"""

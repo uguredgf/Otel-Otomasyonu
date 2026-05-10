@@ -15,6 +15,9 @@ class MusteriEkle(BaseModel):
     musteri_telefon: str = None
     musteri_email: str = None
 
+class PersonelGiris(BaseModel):
+    kullanici_adi: str
+    sifre: str
 # --- API UÇLARI (ENDPOINTS) ---
 
 @app.get("/")
@@ -79,6 +82,74 @@ def tum_musterileri_getir():
         cursor.execute(queries.GET_TUM_MUSTERILER)
         musteriler = cursor.fetchall()
         return {"musteri_sayisi": len(musteriler), "musteriler": musteriler}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
+
+# 1. Aktif Misafirleri Listeleme (Dashboard için)
+@app.get("/aktif-misafirler")
+def aktif_misafirleri_getir():
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(queries.GET_AKTIF_MUSTERILER)
+        return cursor.fetchall()
+    finally:
+        conn.close()
+
+# 2. Ödeme Bekleyenleri Listeleme
+@app.get("/finans/odeme-bekleyenler")
+def odeme_bekleyenleri_getir():
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(queries.GET_FATURA_BEKLEYENLER)
+        return cursor.fetchall()
+    finally:
+        conn.close()
+
+# 3. Fatura Kesme İşlemi (Stored Procedure Tetikleme)
+@app.post("/finans/fatura-kes/{rezervasyon_id}")
+def fatura_kes(rezervasyon_id: int, odeme_yontemi: str = "Nakit"):
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        # Hilal'in yazdığı SQL metodunu çağırıyoruz
+        # Procedure parametreleri: rezervasyon_id ve odeme_yontemi
+        cursor.callproc('sp_FaturaKes', (rezervasyon_id, odeme_yontemi))
+        conn.commit()
+        return {"mesaj": f"{rezervasyon_id} ID'li rezervasyonun faturası kesildi ve oda temizliğe alındı."}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        conn.close()
+
+@app.post("/login")
+def sisteme_giris_yap(bilgiler: PersonelGiris):
+    conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabanı bağlantısı kurulamadı")
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+        # Kullanıcının gönderdiği ad ve şifreyi veritabanında arıyoruz
+        cursor.execute(queries.GET_PERSONEL_GIRIS, (bilgiler.kullanici_adi, bilgiler.sifre))
+        personel = cursor.fetchone()
+
+        if personel:
+            # Şifre doğruysa Ece'nin istediği formatta token/rol bilgisini dönüyoruz
+            return {
+                "mesaj": "Giriş başarılı",
+                "token": f"fake-jwt-token-{personel['personel_id']}", # Şimdilik simülasyon token'ı
+                "role": personel['personel_rol']
+            }
+        else:
+            # Şifre veya kullanıcı adı yanlışsa hata fırlatıyoruz
+            raise HTTPException(status_code=401, detail="Geçersiz kullanıcı adı veya şifre")
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
