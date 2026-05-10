@@ -7,6 +7,7 @@
     <title>Yönetici Panosu - Oda Durumları</title>
     <link rel="stylesheet" href="admin.css">
     <style>
+<<<<<<< HEAD
         .oda-durum-kapsayici {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -18,10 +19,16 @@
             background-color: white;
             border-radius: 8px;
             padding: 1.5rem;
+=======
+        .oda-kutu {
+            background-color: white;
+            border-radius: 8px;
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
+<<<<<<< HEAD
         }
 
         .oda-kutu h3 {
@@ -34,13 +41,25 @@
             margin: 0;
             font-size: 0.9rem;
             font-weight: bold;
+=======
+            transition: transform 0.2s;
+        }
+
+        .oda-kutu:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
         }
 
         .oda-bos {
             border-top: 5px solid #27ae60;
         }
 
+<<<<<<< HEAD
         .oda-bos p {
+=======
+        .oda-bos p:last-child {
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
             color: #27ae60;
         }
 
@@ -48,9 +67,23 @@
             border-top: 5px solid #e74c3c;
         }
 
+<<<<<<< HEAD
         .oda-dolu p {
             color: #e74c3c;
         }
+=======
+        .oda-dolu p:last-child {
+            color: #e74c3c;
+        }
+
+        .oda-temizlik {
+            border-top: 5px solid #f39c12 !important;
+        }
+
+        .oda-temizlik p:last-child {
+            color: #f39c12 !important;
+        }
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
     </style>
 </head>
 
@@ -62,16 +95,24 @@
                 <ul>
                     <li><a href="admin.html">Pano</a></li>
                     <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
+<<<<<<< HEAD
                     <li><a href="admin-odalar.html">Oda Durumları</a></li>
                     <li><a href="admin-misafirler.html">Misafirler</a></li>
                     <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
                     <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+=======
+                    <li><a href="admin-odalar.html" class="aktif">Oda Durumları</a></li>
+                    <li><a href="admin-misafirler.html">Misafirler</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html">Ayarlar</a></li>
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
                 </ul>
             </nav>
         </aside>
 
         <main class="ana-icerik">
             <header class="ust-bilgi">
+<<<<<<< HEAD
                 <h1>Oda Durumları</h1>
                 <div class="kullanici-bilgisi">Oturum Açık</div>
             </header>
@@ -81,6 +122,32 @@
         </main>
     </div>
     <script src="admin-odalar.js"></script>
+=======
+                <h1>Oda Durumları ve Kat Planı</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <div
+                style="background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; margin-top: 1.5rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1); display: flex; align-items: center; gap: 1rem;">
+                <label for="durumFiltresi" style="font-weight: bold; color: #2c3e50; font-size: 1.1rem;">Oda Durumuna
+                    Göre Filtrele:</label>
+                <select id="durumFiltresi"
+                    style="padding: 0.6rem; border-radius: 4px; border: 1px solid #bdc3c7; font-size: 1rem; min-width: 250px; cursor: pointer;">
+                    <option value="hepsi">Tüm Odaları Göster</option>
+                    <option value="oda-bos">Sadece Boş (Müsait) Odalar</option>
+                    <option value="oda-dolu">Sadece Dolu Odalar</option>
+                    <option value="oda-temizlik">Sadece Temizlikte Olanlar</option>
+                </select>
+            </div>
+
+            <section id="adminOdaListesi" style="width: 100%;">
+            </section>
+        </main>
+    </div>
+
+    <script src="admin-odalar.js"></script>
+    <script src="admin-yetki.js"></script>
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 </body>
 
 </html>

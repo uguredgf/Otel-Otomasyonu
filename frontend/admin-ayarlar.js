@@ -100,6 +100,7 @@ fiyatAyarlariFormu.addEventListener("submit", (olay) => {
     localStorage.setItem("hizmetFiyatlari", JSON.stringify(guncelFiyatlar));
     alert("Hizmet fiyatları başarıyla güncellendi.");
 });
+<<<<<<< HEAD
 
 sistemiSifirlaButonu.addEventListener("click", () => {
     const sonOnay = confirm("Tüm rezervasyon verileri silinecek! Bu işlemi onaylıyor musunuz?");
@@ -111,4 +112,6 @@ sistemiSifirlaButonu.addEventListener("click", () => {
     }
 });
 
+=======
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 document.addEventListener("DOMContentLoaded", ayarlariYukle);

@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 -- Otelde Aktif  Bulunan Kişilerin Listesini Gösteren Sanal Tablo
+=======
+﻿-- Otelde Aktif  Bulunan Ki┼şilerin Listesini G├Âsteren Sanal Tablo
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 
 DROP VIEW IF EXISTS vw_aktif_musteriler;
 CREATE VIEW vw_aktif_musteriler AS
@@ -13,4 +17,8 @@ SELECT
 FROM Rezervasyonlar r
 JOIN Musteriler m ON r.musteri_id = m.musteri_id
 JOIN Odalar o ON r.oda_id = o.oda_id
+<<<<<<< HEAD
 WHERE r.rezerve_durumu = 'Onaylandı';
+=======
+WHERE r.rezerve_durumu = 'Onayland─▒';
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)

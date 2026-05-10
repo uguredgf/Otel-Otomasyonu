@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 CREATE DATABASE IF NOT EXISTS otel_otomasyonu CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+=======
+﻿CREATE DATABASE IF NOT EXISTS otel_otomasyonu CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 USE otel_otomasyonu;
 
 CREATE TABLE Oda_Turleri (
@@ -38,7 +42,11 @@ CREATE TABLE Odalar (
     oda_no VARCHAR(10) UNIQUE NOT NULL,
     oda_kat INT,
     odaTur_id INT,
+<<<<<<< HEAD
     oda_durumu ENUM('Boş', 'Dolu', 'Temizlikte', 'Arızalı') DEFAULT 'Boş',
+=======
+    oda_durumu ENUM('Bo┼ş', 'Dolu', 'Temizlikte', 'Ar─▒zal─▒') DEFAULT 'Bo┼ş',
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
     CONSTRAINT fk_oda_odaTuru FOREIGN KEY (odaTur_id) REFERENCES Oda_Turleri(odaTur_id) ON DELETE SET NULL
 );
 
@@ -48,7 +56,11 @@ CREATE TABLE Rezervasyonlar (
     oda_id INT,
     rezerve_giris_tarihi DATE NOT NULL,
     rezerve_cikis_tarihi DATE NOT NULL,
+<<<<<<< HEAD
     rezerve_durumu ENUM('Beklemede', 'Onaylandı', 'Tamamlandı', 'İptal Edildi') DEFAULT 'Beklemede',
+=======
+    rezerve_durumu ENUM('Beklemede', 'Onayland─▒', 'Tamamland─▒', '─░ptal Edildi') DEFAULT 'Beklemede',
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
     CONSTRAINT fk_rez_musteri FOREIGN KEY (musteri_id) REFERENCES Musteriler(musteri_id) ON DELETE CASCADE,
     CONSTRAINT fk_rez_oda FOREIGN KEY (oda_id) REFERENCES Odalar(oda_id) ON DELETE CASCADE
 );
@@ -68,7 +80,11 @@ CREATE TABLE Faturalar (
     rezervasyon_id INT UNIQUE,
     fatura_toplam_tutar DECIMAL(10, 2) NOT NULL,
     fatura_odeme_tarihi DATETIME DEFAULT CURRENT_TIMESTAMP,
+<<<<<<< HEAD
     fatura_odeme_yontemi ENUM('Nakit', 'Kredi Kartı') NOT NULL,
+=======
+    fatura_odeme_yontemi ENUM('Nakit', 'Kredi Kart─▒') NOT NULL,
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
     CONSTRAINT fk_fatura_rez FOREIGN KEY (rezervasyon_id) REFERENCES Rezervasyonlar(rezervasyon_id)
 );
 
@@ -79,4 +95,8 @@ CREATE TABLE Islem_Kayitlari (
     kayit_islem_tarihi TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     kayit_aciklama TEXT,
     CONSTRAINT fk_kayit_personel FOREIGN KEY (personel_id) REFERENCES Personeller(personel_id) ON DELETE SET NULL
+<<<<<<< HEAD
 );
+=======
+);
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)

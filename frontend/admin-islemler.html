@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
+<<<<<<< HEAD
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yönetici Panosu - İşlemler ve Fatura</title>
     <link rel="stylesheet" href="admin.css">
@@ -56,6 +57,60 @@
             border-bottom: 1px solid #ecf0f1;
             text-align: left;
         }
+=======
+    <title>İşlemler ve Fatura Yönetimi</title>
+    <link rel="stylesheet" href="admin.css">
+    <style>
+        .islem-kart {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-satir {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .form-grup {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        select,
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .ekstra-liste {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        .ekstra-liste th,
+        .ekstra-liste td {
+            border: 1px solid #eee;
+            padding: 10px;
+            text-align: left;
+        }
+
+        .toplam-alan {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 15px;
+            color: #27ae60;
+        }
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
     </style>
 </head>
 
@@ -69,14 +124,20 @@
                     <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
                     <li><a href="admin-odalar.html">Oda Durumları</a></li>
                     <li><a href="admin-misafirler.html">Misafirler</a></li>
+<<<<<<< HEAD
                     <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
                     <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+=======
+                    <li><a href="admin-islemler.html" class="aktif">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html">Ayarlar</a></li>
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
                 </ul>
             </nav>
         </aside>
 
         <main class="ana-icerik">
             <header class="ust-bilgi">
+<<<<<<< HEAD
                 <h1>İşlemler ve Faturalandırma</h1>
                 <div class="kullanici-bilgisi">Oturum Açık</div>
             </header>
@@ -131,6 +192,51 @@
             </div>
         </main>
     </div>
+=======
+                <h1>İşlemler ve Fatura</h1>
+                <div class="kullanici-bilgisi">Oturum Açık</div>
+            </header>
+
+            <section class="islem-kart">
+                <h3>Misafire Ekstra Hizmet Ekle</h3>
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Misafir Seçin (Otelde Olanlar):</label>
+                        <select id="aktifMisafirSecimi">
+                            <option value="">-- Misafir Seçin --</option>
+                        </select>
+                    </div>
+                    <div class="form-grup">
+                        <label>Hizmet Seçin:</label>
+                        <select id="hizmetSecimi">
+                            <option value="">-- Hizmet Seçin --</option>
+                        </select>
+                    </div>
+                    <button id="hizmetEkleBtn" class="islem-butonu"
+                        style="background-color: #3498db; height: 40px;">Harcamayı Ekle</button>
+                </div>
+            </section>
+
+            <section class="islem-kart" id="faturaBolumu" style="display:none;">
+                <h3 id="faturaBaslik">Fatura Detayı</h3>
+                <table class="ekstra-liste">
+                    <thead>
+                        <tr>
+                            <th>İşlem Tarihi</th>
+                            <th>Hizmet Adı</th>
+                            <th>Fiyat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faturaGovdesi"></tbody>
+                </table>
+                <div class="toplam-alan" id="genelToplam">Toplam: 0 TL</div>
+                <button id="faturayiKapatBtn" class="islem-butonu"
+                    style="background-color: #27ae60; margin-top: 20px;">Ödemeyi Al ve Çıkış Yap</button>
+            </section>
+        </main>
+    </div>
+
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
     <script src="admin-islemler.js"></script>
 </body>
 

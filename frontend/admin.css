@@ -156,4 +156,17 @@ th {
     border-radius: 4px;
     cursor: pointer;
     font-size: 0.85rem;
+<<<<<<< HEAD
+=======
+}
+
+/* Temizlikteki Odalar İçin Sarı Renk */
+.oda-temizlik {
+    border-top: 5px solid #f39c12 !important;
+}
+
+.oda-temizlik p {
+    color: #f39c12 !important;
+    font-weight: bold;
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 }

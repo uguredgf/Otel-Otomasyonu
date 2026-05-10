@@ -85,6 +85,7 @@ main {
     margin-top: 1rem;
 }
 
+<<<<<<< HEAD
 .hizmet-karti {
     background-color: #f8f9fa;
     padding: 1.5rem;
@@ -101,6 +102,47 @@ main {
 .hizmet-karti h3 {
     color: #2c3e50;
     margin-top: 0;
+=======
+/* Hizmet Kartları Stilleri */
+.hizmet-karti {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.hizmet-karti:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.hizmet-karti img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    /* Resmi bozmadan kırparak alana sığdırır */
+}
+
+.hizmet-icerik {
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.hizmet-icerik h3 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 1.4rem;
+}
+
+.hizmet-icerik p {
+    margin: 0;
+    color: #7f8c8d;
+    line-height: 1.5;
+    font-size: 0.95rem;
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 }
 
 .oda-izgarasi {
@@ -110,12 +152,33 @@ main {
 }
 
 .oda-karti {
+<<<<<<< HEAD
     background-color: white;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
     text-align: center;
+=======
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    /* Resmin köşelerini karta uydurur */
+    text-align: center;
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.oda-karti:hover {
+    transform: translateY(-5px);
+}
+
+.oda-karti-icerik {
+    padding: 1.5rem;
+>>>>>>> 6eb49ac (Admin islemler, misafir listesi ve oda tipleri guncellendi)
 }
 
 .oda-karti button {
