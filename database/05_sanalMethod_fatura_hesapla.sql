@@ -11,12 +11,12 @@ BEGIN
     DECLARE v_hizmet_toplam DECIMAL(10,2);
     DECLARE v_genel_toplam DECIMAL(10,2);
 
-    -- 1. Oda fiyatını ve gün sayısını alalım (Doğru JOIN ve Sütun isimleri ile)
+    -- 1. Oda fiyatını ve gün sayısını alalım
     SELECT ot.odaTur_taban_fiyat, DATEDIFF(r.rezerve_cikis_tarihi, r.rezerve_giris_tarihi)
     INTO v_oda_fiyat, v_gun_sayisi
     FROM Rezervasyonlar r
     JOIN Odalar o ON r.oda_id = o.oda_id
-    JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id -- Doğru eşleşme
+    JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
     WHERE r.rezervasyon_id = p_rezervasyon_id;
 
     -- 2. Hizmetlerin toplamını alalım
