@@ -18,8 +18,8 @@
                     <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
                     <li><a href="admin-odalar.html">Oda Durumları</a></li>
                     <li><a href="admin-misafirler.html">Misafirler</a></li>
-                    <li><a href="admin-islemler.html" class="aktif">İşlemler ve Fatura</a></li>
-                    <li><a href="#">Ayarlar</a></li>
+                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
                 </ul>
             </nav>
         </aside>
@@ -37,13 +37,17 @@
                 <table id="misafirTablosu">
                     <thead>
                         <tr>
-                            <th>Misafir Adı</th>
+                            <th>Müşteri Adı</th>
+                            <th>TC Kimlik</th>
                             <th>Oda No</th>
                             <th>Giriş Tarihi</th>
                             <th>Çıkış Tarihi</th>
+                            <th>E-Posta</th>
                             <th>İşlemler</th>
                         </tr>
                     </thead>
+                    <tbody id="misafirGovdesi">
+                    </tbody>
                     <tbody id="misafirGovdesi">
                     </tbody>
                 </table>
@@ -51,6 +55,7 @@
         </main>
     </div>
     <script src="admin-misafirler.js"></script>
+    <script src="admin-yetki.js"></script>
 </body>
 
 </html>

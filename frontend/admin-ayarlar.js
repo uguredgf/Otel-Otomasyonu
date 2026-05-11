@@ -100,15 +100,4 @@ fiyatAyarlariFormu.addEventListener("submit", (olay) => {
     localStorage.setItem("hizmetFiyatlari", JSON.stringify(guncelFiyatlar));
     alert("Hizmet fiyatları başarıyla güncellendi.");
 });
-
-sistemiSifirlaButonu.addEventListener("click", () => {
-    const sonOnay = confirm("Tüm rezervasyon verileri silinecek! Bu işlemi onaylıyor musunuz?");
-
-    if (sonOnay) {
-        localStorage.removeItem("rezervasyonKayitlari");
-        alert("Sistem başarıyla sıfırlandı. Tüm kayıtlar temizlendi.");
-        window.location.href = "admin.html";
-    }
-});
-
 document.addEventListener("DOMContentLoaded", ayarlariYukle);

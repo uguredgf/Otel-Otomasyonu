@@ -3,58 +3,57 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yönetici Panosu - İşlemler ve Fatura</title>
+    <title>İşlemler ve Fatura Yönetimi</title>
     <link rel="stylesheet" href="admin.css">
     <style>
-        .islem-izgarasi {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: start;
+        .islem-kart {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
-        .form-grubu {
-            margin-bottom: 1.2rem;
+        .form-satir {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            margin-bottom: 15px;
+        }
+
+        .form-grup {
+            flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 5px;
         }
 
-        .form-grubu select,
-        .form-grubu input {
-            padding: 0.8rem;
-            border: 1px solid #bdc3c7;
+        select,
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
             border-radius: 4px;
-            font-size: 1rem;
         }
 
-        .fatura-alani {
-            background-color: #f8f9fa;
-            border: 2px dashed #7f8c8d;
-        }
-
-        .toplam-tutar {
-            font-size: 1.5rem;
-            font-weight: bold;
-            text-align: right;
-            margin-top: 1.5rem;
-            color: #c0392b;
-            border-top: 2px solid #bdc3c7;
-            padding-top: 1rem;
-        }
-
-        .fatura-tablosu {
+        .ekstra-liste {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 1rem;
+            margin-top: 10px;
         }
 
-        .fatura-tablosu th,
-        .fatura-tablosu td {
-            padding: 0.8rem;
-            border-bottom: 1px solid #ecf0f1;
+        .ekstra-liste th,
+        .ekstra-liste td {
+            border: 1px solid #eee;
+            padding: 10px;
             text-align: left;
+        }
+
+        .toplam-alan {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: right;
+            margin-top: 15px;
+            color: #27ae60;
         }
     </style>
 </head>
@@ -69,69 +68,59 @@
                     <li><a href="admin-rezervasyonlar.html">Rezervasyonlar</a></li>
                     <li><a href="admin-odalar.html">Oda Durumları</a></li>
                     <li><a href="admin-misafirler.html">Misafirler</a></li>
-                    <li><a href="admin-islemler.html">İşlemler ve Fatura</a></li>
-                    <li><a href="admin-ayarlar.html" class="aktif">Ayarlar</a></li>
+                    <li><a href="admin-islemler.html" class="aktif">İşlemler ve Fatura</a></li>
+                    <li><a href="admin-ayarlar.html">Ayarlar</a></li>
                 </ul>
             </nav>
         </aside>
 
         <main class="ana-icerik">
             <header class="ust-bilgi">
-                <h1>İşlemler ve Faturalandırma</h1>
+                <h1>İşlemler ve Fatura</h1>
                 <div class="kullanici-bilgisi">Oturum Açık</div>
             </header>
 
-            <div class="islem-izgarasi">
-                <section class="tablo-alani">
-                    <div class="tablo-baslik">
-                        <h2>Ekstra Hizmet Ekle</h2>
-                    </div>
-                    <div class="form-grubu">
-                        <label for="misafirSecimi">Oda ve Misafir Seçiniz:</label>
-                        <select id="misafirSecimi">
-                            <option value="">Misafir Seçiniz...</option>
+            <section class="islem-kart">
+                <h3>Misafire Ekstra Hizmet Ekle</h3>
+                <div class="form-satir">
+                    <div class="form-grup">
+                        <label>Misafir Seçin (Otelde Olanlar):</label>
+                        <select id="aktifMisafirSecimi">
+                            <option value="">-- Misafir Seçin --</option>
                         </select>
                     </div>
-                    <div class="form-grubu">
-                        <label for="hizmetSecimi">Kullanılan Hizmet:</label>
+                    <div class="form-grup">
+                        <label>Hizmet Seçin:</label>
                         <select id="hizmetSecimi">
-                            <option value="Sauna">Sauna (800 TL)</option>
-                            <option value="Havuz">Havuz (500 TL)</option>
-                            <option value="Masaj">Masaj (1500 TL)</option>
-                            <option value="Oda Servisi">Oda Servisi (400 TL)</option>
-                            <option value="Mini Bar">Mini Bar (300 TL)</option>
+                            <option value="">-- Hizmet Seçin --</option>
                         </select>
                     </div>
-                    <div class="form-grubu">
-                        <label for="hizmetAdeti">Kullanım Sayısı / Adet:</label>
-                        <input type="number" id="hizmetAdeti" min="1" value="1">
-                    </div>
-                    <button id="hizmetEkleButonu" class="islem-butonu"
-                        style="width: 100%; padding: 1rem; font-size: 1.1rem;">Hizmeti Faturaya İşle</button>
-                </section>
+                    <button id="hizmetEkleBtn" class="islem-butonu"
+                        style="background-color: #3498db; height: 40px;">Harcamayı Ekle</button>
+                </div>
+            </section>
 
-                <section class="tablo-alani fatura-alani">
-                    <div class="tablo-baslik">
-                        <h2>Anlık Fatura Dökümü</h2>
-                    </div>
-                    <table class="fatura-tablosu">
-                        <thead>
-                            <tr>
-                                <th>Hizmet Adı</th>
-                                <th>Adet</th>
-                                <th>Birim Fiyat</th>
-                                <th>Toplam</th>
-                            </tr>
-                        </thead>
-                        <tbody id="faturaGovdesi">
-                        </tbody>
-                    </table>
-                    <div class="toplam-tutar">Genel Toplam: <span id="genelToplam">0 TL</span></div>
-                </section>
-            </div>
+            <section class="islem-kart" id="faturaBolumu" style="display:none;">
+                <h3 id="faturaBaslik">Fatura Detayı</h3>
+                <table class="ekstra-liste">
+                    <thead>
+                        <tr>
+                            <th>İşlem Tarihi</th>
+                            <th>Hizmet Adı</th>
+                            <th>Fiyat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="faturaGovdesi"></tbody>
+                </table>
+                <div class="toplam-alan" id="genelToplam">Toplam: 0 TL</div>
+                <button id="faturayiKapatBtn" class="islem-butonu"
+                    style="background-color: #27ae60; margin-top: 20px;">Ödemeyi Al ve Çıkış Yap</button>
+            </section>
         </main>
     </div>
+
     <script src="admin-islemler.js"></script>
+    <script src="admin-yetki.js"></script>
 </body>
 
 </html>
