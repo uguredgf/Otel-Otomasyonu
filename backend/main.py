@@ -45,13 +45,6 @@ class FiyatGuncelleme(BaseModel):
     oda_turu_adi: str
     yeni_fiyat: float
 
-class MusteriEkle(BaseModel):
-    musteri_adi: str
-    musteri_soyadi: str
-    musteri_tc_no: str
-    musteri_telefon: str = None
-    musteri_email: str = None
-
 class HizmetFiyatGuncelleme(BaseModel):
     hizmet_adi: str
     yeni_fiyat: float
@@ -86,14 +79,20 @@ def tum_oda_detaylarini_getir():
 
 # Sadece Müsait Odalar (Opsiyonel / Hoca Sunumu İçin)
 @app.get("/odalar/musait")
-def musait_odalari_getir():
+def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, kisi_sayisi: int = 1):
     conn = get_db_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Veritabanı bağlantısı kurulamadı")
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(queries.GET_MUSAIT_ODALAR) 
-        musait_odalar = cursor.fetchall()
+        # Hilal'in akıllı müsait oda arama metodunu çağırıyoruz
+        cursor.callproc('sp_MusaitOdaAra', (giris_tarihi, cikis_tarihi, kisi_sayisi))
+        
+        musait_odalar = []
+        # Procedure'den dönen tabloyu okumak için stored_results() kullanıyoruz
+        for result in cursor.stored_results():
+            musait_odalar = result.fetchall()
+            
         return {"musait_oda_sayisi": len(musait_odalar), "odalar": musait_odalar}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -102,6 +101,7 @@ def musait_odalari_getir():
             cursor.close()
             conn.close()
 
+            
 # 3. Rezervasyon Oluşturma (sp_YeniRezervasyonEkle)
 @app.post("/rezervasyonlar", status_code=201)
 def rezervasyon_olustur(veri: YeniRezervasyon):
@@ -153,28 +153,6 @@ def oda_fiyati_guncelle(veri: FiyatGuncelleme):
         return {"mesaj": "Oda türü fiyatı başarıyla güncellendi."}
     finally:
         conn.close()
-
-# 7. Sadece Müşteri Ekleme (Hoca Sunumu İçin)
-@app.post("/musteriler", status_code=201)
-def yeni_musteri_ekle(musteri: MusteriEkle):
-    conn = get_db_connection()
-    if not conn:
-        raise HTTPException(status_code=500, detail="Veritabanı bağlantısı kurulamadı")
-    try:
-        cursor = conn.cursor()
-        degerler = (musteri.musteri_adi, musteri.musteri_soyadi, musteri.musteri_tc_no, musteri.musteri_telefon, musteri.musteri_email)
-        cursor.execute(queries.INSERT_YENI_MUSTERI, degerler)
-        yeni_id = cursor.lastrowid 
-        conn.commit() 
-        return {"mesaj": "Müşteri başarıyla eklendi", "musteri_id": yeni_id}
-    except mysql.connector.IntegrityError:
-        raise HTTPException(status_code=400, detail="Bu TC Kimlik numarası ile sistemde zaten bir kayıt var.")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
 
 # 8. Tüm Müşterileri Getir
 @app.get("/musteriler")
