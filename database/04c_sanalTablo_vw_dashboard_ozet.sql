@@ -16,4 +16,4 @@ SELECT
     (SELECT COUNT(*) FROM Odalar WHERE oda_durumu = 'Dolu') AS dolu_oda_sayisi,
     (SELECT COUNT(*) FROM Odalar WHERE oda_durumu = 'Boş') AS bos_oda_sayisi,
     (SELECT COUNT(*) FROM Odalar WHERE oda_durumu = 'Temizlikte') AS temizlikteki_oda_sayisi
-FROM DUAL;
+FROM DUAL; 
