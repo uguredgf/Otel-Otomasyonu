@@ -42,7 +42,7 @@ class RezervasyonDurum(BaseModel):
     yeni_durum: str # 'Onaylandı', 'İptal Edildi' vb.
 
 class FiyatGuncelleme(BaseModel):
-    id: int
+    oda_turu_adi: str
     yeni_fiyat: float
 
 class MusteriEkle(BaseModel):
@@ -52,6 +52,9 @@ class MusteriEkle(BaseModel):
     musteri_telefon: str = None
     musteri_email: str = None
 
+class HizmetFiyatGuncelleme(BaseModel):
+    hizmet_adi: str
+    yeni_fiyat: float
 
 # --- API UÇLARI (ENDPOINTS) ---
 
@@ -145,7 +148,7 @@ def oda_fiyati_guncelle(veri: FiyatGuncelleme):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.callproc('sp_OdaTuruGuncelle', (veri.id, veri.yeni_fiyat))
+        cursor.callproc('sp_OdaTuruGuncelle', (veri.oda_turu_adi, veri.yeni_fiyat))
         conn.commit()
         return {"mesaj": "Oda türü fiyatı başarıyla güncellendi."}
     finally:
@@ -251,3 +254,16 @@ def sisteme_giris_yap(bilgiler: PersonelGiris):
         if conn and conn.is_connected():
             cursor.close()
             conn.close()
+
+# 13. Ayarlar - Hizmet Fiyatı Güncelleme
+@app.put("/ayarlar/hizmet-fiyat")
+def hizmet_fiyati_guncelle(veri: HizmetFiyatGuncelleme):
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        # Hilal'in hazırladığı sp_HizmetFiyatGuncelle metodunu çağırıyoruz
+        cursor.callproc('sp_HizmetFiyatGuncelle', (veri.hizmet_adi, veri.yeni_fiyat))
+        conn.commit()
+        return {"mesaj": f"{veri.hizmet_adi} hizmetinin fiyatı başarıyla güncellendi."}
+    finally:
+        conn.close()
