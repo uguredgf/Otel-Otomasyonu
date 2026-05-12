@@ -44,6 +44,7 @@ class RezervasyonDurum(BaseModel):
 class FiyatGuncelleme(BaseModel):
     oda_turu_adi: str
     yeni_fiyat: float
+    yeni_kapasite: int
 
 class HizmetFiyatGuncelleme(BaseModel):
     hizmet_adi: str
@@ -101,7 +102,7 @@ def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, kisi_sayisi: int 
             cursor.close()
             conn.close()
 
-            
+
 # 3. Rezervasyon Oluşturma (sp_YeniRezervasyonEkle)
 @app.post("/rezervasyonlar", status_code=201)
 def rezervasyon_olustur(veri: YeniRezervasyon):
@@ -148,7 +149,7 @@ def oda_fiyati_guncelle(veri: FiyatGuncelleme):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()
-        cursor.callproc('sp_OdaTuruGuncelle', (veri.oda_turu_adi, veri.yeni_fiyat))
+        cursor.callproc('sp_OdaTuruGuncelle', (veri.oda_turu_adi, veri.yeni_fiyat, veri.yeni_kapasite))
         conn.commit()
         return {"mesaj": "Oda türü fiyatı başarıyla güncellendi."}
     finally:
@@ -158,19 +159,14 @@ def oda_fiyati_guncelle(veri: FiyatGuncelleme):
 @app.get("/musteriler")
 def tum_musterileri_getir():
     conn = get_db_connection()
-    if not conn:
-        raise HTTPException(status_code=500, detail="Veritabanı bağlantısı kurulamadı")
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(queries.GET_TUM_MUSTERILER)
+        # Hilal'in tavsiyesiyle daha detaylı olan view'ı kullanıyoruz
+        cursor.execute(queries.GET_AKTIF_MUSTERILER)
         musteriler = cursor.fetchall()
         return {"musteri_sayisi": len(musteriler), "musteriler": musteriler}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
     finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
+        conn.close()
 
 # 9. Aktif Misafirleri Listeleme
 @app.get("/aktif-misafirler")
@@ -196,7 +192,7 @@ def odeme_bekleyenleri_getir():
 
 # 11. Fatura Kesme İşlemi
 @app.post("/finans/fatura-kes/{rezervasyon_id}")
-def fatura_kes(rezervasyon_id: int, odeme_yontemi: str = "Nakit"):
+def fatura_kes(rezervasyon_id: int, odeme_yontemi: str):
     conn = get_db_connection()
     try:
         cursor = conn.cursor()

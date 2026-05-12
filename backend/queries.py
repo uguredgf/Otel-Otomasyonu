@@ -1,10 +1,6 @@
 # backend/queries.py
 
 # --- TEMEL TABLO SORGULARI ---
-GET_TUM_MUSTERILER = """
-    SELECT * FROM Musteriler ORDER BY musteri_id DESC
-"""
-
 GET_PERSONEL_GIRIS = """
     SELECT personel_id, personel_rol 
     FROM Personeller 
