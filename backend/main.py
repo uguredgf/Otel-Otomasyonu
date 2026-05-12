@@ -1,11 +1,19 @@
-# backend/main.py
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from database import get_db_connection
 import mysql.connector
 import queries
 
 app = FastAPI(title="Otel Otomasyonu API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Geliştirme aşamasında her yerden gelen isteği kabul et
+    allow_credentials=True,
+    allow_methods=["*"],  # GET, POST, PUT vb. hepsine izin ver
+    allow_headers=["*"],
+)
 
 # --- PYDANTIC MODELLERİ ---
 
