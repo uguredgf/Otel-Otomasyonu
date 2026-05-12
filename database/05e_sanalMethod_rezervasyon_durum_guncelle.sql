@@ -1,4 +1,4 @@
---rezerve edilen odanın durumunun guncellenmesi , iptal ve check-out işlemleri için oluşturulan procedure
+-- rezerve edilen odanın durumunun guncellenmesi , iptal ve check-out işlemleri için oluşturulan procedure
 DROP PROCEDURE IF EXISTS sp_RezervasyonDurumGuncelle;
 DELIMITER //
 

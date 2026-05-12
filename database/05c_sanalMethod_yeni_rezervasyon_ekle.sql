@@ -19,7 +19,7 @@ BEGIN
 
     -- 1. ADIM: MÜŞTERİ TANIMA (Resepsiyonist Mantığı)
     -- TC Kimlik numarasından bu müşterinin daha önce otelde kalıp kalmadığına bakılır.
-    --musteri otelde kalmışsa musteri_id degişmez kalmamışsa yeni musteri_id atanır.
+    -- musteri otelde kalmışsa musteri_id degişmez kalmamışsa yeni musteri_id atanır.
     SELECT musteri_id INTO v_musteri_id 
     FROM Musteriler 
     WHERE musteri_tc_no = p_tc;
@@ -54,7 +54,7 @@ BEGIN
         INSERT INTO Rezervasyonlar (musteri_id, oda_id, rezerve_giris_tarihi, rezerve_cikis_tarihi, rezerve_durumu)
         VALUES (v_musteri_id, v_atanacak_oda_id, p_giris, p_cikis, 'Beklemede');
         
-        --işlem geçmişi tablosu için işlem kaydı oluştur
+        -- işlem geçmişi tablosu için işlem kaydı oluştur
         INSERT INTO Islem_Kayitlari (personel_id, kayit_islem_tipi, kayit_aciklama)
         VALUES (1, 'Yeni Rezervasyon', CONCAT(p_tc, ' TC nolu misafir için otomatik oda atandı.'));
     ELSE
