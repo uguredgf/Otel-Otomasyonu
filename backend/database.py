@@ -6,9 +6,9 @@ def get_db_connection():
     try:
         connection = mysql.connector.connect(
             host='localhost',
-            database='otel_otomasyonu', # Hilal'in kurduğu db adı
-            user='root', # Kendi MySQL kullanıcı adın (genelde root'tur)
-            password='' # Kendi MySQL şifren (yoksa boş bırak)
+            database='otel_otomasyonu', 
+            user='root', 
+            password='' 
         )
         if connection.is_connected():
             return connection
