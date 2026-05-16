@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otel Otomasyonu | Kontrol Paneli</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-badge">H</div>
+                <h1>Otel Yonetim</h1>
+                <p>Gunluk operasyon, rezervasyon ve oda takibi tek panelde.</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-link-item active">Pano</a>
+                <a href="rezervasyonlar.html" class="nav-link-item" id="menuRezervasyon">Rezervasyonlar</a>
+                <a href="odalar.html" class="nav-link-item" id="menuOdalar">Oda Durumlari</a>
+                <a href="misafirler.html" class="nav-link-item">Misafirler</a>
+                <a href="islemler.html" class="nav-link-item">Islemler ve Fatura</a>
+                <a href="gecmis.html" class="nav-link-item">Islem Gecmisi</a>
+                <a href="ayarlar.html" class="nav-link-item" id="menuAyarlar">Ayarlar</a>
+                <a href="#" class="nav-link-item logout" onclick="logout()">Cikis Yap</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section class="topbar-card">
+                <div>
+                    <p class="title-eyebrow">Finansal Durum ve Pano</p>
+                    <h2 class="page-title">Gunluk operasyon ozeti</h2>
+                </div>
+                <div class="session-pill" id="kullaniciRol">Oturum acik</div>
+            </section>
+
+            <section class="overview-grid">
+                <article class="stats-card">
+                    <h3>Toplam Dolu Oda</h3>
+                    <strong id="k_toplam_misafir">0</strong>
+                    <span>Otelde aktif olarak kullanilan oda sayisi</span>
+                </article>
+                <article class="stats-card">
+                    <h3>Bugun Beklenen Cikis</h3>
+                    <strong id="k_bugun_cikis">0</strong>
+                    <span>Bugun cikis yapmasi planlanan misafirler</span>
+                </article>
+                <article class="stats-card success">
+                    <h3>Kasadaki Ciro</h3>
+                    <strong id="k_bekleyen_fatura">0 TL</strong>
+                    <span>Onaylanan islem gelirleri</span>
+                </article>
+                <article class="stats-card warning">
+                    <h3>Musait Oda</h3>
+                    <strong id="k_musait_oda">0</strong>
+                    <span>Hemen yerlesime uygun oda sayisi</span>
+                </article>
+            </section>
+
+            <section class="dashboard-grid">
+                <article class="content-card">
+                    <h3 class="section-title">Aktif Islemler</h3>
+                    <p class="section-subtitle">Konaklamasi devam eden misafirleri ve hizli fatura akislarini buradan yonetin.</p>
+
+                    <div class="table-responsive">
+                        <table class="hotel-table">
+                            <thead>
+                                <tr>
+                                    <th>Musteri Adi</th>
+                                    <th>Oda No</th>
+                                    <th>Durum</th>
+                                    <th>Giris Tarihi</th>
+                                    <th>Cikis Tarihi</th>
+                                    <th>Islemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="misafirTablosu"></tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <aside class="highlight-card">
+                    <p class="title-eyebrow">Operasyon Merkezi</p>
+                    <h3 class="section-title">Hizli Erisim</h3>
+                    <p class="section-subtitle">Resepsiyon ekibinin en sik kullandigi isleri tek noktada topladik.</p>
+
+                    <div class="mini-grid">
+                        <div class="mini-card">
+                            <strong id="k_aktif_misafir">0</strong>
+                            <span>Aktif misafir sayisi</span>
+                        </div>
+                        <div class="mini-card">
+                            <strong id="k_doluluk_orani">%0</strong>
+                            <span>Tahmini doluluk orani</span>
+                        </div>
+                    </div>
+
+                    <div class="action-row">
+                        <a class="primary-btn px-4 py-3" href="rezervasyonlar.html">Yeni rezervasyon</a>
+                        <a class="secondary-btn px-4 py-3" href="odalar.html">Odalari incele</a>
+                    </div>
+
+                    <div class="mini-list">
+                        <div class="mini-list-item">
+                            <span>Oturum durumu</span>
+                            <strong>Aktif</strong>
+                        </div>
+                        <div class="mini-list-item">
+                            <span>Personel rolu</span>
+                            <strong id="kullaniciRolMetin">Yukleniyor</strong>
+                        </div>
+                        <div class="mini-list-item">
+                            <span>Panel modu</span>
+                            <strong>Resepsiyon</strong>
+                        </div>
+                    </div>
+
+                    <p class="mini-note">Not: Rezervasyon olusturma ve cikis islemleri mevcut backend endpointleriyle calismaya devam eder.</p>
+                </aside>
+            </section>
+        </main>
+    </div>
+
+    <div class="modal fade" id="rezervasyonModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <p class="title-eyebrow mb-1">Yeni Kayit</p>
+                        <h5 class="modal-title">Yeni rezervasyon olustur</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formRezervasyon">
+                        <div class="form-grid">
+                            <div>
+                                <label class="form-label" for="rezTc">TC Kimlik No</label>
+                                <input type="text" id="rezTc" class="form-control" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezOdaTipi">Oda Tipi</label>
+                                <select id="rezOdaTipi" class="form-select" required>
+                                    <option value="Ekonomik Oda">Ekonomik Oda</option>
+                                    <option value="Standart Tek Kişilik">Standart Tek Kisilik</option>
+                                    <option value="Standart Çift Kişilik">Standart Cift Kisilik</option>
+                                    <option value="Aile Süiti">Aile Suiti</option>
+                                    <option value="Balayı Süiti">Balayi Suiti</option>
+                                    <option value="Kral Dairesi">Kral Dairesi</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezAd">Ad</label>
+                                <input type="text" id="rezAd" class="form-control" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezSoyad">Soyad</label>
+                                <input type="text" id="rezSoyad" class="form-control" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezTelefon">Telefon</label>
+                                <input type="text" id="rezTelefon" class="form-control" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezEmail">E-posta</label>
+                                <input type="email" id="rezEmail" class="form-control" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezGiris">Giris Tarihi</label>
+                                <input type="date" id="rezGiris" class="form-control" required>
+                            </div>
+                            <div>
+                                <label class="form-label" for="rezCikis">Cikis Tarihi</label>
+                                <input type="date" id="rezCikis" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="action-row">
+                            <button type="submit" class="primary-btn px-4 py-3">Rezervasyonu kaydet</button>
+                            <button type="button" class="secondary-btn px-4 py-3" data-bs-dismiss="modal">Vazgec</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="faturaModalYeni" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <p class="title-eyebrow mb-1">Cikis Islemi</p>
+                        <h5 class="modal-title">Fatura kes ve cikis yap</h5>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="section-subtitle mb-3">Musteri: <strong id="faturaMusteriAd">Yukleniyor...</strong></p>
+
+                    <form id="formFatura">
+                        <input type="hidden" id="faturaRezId">
+
+                        <div class="form-group">
+                            <label class="form-label" for="odemeYontemi">Odeme yontemi</label>
+                            <select id="odemeYontemi" class="form-select" required>
+                                <option value="Nakit">Nakit</option>
+                                <option value="Kredi Kartı">Kredi Karti</option>
+                                <option value="Havale/EFT">Havale/EFT</option>
+                            </select>
+                        </div>
+
+                        <div class="action-row">
+                            <button type="submit" class="primary-btn px-4 py-3">Faturayi kes ve cikis yap</button>
+                            <button type="button" class="secondary-btn px-4 py-3" data-bs-dismiss="modal">Iptal</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
