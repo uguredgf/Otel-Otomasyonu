@@ -47,19 +47,60 @@ function initLocalState() {
     }
 }
 
+
+
 function applyShell(roleElementId = "kullaniciRol", roleTextId = "kullaniciRolMetin") {
     const role = localStorage.getItem("rol") || "Personel";
     const roleElement = document.getElementById(roleElementId);
     const roleTextElement = document.getElementById(roleTextId);
 
+    // Sağ üstteki ve sağ taraftaki paneldeki rol isimlerini yazdır
     if (roleElement) {
         roleElement.textContent = `${role} oturumu`;
     }
     if (roleTextElement) {
         roleTextElement.textContent = role;
     }
-}
 
+    const mevcutSayfa = window.location.pathname.split("/").pop();
+    
+    // Menü Linklerini Seç
+    const menuAyarlar = document.getElementById("menuAyarlar");
+
+    // --- 1. RESEPSİYONİST KONTROLÜ ---
+    if (role === "Resepsiyonist") {
+        // Ayarlar sayfasına girmeye çalışıyorsa geri şutla
+        if (mevcutSayfa === "ayarlar.html") {
+            alert("Ayarlar sayfasına erişim yetkiniz bulunmamaktadır!");
+            window.location.href = "dashboard.html";
+            return; 
+        }
+        
+        // Ayarlar menüsünü tıklanamaz yap ve soluklaştır
+        if (menuAyarlar) {
+            menuAyarlar.style.pointerEvents = "none"; 
+            menuAyarlar.style.opacity = "0.5"; // Tıklanmadığını belli etmek için soluk gösterir
+        }
+    }
+
+    // --- 2. TEMİZLİK KONTROLÜ ---
+    if (role === "Temizlik") {
+
+        if (mevcutSayfa !== "odalar.html") {
+            window.location.href = "odalar.html";
+            return; 
+        }
+
+        const tumLinkler = document.querySelectorAll(".nav-link-item");
+        tumLinkler.forEach(link => {
+            const href = link.getAttribute("href");
+            if (href !== "odalar.html" && href !== "#") {
+                link.style.pointerEvents = "none";
+                link.style.opacity = "0.5"; 
+            }
+        });
+    }
+}
 function readJson(key) {
     try {
         const raw = localStorage.getItem(key);
@@ -229,9 +270,7 @@ function normalizeRoom(raw) {
 }
 
 function mergeRoomStatus(room) {
-    const override = getRoomOverrides()[String(room.roomNo)];
-    if (!override) return room;
-    return { ...room, status: override.durum };
+    return room;
 }
 
 function filterCheckedOutGuests(list) {
@@ -280,4 +319,32 @@ function logout() {
     localStorage.removeItem("token");
     localStorage.removeItem("rol");
     window.location.href = "yetkili.html";
+}
+
+function sayfaYetkiKontrolu(event, hedefSayfa) {
+    const rol = localStorage.getItem("rol");
+
+    if (rol === "Admin") {
+        return true; 
+    }
+
+    if (rol === "Resepsiyonist") {
+        if (hedefSayfa === "ayarlar") {
+            event.preventDefault(); 
+            alert("Ayarlar sayfasına erişim yetkiniz bulunmamaktadır!");
+            return false;
+        }
+        return true; 
+    }
+
+    if (rol === "Temizlik") {
+        if (hedefSayfa !== "odalar") {
+            event.preventDefault(); 
+            alert("Bu sayfaya erişim yetkiniz yok! Sadece Oda Durumları ekranına erişebilirsiniz.");
+            return false;
+        }
+        return true;
+    }
+
+    return true;
 }

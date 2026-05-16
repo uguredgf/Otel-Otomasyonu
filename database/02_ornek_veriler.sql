@@ -27,18 +27,15 @@ INSERT INTO Musteriler (musteri_id, musteri_adi, musteri_soyadi, musteri_tc_no, 
 (014, 'Deniz', 'Tekin', '15151515151', '05335006677', 'deniz.tekin@email.com'),
 (015, 'Burak', 'Şen', '16161616161', '05446007788', 'burak.sen@email.com');
 
--- 3. Personeller (10 Kişi - Ekip ve diğer çalışanlar) 
+-- 3. Personeller (Mutfak ve Şoför silindi, sadece sisteme girecek yetkililer bırakıldı)
 INSERT INTO Personeller (personel_id , personel_adi, personel_soyadi, personel_rol, personel_kullanici_adi, personel_sifre) VALUES
-(001, 'Uğur', 'Erdoğan', 'Admin ', 'backend_admin_ugur', 'ugur2026'),
+(001, 'Uğur', 'Erdoğan', 'Admin', 'backend_admin_ugur', 'ugur2026'),
 (002, 'Ecenur', 'Eke', 'Admin', 'frontend_admin_ece', 'ece2026'),
 (003, 'Hilal', 'Çoğul', 'Admin', 'database_admin_hilal', 'hilal2026'),
-(004, 'Hasan', 'Demir', 'Mutfak', 'mutfak_hasan', 'hasan2026'),
 (005, 'Ayten', 'Temiz', 'Temizlik', 'temizlik_ayten', 'ayten2026'),
 (006, 'Kemal', 'Müdür', 'Admin', 'admin_kemal', 'kemal2026'),
 (007, 'Seda', 'Gül', 'Resepsiyonist', 'res_seda', 'seda2026'),
-(008, 'Murat', 'Aşçı', 'Mutfak', 'mutfak_murat', 'murat2026'),
-(009, 'Zehra', 'Pırıl', 'Temizlik', 'temizlik_zehra', 'zehra2026'),
-(010, 'Tarik', 'Şoför', 'Resepsiyonist', 'res_tarik', 'tarik2026');
+(009, 'Zehra', 'Pırıl', 'Temizlik', 'temizlik_zehra', 'zehra2026');
 
 -- 4. Hizmetler (10 Çeşit Ekstra)
 INSERT INTO Hizmetler (hizmet_id, hizmet_adi, hizmet_birim_fiyat) VALUES

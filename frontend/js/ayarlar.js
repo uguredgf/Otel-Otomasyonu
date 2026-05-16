@@ -1,9 +1,20 @@
 document.addEventListener("DOMContentLoaded", async () => {
     if (!requireAuth()) return;
+    
+    // GÜVENLİK KONTROLÜ: Resepsiyonist ayarlar sayfasına giremez
+    const rol = localStorage.getItem("rol");
+    if (rol === "Resepsiyonist") {
+        alert("Bu sayfaya erişim yetkiniz bulunmamaktadır!");
+        window.location.href = "dashboard.html";
+        return; // Sayfanın geri kalanını yüklemesini durdur
+    }
+
     applyShell();
     await odaTipleriniYukle();
     hizmetleriYukle();
 });
+
+// ... (dosyanın geri kalanı aynı kalacak) ...
 
 async function odaTipleriniYukle() {
     const tbody = document.getElementById("odaAyarlariGovdesi");

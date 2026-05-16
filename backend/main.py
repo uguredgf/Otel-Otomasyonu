@@ -71,27 +71,60 @@ def ana_sayfa():
 @app.get("/dashboard/ozet")
 def dashboard_verilerini_getir():
     conn = get_db_connection()
+    if not conn:
+        return {"dolu_oda_sayisi": 0, "bos_oda_sayisi": 0, "toplam_ciro": 0, "bugun_cikis_yapacaklar": 0}
+        
     try:
         cursor = conn.cursor(dictionary=True)
+        
+        # 1. Dolu ve Boş Oda Sayısını Bulma
         cursor.execute(queries.GET_AKTIF_MUSTERILER)
         aktif_misafirler = cursor.fetchall()
         gercek_dolu_oda = len(aktif_misafirler)
 
         cursor.execute("SELECT COUNT(*) as toplam FROM Odalar")
-        toplam_oda = cursor.fetchone()["toplam"]
+        toplam_oda_sonuc = cursor.fetchone()
+        toplam_oda = toplam_oda_sonuc["toplam"] if toplam_oda_sonuc else 0
         gercek_bos_oda = toplam_oda - gercek_dolu_oda
 
+        # 2. Ciro ve Özet Bilgisi
         cursor.execute(queries.GET_DASHBOARD_OZET)
         ozet = cursor.fetchone()
 
-        if ozet:
-            ozet["dolu_oda_sayisi"] = gercek_dolu_oda
-            ozet["bos_oda_sayisi"] = gercek_bos_oda
-            return ozet
+        # 3. YENİ: Bugün Çıkış Yapacak Misafir Sayısı
+        # (Otomatik olarak bugünün tarihini kontrol eder)
+        bugun_sorgusu = """
+            SELECT COUNT(*) as cikis_sayisi 
+            FROM Rezervasyonlar 
+            WHERE rezerve_durumu NOT IN ('İptal Edildi', 'Tamamlandı') 
+            AND rezerve_cikis_tarihi = CURDATE()
+        """
+        cursor.execute(bugun_sorgusu)
+        bugun_cikis_sonuc = cursor.fetchone()
+        bugun_cikis = bugun_cikis_sonuc["cikis_sayisi"] if bugun_cikis_sonuc else 0
 
-        return {"dolu_oda_sayisi": gercek_dolu_oda, "bos_oda_sayisi": gercek_bos_oda, "toplam_ciro": 0}
+        # 4. KUSURSUZ EŞLEŞTİRME BÖLÜMÜ (Frontend'e gidecek standart paket)
+        sonuc = {
+            "dolu_oda_sayisi": gercek_dolu_oda,
+            "bos_oda_sayisi": gercek_bos_oda,
+            "bugun_cikis_yapacaklar": bugun_cikis,
+            "toplam_ciro": 0.0
+        }
+
+        # SQL'den dönen ciro kolonunun adı ne olursa olsun yakalıyoruz
+        if ozet:
+            ciro_degeri = ozet.get("toplam_ciro") or ozet.get("ciro") or ozet.get("toplam_tutar") or 0
+            sonuc["toplam_ciro"] = float(ciro_degeri)
+
+        return sonuc
+
+    except Exception as e:
+        print("Dashboard Hatası:", str(e))
+        return {"dolu_oda_sayisi": 0, "bos_oda_sayisi": 0, "toplam_ciro": 0, "bugun_cikis_yapacaklar": 0}
     finally:
-        conn.close()
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
 
 
 @app.get("/odalar/detayli")
@@ -215,7 +248,6 @@ def oda_fiyati_guncelle(veri: FiyatGuncelleme):
         return {"mesaj": "Oda turu fiyati basariyla guncellendi."}
     finally:
         conn.close()
-
 
 @app.get("/musteriler")
 def tum_musterileri_getir():

@@ -8,9 +8,13 @@ async function dashboardOzetiniGetir() {
     const veri = await apiIstekAt("/dashboard/ozet");
     if (!veri) return;
 
+    // Backend'den gelen %100 net veriler elementlere yazılıyor
     metinYaz("k_toplam_misafir", veri.dolu_oda_sayisi || 0);
     metinYaz("k_musait_oda", veri.bos_oda_sayisi || 0);
     metinYaz("k_bekleyen_fatura", `${paraFormatla(veri.toplam_ciro || 0)} TL`);
+    
+    // YENİ: Bugün çıkış yapacakların sayısını ekrana basıyoruz
+    metinYaz("k_bugun_cikis", veri.bugun_cikis_yapacaklar || 0);
 
     const toplamOda = (veri.dolu_oda_sayisi || 0) + (veri.bos_oda_sayisi || 0);
     const dolulukOrani = toplamOda > 0
