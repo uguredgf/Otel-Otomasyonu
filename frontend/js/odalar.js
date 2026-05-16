@@ -46,8 +46,26 @@ function odaDurumSinifi(durum) {
     }
 }
 
-function odayiMusaitYap(roomNo) {
-    setRoomOverride(roomNo, "Bos");
-    addOperationLog("oda", `${roomNo} numarali oda musaite alindi`, "Temizlik tamamlandi ve oda tekrar kullanima acildi.");
-    odalariGetir();
+// Odayı Veritabanında "Boş" Durumuna Çeken Fonksiyon
+async function odayiMusaitYap(roomNo) {
+    // 1. Python Backend'ine gerçek güncelleme paketini gönderiyoruz
+    const durumPaketi = {
+        oda_no: String(roomNo),
+        yeni_durum: "Boş" 
+    };
+    
+    // 2. API isteğini atıyoruz
+    const sonuc = await apiIstekAt("/odalar/durum", "PUT", durumPaketi);
+    
+    // 3. Eğer veritabanı başarıyla güncellendiyse arayüzü yenile
+    if (sonuc) {
+        // Eski mimarinin hata vermemesi için yerel hafızayı da güncelliyoruz
+        if (typeof setRoomOverride === "function") {
+            setRoomOverride(roomNo, "Boş");
+        }
+        
+        addOperationLog("oda", `${roomNo} numarali oda musaite alindi`, "Temizlik tamamlandi ve oda tekrar kullanima acildi.");
+        
+        await odalariGetir();
+    }
 }

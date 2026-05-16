@@ -39,7 +39,25 @@
             <section class="content-card mt-4">
                 <h3 class="section-title">Kayitli hareketler</h3>
                 <p class="section-subtitle">Bu liste frontend uzerinden gerceklestirilen aksiyonlarin zaman damgali ozetidir.</p>
-                <div id="gecmisListesi" class="history-list"></div>
+                
+                <div class="mb-4 mt-3">
+                    <input type="text" id="aramaKutusu" class="form-control form-control-lg border-2 shadow-sm" placeholder="🔍 İşlem, misafir veya oda no ara...">
+                </div>
+
+                <style>
+                    .scrollable-history {
+                        max-height: 500px; /* Kutunun maksimum boyu */
+                        overflow-y: auto; /* Taşanları kaydırılabilir yap */
+                        padding-right: 15px;
+                    }
+                    
+                    .scrollable-history::-webkit-scrollbar { width: 8px; }
+                    .scrollable-history::-webkit-scrollbar-track { background: #f8f9fa; border-radius: 8px; }
+                    .scrollable-history::-webkit-scrollbar-thumb { background: #ced4da; border-radius: 8px; }
+                    .scrollable-history::-webkit-scrollbar-thumb:hover { background: #adb5bd; }
+                </style>
+
+                <div id="gecmisListesi" class="history-list scrollable-history"></div>
             </section>
         </main>
     </div>

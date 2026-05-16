@@ -126,7 +126,7 @@ async function hizmetEkle() {
     faturaGoster();
 }
 
-function faturaGoster() {
+async function faturaGoster() {
     const guest = getSelectedGuest();
     const tbody = document.getElementById("faturaGovdesi");
     const title = document.getElementById("faturaBaslik");
@@ -136,7 +136,7 @@ function faturaGoster() {
 
     if (!guest) {
         title.textContent = "Fatura detayi";
-        tbody.innerHTML = "<tr><td colspan='3'><div class='empty-state'>Faturayi gormek icin aktif bir misafir secin.</div></td></tr>";
+        tbody.innerHTML = "<tr><td colspan='4'><div class='empty-state'>Faturayi gormek icin aktif bir misafir secin.</div></td></tr>";
         total.textContent = "Genel Toplam: 0 TL";
         return;
     }
@@ -149,27 +149,40 @@ function faturaGoster() {
     const rows = [{
         tarih: `${guest.checkIn} / ${guest.checkOut}`,
         kalem: `Konaklama (${nights} gece x ${formatCurrency(roomPrice)})`,
-        tutar: roomTotal
+        tutar: roomTotal,
+        hizmetId: null 
     }];
 
-    const extras = getReservationExpenses(guest.reservationId);
+    
+    const extras = await apiIstekAt(`/rezervasyonlar/${guest.reservationId}/hizmetler`) || [];
+    
     extras.forEach((item) => {
+        // DİKKAT: item.adet yerine veritabanından gelen item.hizmet_adet yazıldı
+        const miktar = Number(item.hizmet_adet || 1);
+        const kalemToplam = Number(item.hizmet_birim_fiyat || 0) * miktar;
+        
         rows.push({
-            tarih: formatDateTime(item.tarih),
-            kalem: `${item.ad} x${item.quantity}`,
-            tutar: item.toplam
+            tarih: "-", 
+            kalem: `${item.hizmet_adi} x${miktar}`,
+            tutar: kalemToplam,
+            hizmetId: item.hizmet_id
         });
     });
 
     const grandTotal = rows.reduce((sum, row) => sum + Number(row.tutar || 0), 0);
     title.textContent = `${guest.customerName} - Oda ${guest.roomNo} Fatura Detayi`;
+    
     tbody.innerHTML = rows.map((row) => `
         <tr>
             <td>${escapeHtml(row.tarih)}</td>
             <td>${escapeHtml(row.kalem)}</td>
             <td>${formatCurrency(row.tutar)}</td>
+            <td class="text-end">
+                ${row.hizmetId ? `<button class="btn btn-sm btn-outline-danger py-0" onclick="ekstraHizmetiSil(${guest.reservationId}, ${row.hizmetId})"><i class="bi bi-trash"></i> Sil</button>` : ''}
+            </td>
         </tr>
     `).join("");
+    
     total.textContent = `Genel Toplam: ${formatCurrency(grandTotal)}`;
 }
 
@@ -181,10 +194,19 @@ async function cikisYapVeFaturaKes() {
     }
 
     const paymentMethod = document.getElementById("odemeYontemi")?.value || "Nakit";
+    
+    // 1. Önce Faturayı Kes ve Ödemeyi Al
     const endpoint = `/finans/fatura-kes/${guest.reservationId}?odeme_yontemi=${encodeURIComponent(paymentMethod)}`;
     const result = await apiIstekAt(endpoint, "POST");
     if (!result) return;
 
+  const durumVerisi = {
+        rezervasyon_id: Number(guest.reservationId),
+        yeni_durum: "Tamamlandı"
+    };
+    await apiIstekAt("/rezervasyonlar/durum", "PUT", durumVerisi);
+
+    // 3. Frontend tarafındaki görsel güncellemeleri yap
     markReservationCheckedOut(guest);
     setRoomOverride(guest.roomNo, "Temizlikte");
 
@@ -205,4 +227,23 @@ async function cikisYapVeFaturaKes() {
     alert(`Basarili! ${result.mesaj}`);
     await aktifMisafirleriYukle();
     faturaGoster();
+}
+
+async function ekstraHizmetiSil(rezervasyonId, hizmetId) {
+    if (!confirm("Bu ekstra hizmeti faturadan silmek istediğinize emin misiniz?")) {
+        return;
+    }
+
+    const silmeVerisi = {
+        rezervasyon_id: Number(rezervasyonId),
+        hizmet_id: Number(hizmetId)
+    };
+    
+    const result = await apiIstekAt("/rezervasyonlar/hizmet-sil", "DELETE", silmeVerisi);
+    
+    if (result) {
+        alert("Hizmet faturadan başarıyla kaldırıldı.");
+        // Tabloyu veritabanındaki güncel durumu çekerek saniyesinde yeniliyoruz!
+        await faturaGoster();
+    }
 }

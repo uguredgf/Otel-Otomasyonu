@@ -32,8 +32,9 @@ async function musaitlikSorgula() {
         return;
     }
 
+    // DEĞİŞİKLİK: URL'nin sonuna &oda_tipi= parametresini güvenli bir şekilde ekledik!
     const result = await apiIstekAt(
-        `/odalar/musait?giris_tarihi=${encodeURIComponent(checkIn)}&cikis_tarihi=${encodeURIComponent(checkOut)}`
+        `/odalar/musait?giris_tarihi=${encodeURIComponent(checkIn)}&cikis_tarihi=${encodeURIComponent(checkOut)}&oda_tipi=${encodeURIComponent(roomType)}`
     );
     if (!result) return;
 

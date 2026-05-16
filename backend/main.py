@@ -54,6 +54,15 @@ class HizmetFiyatGuncelleme(BaseModel):
     yeni_fiyat: float
 
 
+class HizmetSilVerisi(BaseModel):
+    rezervasyon_id: int
+    hizmet_id: int
+
+class OdaDurumVerisi(BaseModel):
+    oda_no: str
+    yeni_durum: str
+
+
 @app.get("/")
 def ana_sayfa():
     return {"mesaj": "Otel Otomasyonu Backend Sistemi Calisiyor!"}
@@ -97,13 +106,15 @@ def tum_oda_detaylarini_getir():
 
 
 @app.get("/odalar/musait")
-def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, kisi_sayisi: int = 1):
+def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = None, kisi_sayisi: int = 1):
     conn = get_db_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
 
     try:
         cursor = conn.cursor(dictionary=True)
+        
+        # Orijinal Prosedür Çağrısı (Tarihe göre boş odaları getirir)
         try:
             cursor.callproc("sp_MusaitOdaAra", (giris_tarihi, cikis_tarihi, kisi_sayisi))
         except Exception as procedure_error:
@@ -115,7 +126,17 @@ def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, kisi_sayisi: int 
         for result in cursor.stored_results():
             musait_odalar = result.fetchall()
 
+        # 🎯 NOKTA ATIŞI FİLTRELEME:
+        # Prosedürün döndürdüğü 'tip' sütunu ile frontend'den gelen 'oda_tipi' metnini
+        # boşlukları temizleyerek ve küçük harfe çevirerek kusursuzca eşleştiriyoruz.
+        if oda_tipi:
+            musait_odalar = [
+                oda for oda in musait_odalar 
+                if str(oda.get('tip', '')).strip().lower() == oda_tipi.strip().lower()
+            ]
+
         return {"musait_oda_sayisi": len(musait_odalar), "odalar": musait_odalar}
+        
     except Exception as e:
         print("REZERVASYON HATASI YAKALANDI:", str(e))
         raise HTTPException(status_code=500, detail=str(e))
@@ -201,12 +222,23 @@ def tum_musterileri_getir():
     conn = get_db_connection()
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(queries.GET_AKTIF_MUSTERILER)
+
+        sorgu = """
+            SELECT 
+                v.*, 
+                m.musteri_tc_no AS tc_kimlik, 
+                m.musteri_email AS email, 
+                m.musteri_telefon AS telefon 
+            FROM vw_aktif_musteriler v
+            JOIN rezervasyonlar r ON v.rezervasyon_id = r.rezervasyon_id
+            JOIN musteriler m ON r.musteri_id = m.musteri_id
+            WHERE v.rezerve_giris_tarihi <= CURDATE() AND v.rezerve_cikis_tarihi >= CURDATE()
+        """
+        cursor.execute(sorgu)
         musteriler = cursor.fetchall()
         return {"musteri_sayisi": len(musteriler), "musteriler": musteriler}
     finally:
         conn.close()
-
 
 @app.get("/aktif-misafirler")
 def aktif_misafirleri_getir():
@@ -278,5 +310,47 @@ def hizmet_fiyati_guncelle(veri: HizmetFiyatGuncelleme):
         cursor.callproc("sp_HizmetFiyatGuncelle", (veri.hizmet_adi, veri.yeni_fiyat))
         conn.commit()
         return {"mesaj": f"{veri.hizmet_adi} hizmetinin fiyati basariyla guncellendi."}
+    finally:
+        conn.close()
+
+@app.delete("/rezervasyonlar/hizmet-sil")
+def hizmet_sil(veri: HizmetSilVerisi):
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        # Veritabanından o rezervasyona ait o hizmeti (sadece 1 tanesini) sil
+        sorgu = "DELETE FROM rezervasyon_hizmetleri WHERE rezervasyon_id = %s AND hizmet_id = %s LIMIT 1"
+        cursor.execute(sorgu, (veri.rezervasyon_id, veri.hizmet_id))
+        conn.commit()
+        return {"mesaj": "Hizmet faturadan başarıyla silindi."}
+    finally:
+        conn.close()
+
+@app.get("/rezervasyonlar/{rezervasyon_id}/hizmetler")
+def rezervasyon_hizmetlerini_getir(rezervasyon_id: int):
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor(dictionary=True)
+        sorgu = """
+            SELECT rh.hizmet_id, h.hizmet_adi, h.hizmet_birim_fiyat, rh.hizmet_adet
+            FROM rezervasyon_hizmetleri rh
+            JOIN hizmetler h ON rh.hizmet_id = h.hizmet_id
+            WHERE rh.rezervasyon_id = %s
+        """
+        cursor.execute(sorgu, (rezervasyon_id,))
+        return cursor.fetchall()
+    finally:
+        conn.close()
+
+@app.put("/odalar/durum")
+def oda_durumunu_guncelle(veri: OdaDurumVerisi):
+    conn = get_db_connection()
+    try:
+        cursor = conn.cursor()
+        # Gerçek sütun isimlerine göre odayı 'Boş' veya istenen duruma çeken SQL sorgusu
+        sorgu = "UPDATE odalar SET oda_durumu = %s WHERE oda_no = %s"
+        cursor.execute(sorgu, (veri.yeni_durum, veri.oda_no))
+        conn.commit()
+        return {"mesaj": f"{veri.oda_no} numaralı oda durumu '{veri.yeni_durum}' olarak güncellendi."}
     finally:
         conn.close()
