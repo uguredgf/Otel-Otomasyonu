@@ -8,7 +8,7 @@ def get_db_connection():
             host='localhost',
             database='otel_otomasyonu', 
             user='root', 
-            password='' 
+            password='',
             use_pure=True
         )
         if connection.is_connected():
