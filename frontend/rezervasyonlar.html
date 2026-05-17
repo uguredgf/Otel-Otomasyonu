@@ -12,19 +12,19 @@
         <aside class="sidebar">
             <div class="brand">
                 <div class="brand-badge">H</div>
-                <h2>Otel Yonetim</h2>
-                <p>Rezervasyon olusturma ve aktif konaklama takibi tek ekranda.</p>
+                <h2>Otel Yönetimi</h2>
+                <p>Rezervasyon Oluşturma ve Aktif konaklama takibi tek ekranda.</p>
             </div>
 
             <nav class="nav-menu">
                 <a href="dashboard.html" class="nav-link-item">Pano</a>
                 <a href="rezervasyonlar.html" class="nav-link-item active">Rezervasyonlar</a>
-                <a href="odalar.html" class="nav-link-item">Oda Durumlari</a>
+                <a href="odalar.html" class="nav-link-item">Oda Durumları</a>
                 <a href="misafirler.html" class="nav-link-item">Misafirler</a>
-                <a href="islemler.html" class="nav-link-item">Islemler ve Fatura</a>
-                <a href="gecmis.html" class="nav-link-item">Islem Gecmisi</a>
+                <a href="islemler.html" class="nav-link-item">İşlemler ve Fatura</a>
+                <a href="gecmis.html" class="nav-link-item">İşlem Geçmişi</a>
                 <a href="ayarlar.html" class="nav-link-item">Ayarlar</a>
-                <a href="#" class="nav-link-item logout" onclick="logout()">Cikis Yap</a>
+                <a href="#" class="nav-link-item logout" onclick="logout()">Çıkış Yap</a>
             </nav>
         </aside>
 
@@ -32,15 +32,15 @@
             <section class="topbar-card">
                 <div>
                     <p class="title-eyebrow">Rezervasyon Yonetimi</p>
-                    <h1 class="page-title">Yeni kayit ve aktif rezervasyonlar</h1>
+                    <h1 class="page-title">Yeni kayıt ve aktif rezervasyonlar</h1>
                 </div>
-                <div class="session-pill" id="kullaniciRol">Oturum acik</div>
+                <div class="session-pill" id="kullaniciRol">Oturum açık</div>
             </section>
 
             <section class="dashboard-grid mt-4">
                 <article class="content-card">
                     <h3 class="section-title">Yeni rezervasyon</h3>
-                    <p class="section-subtitle">Backend uzerinden dogrudan yeni rezervasyon olusturun.</p>
+                    <p class="section-subtitle">Doğrudan yeni rezervasyon oluşturun.</p>
 
                     <form id="rezervasyonFormu">
                         <div class="form-grid">
@@ -53,7 +53,7 @@
                                 <select id="rezOdaTipi" class="form-select" required>
                                     <option value="Ekonomik Oda">Ekonomik Oda</option>
                                     <option value="Standart Tek Kişilik">Standart Tek Kisilik</option>
-                                    <option value="Standart Çift Kişilik">Standart Cift Kisilik</option>
+                                    <option value="Standart Çift Kişilik">Standart Çift Kişilik</option>
                                     <option value="Aile Süiti">Aile Suiti</option>
                                     <option value="Balayı Süiti">Balayi Suiti</option>
                                     <option value="Kral Dairesi">Kral Dairesi</option>
@@ -76,11 +76,11 @@
                                 <input type="email" id="rezEmail" class="form-control" required>
                             </div>
                             <div>
-                                <label class="form-label" for="rezGiris">Giris Tarihi</label>
+                                <label class="form-label" for="rezGiris">Giriş Tarihi</label>
                                 <input type="date" id="rezGiris" class="form-control" required>
                             </div>
                             <div>
-                                <label class="form-label" for="rezCikis">Cikis Tarihi</label>
+                                <label class="form-label" for="rezCikis">Çıkış Tarihi</label>
                                 <input type="date" id="rezCikis" class="form-control" required>
                             </div>
                         </div>
@@ -92,28 +92,28 @@
 
                 <aside class="highlight-card">
                     <p class="title-eyebrow">Bekleyen Tahsilatlar</p>
-                    <h3 class="section-title">Odeme Durumu</h3>
-                    <p class="section-subtitle">Backend tarafinda odemesi bekleyen kayitlar burada listelenir.</p>
+                    <h3 class="section-title">Ödeme Durumu</h3>
+                    <p class="section-subtitle">Backend tarafında ödemesi bekleyen kayıtlar burada listelenir.</p>
                     <div id="bekleyenOdemeListesi" class="mini-list"></div>
                 </aside>
             </section>
 
             <section class="content-card mt-4">
-                <h3 class="section-title">Tum rezervasyonlar</h3>
+                <h3 class="section-title">Tüm rezervasyonlar</h3>
                 <p class="section-subtitle">Admin ve resepsiyon personeli burada onay, iptal ve durum takibini yapabilir.</p>
                 <div class="table-responsive">
                     <table class="hotel-table">
                         <thead>
                             <tr>
                                 <th>Rez. ID</th>
-                                <th>Musteri</th>
+                                <th>Müşteri</th>
                                 <th>Oda</th>
                                 <th>Oda Tipi</th>
-                                <th>Giris</th>
-                                <th>Cikis</th>
+                                <th>Giriş</th>
+                                <th>Çıkış</th>
                                 <th>Durum</th>
-                                <th>Odeme</th>
-                                <th>Islem</th>
+                                <th>Ödeme</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="rezervasyonTablosu"></tbody>

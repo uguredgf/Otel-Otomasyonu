@@ -577,7 +577,7 @@ a {
 
 .public-lead {
     max-width: 760px;
-    color: var(--text-700);
+    color: #000000; 
     font-size: 1.08rem;
 }
 
@@ -796,5 +796,100 @@ a {
     .page-title,
     .section-title {
         font-size: 1.6rem;
+    }
+}
+.oda-resmi {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 12px;
+    margin-bottom: 16px;
+}
+
+.karsilama_alani {
+    background-image: url('otelindisii.png'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: var(--radius-xl);
+    margin: 16px 32px;
+    padding: 60px 40px; 
+}
+
+/* Sol ve sağ kutuları yan yana dizen ızgara yapısı */
+.karsilama_duzeni {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr; /* Sol taraf yazı için biraz daha geniş */
+    gap: 60px;
+    align-items: center;
+    min-height: 50vh;
+}
+
+/* Sol taraftaki yazıları ve logoyu saran buzlu cam efekti */
+.karsilama_sol_kutu {
+    background: rgba(255, 255, 255, 0.22); /* Yarı saydam beyaz arka plan */
+    backdrop-filter: blur(12px); /* Arka planı bulanıklaştırır */
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* Logonun yeni konumu ve boyutu */
+.otel_logosu {
+    height: 70px;
+    width: auto;
+    margin-bottom: 24px;
+    display: block;
+}
+
+/* İstediğin siyah ve kalın başlık tasarımı */
+.siyah_ana_baslik {
+    color: #000000;
+    margin: 10px 0 16px;
+    font-size: 3.2rem;
+    line-height: 1.1;
+    font-weight: 800;
+}
+
+.siyah_alt_metin {
+    color: #222222;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+/* Sağ taraftaki mini kartların dikey hizalanması */
+.karsilama_sag_kutu {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Sağdaki bilgi kartlarının cam efekti tasarımı */
+.ozellik_karti {
+    background: rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(12px);
+    padding: 24px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    color: #223142;
+}
+
+.ozellik_karti strong {
+    display: block;
+    font-size: 1.25rem;
+    color: #000000;
+    margin-bottom: 6px;
+    font-weight: 800;
+}
+
+/* Telefonlar ve tabletler için dar ekran görünümü */
+@media (max-width: 960px) {
+    .karsilama_duzeni {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 }

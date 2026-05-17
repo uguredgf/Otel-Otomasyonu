@@ -28,7 +28,7 @@ async function odalariGetir() {
             `;
         });
     } else {
-        odaGrid.innerHTML = "<div class='empty-state'>Sistemde kayitli oda bulunamadi.</div>";
+        odaGrid.innerHTML = "<div class='empty-state'>Sistemde kayıtlı oda bulunamadı.</div>";
     }
 }
 
@@ -64,7 +64,7 @@ async function odayiMusaitYap(roomNo) {
             setRoomOverride(roomNo, "Boş");
         }
         
-        addOperationLog("oda", `${roomNo} numarali oda musaite alindi`, "Temizlik tamamlandi ve oda tekrar kullanima acildi.");
+        addOperationLog("oda", `${roomNo} numarali oda musaite alındı`, "Temizlik tamamlandı ve oda tekrar kullanıma acildı.");
         
         await odalariGetir();
     }

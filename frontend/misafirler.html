@@ -12,18 +12,18 @@
         <aside class="sidebar">
             <div class="brand">
                 <div class="brand-badge">H</div>
-                <h2>Otel Yonetim</h2>
+                <h2>Otel Yönetim</h2>
                 <p>Aktif konaklayan misafirlerin tum detaylarini izleyin.</p>
             </div>
             <nav class="nav-menu">
                 <a href="dashboard.html" class="nav-link-item">Pano</a>
                 <a href="rezervasyonlar.html" class="nav-link-item">Rezervasyonlar</a>
-                <a href="odalar.html" class="nav-link-item">Oda Durumlari</a>
+                <a href="odalar.html" class="nav-link-item">Oda Durumları</a>
                 <a href="misafirler.html" class="nav-link-item active">Misafirler</a>
-                <a href="islemler.html" class="nav-link-item">Islemler ve Fatura</a>
-                <a href="gecmis.html" class="nav-link-item">Islem Gecmisi</a>
+                <a href="islemler.html" class="nav-link-item">İşlemler ve Fatura</a>
+                <a href="gecmis.html" class="nav-link-item">İşlem Geçmişi</a>
                 <a href="ayarlar.html" class="nav-link-item">Ayarlar</a>
-                <a href="#" class="nav-link-item logout" onclick="logout()">Cikis Yap</a>
+                <a href="#" class="nav-link-item logout" onclick="logout()">Çıkış Yap</a>
             </nav>
         </aside>
 
@@ -33,23 +33,23 @@
                     <p class="title-eyebrow">Misafir Yonetimi</p>
                     <h1 class="page-title">Konaklayan misafir listesi</h1>
                 </div>
-                <div class="session-pill" id="kullaniciRol">Oturum acik</div>
+                <div class="session-pill" id="kullaniciRol">Oturum açık</div>
             </section>
 
             <section class="content-card mt-4">
                 <h3 class="section-title">Aktif misafirler</h3>
-                <p class="section-subtitle">Cikis yapmayan tum aktif misafirleri ve hizli islem gecislerini gorun.</p>
+                <p class="section-subtitle">Çıkış yapmayan tüm aktif misafirleri ve hızlı işlem geçişlerini görün.</p>
                 <div class="table-responsive">
                     <table class="hotel-table">
                         <thead>
                             <tr>
-                                <th>Musteri</th>
+                                <th>Müşteri</th>
                                 <th>TC Kimlik</th>
                                 <th>Oda No</th>
-                                <th>Giris</th>
-                                <th>Cikis</th>
+                                <th>Giriş</th>
+                                <th>Çıkış</th>
                                 <th>E-posta</th>
-                                <th>Islem</th>
+                                <th>İşlem</th>
                             </tr>
                         </thead>
                         <tbody id="misafirTablosu"></tbody>

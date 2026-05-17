@@ -95,8 +95,8 @@ if (rezervasyonFormu) {
             rezervasyonFormu.reset();
             addOperationLog(
                 "rezervasyon",
-                `${yeniRezervasyonVerisi.ad} ${yeniRezervasyonVerisi.soyad} icin rezervasyon olusturuldu`,
-                `${yeniRezervasyonVerisi.giris_tarihi} - ${yeniRezervasyonVerisi.cikis_tarihi} tarihleri arasinda ${yeniRezervasyonVerisi.oda_tipi} oda talebi alindi.`
+                `${yeniRezervasyonVerisi.ad} ${yeniRezervasyonVerisi.soyad} için rezervasyon oluşturuldu`,
+                `${yeniRezervasyonVerisi.giris_tarihi} - ${yeniRezervasyonVerisi.cikis_tarihi} tarihleri arasında ${yeniRezervasyonVerisi.oda_tipi} oda talebi alindi.`
             );
 
             const modal = bootstrap.Modal.getInstance(document.getElementById("rezervasyonModal"));

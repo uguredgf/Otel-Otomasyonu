@@ -42,7 +42,7 @@ async function aktifMisafirleriYukle(selectedReservationId) {
     const select = document.getElementById("aktifMisafirSecimi");
     if (!select) return;
 
-    select.innerHTML = '<option value="">-- Misafir Secin --</option>';
+    select.innerHTML = '<option value="">Misafir Seçin</option>';
     aktifMisafirler.forEach((guest) => {
         select.innerHTML += `<option value="${escapeHtml(guest.reservationId)}">${escapeHtml(guest.customerName)} (Oda ${escapeHtml(guest.roomNo)})</option>`;
     });

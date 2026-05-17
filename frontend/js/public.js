@@ -13,11 +13,11 @@ if (publicReservationForm) {
         const result = await apiIstekAt("/rezervasyonlar", "POST", payload);
         if (!result) return;
 
-        alert(`Talebiniz alindi. ${result.mesaj} Rezervasyonunuz yetkili onayina dusmustur.`);
+        alert(`Talebiniz alındı. ${result.mesaj} Rezervasyonunuz yetkili onayına düsmüştür.`);
         publicReservationForm.reset();
         renderAvailabilityMessage(
-            "Talebiniz alindi",
-            "Rezervasyon kaydiniz basariyla olusturuldu. Yetkili ekip onay verdikten sonra surec tamamlanir."
+            "Talebiniz alındı",
+            "Rezervasyon kaydınız başarıyla oluşturuldu. Yetkili ekip onay verdikten sonra süreç tamamlanır."
         );
     });
 }
@@ -28,7 +28,7 @@ async function musaitlikSorgula() {
     const roomType = document.getElementById("guestRoomType").value;
 
     if (!checkIn || !checkOut || !roomType) {
-        alert("Lutfen musaitlik sorgusu icin tarih ve oda tipi secin.");
+        alert("Lütfen musaitlik sorgusu için tarih ve oda tipi seçin.");
         return;
     }
 
@@ -40,7 +40,7 @@ async function musaitlikSorgula() {
 
     renderAvailabilityMessage(
         `${result.musait_oda_sayisi || 0} oda bulundu`,
-        `${roomType} icin secilen tarihlerde musait gorunen oda sayisi: ${result.musait_oda_sayisi || 0}`
+        `${roomType} icin secilen tarihlerde musait gorünen oda sayısı: ${result.musait_oda_sayisi || 0}`
     );
 }
 

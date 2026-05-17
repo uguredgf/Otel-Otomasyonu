@@ -12,18 +12,18 @@
         <aside class="sidebar">
             <div class="brand">
                 <div class="brand-badge">H</div>
-                <h2>Otel Yonetim</h2>
-                <p>Ek hizmet ekleme, hesap toplama ve cikis akisini buradan yonetin.</p>
+                <h2>Otel Yönetim</h2>
+                <p>Ek hizmet ekleme, hesap toplama ve çıkış akışını buradan yönetin.</p>
             </div>
             <nav class="nav-menu">
                 <a href="dashboard.html" class="nav-link-item">Pano</a>
                 <a href="rezervasyonlar.html" class="nav-link-item">Rezervasyonlar</a>
-                <a href="odalar.html" class="nav-link-item">Oda Durumlari</a>
+                <a href="odalar.html" class="nav-link-item">Oda Durumları</a>
                 <a href="misafirler.html" class="nav-link-item">Misafirler</a>
-                <a href="islemler.html" class="nav-link-item active">Islemler ve Fatura</a>
-                <a href="gecmis.html" class="nav-link-item">Islem Gecmisi</a>
+                <a href="islemler.html" class="nav-link-item active">İşlemler ve Fatura</a>
+                <a href="gecmis.html" class="nav-link-item">İşlem Geçmişi</a>
                 <a href="ayarlar.html" class="nav-link-item">Ayarlar</a>
-                <a href="#" class="nav-link-item logout" onclick="logout()">Cikis Yap</a>
+                <a href="#" class="nav-link-item logout" onclick="logout()">Çıkış Yap</a>
             </nav>
         </aside>
 
@@ -31,7 +31,7 @@
             <section class="topbar-card">
                 <div>
                     <p class="title-eyebrow">Operasyon ve Fatura</p>
-                    <h1 class="page-title">Ek hizmetler ve cikis islemi</h1>
+                    <h1 class="page-title">Ek hizmetler ve çıkış islemi</h1>
                 </div>
                 <div class="session-pill" id="kullaniciRol">Oturum acik</div>
             </section>
@@ -39,14 +39,14 @@
             <section class="dashboard-grid mt-4">
                 <article class="content-card">
                     <h3 class="section-title">Ekstra hizmet ekle</h3>
-                    <p class="section-subtitle">Aktif misafire ek hizmet tanimlayin ve fatura detayini aninda guncelleyin.</p>
+                    <p class="section-subtitle">Aktif misafire ek hizmet tanımlayın ve fatura detayını anında güncelleyin.</p>
                     <div class="form-grid">
                         <div class="full-span">
-                            <label class="form-label" for="aktifMisafirSecimi">Misafir secin</label>
+                            <label class="form-label" for="aktifMisafirSecimi">Misafir seçin</label>
                             <select id="aktifMisafirSecimi" class="form-select"></select>
                         </div>
                         <div>
-                            <label class="form-label" for="hizmetSecimi">Hizmet secin</label>
+                            <label class="form-label" for="hizmetSecimi">Hizmet seçin</label>
                             <select id="hizmetSecimi" class="form-select"></select>
                         </div>
                         <div>
@@ -55,27 +55,27 @@
                         </div>
                     </div>
                     <div class="action-row">
-                        <button class="primary-btn px-4 py-3" id="hizmetEkleBtn">Harcamayi ekle</button>
+                        <button class="primary-btn px-4 py-3" id="hizmetEkleBtn">Harcamayı ekle</button>
                     </div>
                 </article>
 
                 <aside class="highlight-card">
-                    <p class="title-eyebrow">Tahsilat Notlari</p>
-                    <h3 class="section-title">Bekleyen odemeler</h3>
-                    <p class="section-subtitle">Backend tarafinda odeme bekleyen kayitlar varsa burada ozetlenir.</p>
+                    <p class="title-eyebrow">Tahsilat Notları</p>
+                    <h3 class="section-title">Bekleyen Ödemeler</h3>
+                    <p class="section-subtitle">Ödeme bekleyen kayıtlar varsa burada özetlenir.</p>
                     <div id="bekleyenOdemeListesi" class="mini-list"></div>
                 </aside>
             </section>
 
             <section class="content-card mt-4" id="faturaBolumu">
-                <h3 class="section-title" id="faturaBaslik">Fatura detayi</h3>
-                <p class="section-subtitle">Konaklama ve ek hizmet toplamlarini inceleyin, sonra cikis islemine gecin.</p>
+                <h3 class="section-title" id="faturaBaslik">Fatura detayı</h3>
+                <p class="section-subtitle">Konaklama ve ek hizmet toplamlarını inceleyin, sonra çıkış işlemine geçin.</p>
 
                 <div class="table-responsive">
                     <table class="hotel-table">
                         <thead>
                             <tr>
-                                <th>Islem Tarihi</th>
+                                <th>İşlem Tarihi</th>
                                 <th>Kalem</th>
                                 <th>Tutar</th>
                             </tr>
@@ -91,10 +91,10 @@
                     <div class="room-toolbar">
                         <select id="odemeYontemi" class="form-select">
                             <option value="Nakit">Nakit</option>
-                            <option value="Kredi Kartı">Kredi Karti</option>
+                            <option value="Kredi Kartı">Kredi Kartı</option>
                             <option value="Havale/EFT">Havale/EFT</option>
                         </select>
-                        <button class="primary-btn px-4 py-3" id="faturayiKapatBtn">Odemeyi al ve cikis yap</button>
+                        <button class="primary-btn px-4 py-3" id="faturayiKapatBtn">Ödemeyi al ve çıkış yap</button>
                     </div>
                 </div>
             </section>

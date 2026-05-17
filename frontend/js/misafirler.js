@@ -11,7 +11,7 @@ async function aktifMisafirleriYukle() {
     if (!tbody) return;
 
     if (!guests.length) {
-        tbody.innerHTML = "<tr><td colspan='7'><div class='empty-state'>Su an konaklayan aktif misafir bulunmuyor.</div></td></tr>";
+        tbody.innerHTML = "<tr><td colspan='7'><div class='empty-state'>Şu an konaklayan aktif misafir bulunmuyor.</div></td></tr>";
         return;
     }
 

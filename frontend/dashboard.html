@@ -12,19 +12,19 @@
         <aside class="sidebar">
             <div class="brand">
                 <div class="brand-badge">H</div>
-                <h1>Otel Yonetim</h1>
-                <p>Gunluk operasyon, rezervasyon ve oda takibi tek panelde.</p>
+                <h1>Otel Yönetimi</h1>
+                <p>Günlük Operasyon, Rezervasyon ve Oda Takibi Tek Panelde.</p>
             </div>
 
             <nav class="nav-menu">
                 <a href="dashboard.html" class="nav-link-item active">Pano</a>
                 <a href="rezervasyonlar.html" class="nav-link-item" id="menuRezervasyon">Rezervasyonlar</a>
-                <a href="odalar.html" class="nav-link-item" id="menuOdalar">Oda Durumlari</a>
+                <a href="odalar.html" class="nav-link-item" id="menuOdalar">Oda Durumları</a>
                 <a href="misafirler.html" class="nav-link-item">Misafirler</a>
-                <a href="islemler.html" class="nav-link-item">Islemler ve Fatura</a>
-                <a href="gecmis.html" class="nav-link-item">Islem Gecmisi</a>
+                <a href="islemler.html" class="nav-link-item">İşlemler ve Fatura</a>
+                <a href="gecmis.html" class="nav-link-item">İşlem Geçmişi</a>
                 <a href="ayarlar.html" class="nav-link-item" id="menuAyarlar">Ayarlar</a>
-                <a href="#" class="nav-link-item logout" onclick="logout()">Cikis Yap</a>
+                <a href="#" class="nav-link-item logout" onclick="logout()">Çıkış Yap</a>
             </nav>
         </aside>
 
@@ -32,49 +32,49 @@
             <section class="topbar-card">
                 <div>
                     <p class="title-eyebrow">Finansal Durum ve Pano</p>
-                    <h2 class="page-title">Gunluk operasyon ozeti</h2>
+                    <h2 class="page-title">Günlük operasyon özeti</h2>
                 </div>
-                <div class="session-pill" id="kullaniciRol">Oturum acik</div>
+                <div class="session-pill" id="kullaniciRol">Oturum açık</div>
             </section>
 
             <section class="overview-grid">
                 <article class="stats-card">
                     <h3>Toplam Dolu Oda</h3>
                     <strong id="k_toplam_misafir">0</strong>
-                    <span>Otelde aktif olarak kullanilan oda sayisi</span>
+                    <span>Otelde aktif olarak kullanılan oda sayıs</span>
                 </article>
                 <article class="stats-card">
-                    <h3>Bugun Beklenen Cikis</h3>
+                    <h3>Bugun Beklenen Cıkış</h3>
                     <strong id="k_bugun_cikis">0</strong>
-                    <span>Bugun cikis yapmasi planlanan misafirler</span>
+                    <span>Bugün çıkış yapması planlanan misafirler</span>
                 </article>
                 <article class="stats-card success">
                     <h3>Kasadaki Ciro</h3>
                     <strong id="k_bekleyen_fatura">0 TL</strong>
-                    <span>Onaylanan islem gelirleri</span>
+                    <span>Onaylanan işlem gelirleri</span>
                 </article>
                 <article class="stats-card warning">
                     <h3>Musait Oda</h3>
                     <strong id="k_musait_oda">0</strong>
-                    <span>Hemen yerlesime uygun oda sayisi</span>
+                    <span>Hemen yerleşime uygun oda sayısı</span>
                 </article>
             </section>
 
             <section class="dashboard-grid">
                 <article class="content-card">
                     <h3 class="section-title">Aktif Islemler</h3>
-                    <p class="section-subtitle">Konaklamasi devam eden misafirleri ve hizli fatura akislarini buradan yonetin.</p>
+                    <p class="section-subtitle">Konaklamasi devam eden misafirleri ve hızlı fatura akışlarını buradan yönetin.</p>
 
                     <div class="table-responsive">
                         <table class="hotel-table">
                             <thead>
                                 <tr>
-                                    <th>Musteri Adi</th>
+                                    <th>üşteri Adı</th>
                                     <th>Oda No</th>
                                     <th>Durum</th>
-                                    <th>Giris Tarihi</th>
-                                    <th>Cikis Tarihi</th>
-                                    <th>Islemler</th>
+                                    <th>Giriş Tarihi</th>
+                                    <th>Çıkış Tarihi</th>
+                                    <th>İşlemler</th>
                                 </tr>
                             </thead>
                             <tbody id="misafirTablosu"></tbody>
@@ -84,13 +84,13 @@
 
                 <aside class="highlight-card">
                     <p class="title-eyebrow">Operasyon Merkezi</p>
-                    <h3 class="section-title">Hizli Erisim</h3>
-                    <p class="section-subtitle">Resepsiyon ekibinin en sik kullandigi isleri tek noktada topladik.</p>
+                    <h3 class="section-title">Hızlı Erişim</h3>
+                    <p class="section-subtitle">Resepsiyon ekibinin en sık kullandığı işlemleri tek noktada topladık.</p>
 
                     <div class="mini-grid">
                         <div class="mini-card">
                             <strong id="k_aktif_misafir">0</strong>
-                            <span>Aktif misafir sayisi</span>
+                            <span>Aktif misafir sayısı</span>
                         </div>
                         <div class="mini-card">
                             <strong id="k_doluluk_orani">%0</strong>
@@ -110,7 +110,7 @@
                         </div>
                         <div class="mini-list-item">
                             <span>Personel rolu</span>
-                            <strong id="kullaniciRolMetin">Yukleniyor</strong>
+                            <strong id="kullaniciRolMetin">Yükleniyor</strong>
                         </div>
                         <div class="mini-list-item">
                             <span>Panel modu</span>
@@ -118,7 +118,7 @@
                         </div>
                     </div>
 
-                    <p class="mini-note">Not: Rezervasyon olusturma ve cikis islemleri mevcut backend endpointleriyle calismaya devam eder.</p>
+                    <p class="mini-note">Not: Rezervasyon oluşturma ve çıkış işlemleri mevcut backend endpointleriyle çalismaya devam eder.</p>
                 </aside>
             </section>
         </main>
@@ -129,8 +129,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div>
-                        <p class="title-eyebrow mb-1">Yeni Kayit</p>
-                        <h5 class="modal-title">Yeni rezervasyon olustur</h5>
+                        <p class="title-eyebrow mb-1">Yeni Kayıt</p>
+                        <h5 class="modal-title">Yeni rezervasyon oluştur</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
@@ -145,8 +145,8 @@
                                 <label class="form-label" for="rezOdaTipi">Oda Tipi</label>
                                 <select id="rezOdaTipi" class="form-select" required>
                                     <option value="Ekonomik Oda">Ekonomik Oda</option>
-                                    <option value="Standart Tek Kişilik">Standart Tek Kisilik</option>
-                                    <option value="Standart Çift Kişilik">Standart Cift Kisilik</option>
+                                    <option value="Standart Tek Kişilik">Standart Tek Kişilik</option>
+                                    <option value="Standart Çift Kişilik">Standart Çift Kişilik</option>
                                     <option value="Aile Süiti">Aile Suiti</option>
                                     <option value="Balayı Süiti">Balayi Suiti</option>
                                     <option value="Kral Dairesi">Kral Dairesi</option>
@@ -169,18 +169,18 @@
                                 <input type="email" id="rezEmail" class="form-control" required>
                             </div>
                             <div>
-                                <label class="form-label" for="rezGiris">Giris Tarihi</label>
+                                <label class="form-label" for="rezGiris">Giriş Tarihi</label>
                                 <input type="date" id="rezGiris" class="form-control" required>
                             </div>
                             <div>
-                                <label class="form-label" for="rezCikis">Cikis Tarihi</label>
+                                <label class="form-label" for="rezCikis">Çıkış Tarihi</label>
                                 <input type="date" id="rezCikis" class="form-control" required>
                             </div>
                         </div>
 
                         <div class="action-row">
                             <button type="submit" class="primary-btn px-4 py-3">Rezervasyonu kaydet</button>
-                            <button type="button" class="secondary-btn px-4 py-3" data-bs-dismiss="modal">Vazgec</button>
+                            <button type="button" class="secondary-btn px-4 py-3" data-bs-dismiss="modal">Vazgeç</button>
                         </div>
                     </form>
                 </div>
@@ -193,8 +193,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <div>
-                        <p class="title-eyebrow mb-1">Cikis Islemi</p>
-                        <h5 class="modal-title">Fatura kes ve cikis yap</h5>
+                        <p class="title-eyebrow mb-1">Çıkış İşlemi</p>
+                        <h5 class="modal-title">Fatura kes ve çıkış yap</h5>
                     </div>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Kapat"></button>
                 </div>
@@ -205,16 +205,16 @@
                         <input type="hidden" id="faturaRezId">
 
                         <div class="form-group">
-                            <label class="form-label" for="odemeYontemi">Odeme yontemi</label>
+                            <label class="form-label" for="odemeYontemi">Ödeme yöntemi</label>
                             <select id="odemeYontemi" class="form-select" required>
                                 <option value="Nakit">Nakit</option>
-                                <option value="Kredi Kartı">Kredi Karti</option>
+                                <option value="Kredi Kartı">Kredi Kartı</option>
                                 <option value="Havale/EFT">Havale/EFT</option>
                             </select>
                         </div>
 
                         <div class="action-row">
-                            <button type="submit" class="primary-btn px-4 py-3">Faturayi kes ve cikis yap</button>
+                            <button type="submit" class="primary-btn px-4 py-3">Faturayı kes ve çıkış yap</button>
                             <button type="button" class="secondary-btn px-4 py-3" data-bs-dismiss="modal">Iptal</button>
                         </div>
                     </form>
