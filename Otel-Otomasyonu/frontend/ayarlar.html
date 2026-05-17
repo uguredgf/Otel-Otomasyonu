@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otel Otomasyonu | Ayarlar</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-badge">H</div>
+                <h2>Otel Yönetim</h2>
+                <p>Oda tipi fiyatları ve hizmet katalogu ayarlarından yönetilir.</p>
+            </div>
+            <nav class="nav-menu">
+                <a href="dashboard.html" class="nav-link-item">Pano</a>
+                <a href="rezervasyonlar.html" class="nav-link-item">Rezervasyonlar</a>
+                <a href="odalar.html" class="nav-link-item">Oda Durumlari</a>
+                <a href="misafirler.html" class="nav-link-item">Misafirler</a>
+                <a href="islemler.html" class="nav-link-item">Islemler ve Fatura</a>
+                <a href="gecmis.html" class="nav-link-item">Islem Gecmisi</a>
+                <a href="ayarlar.html" class="nav-link-item active">Ayarlar</a>
+                <a href="#" class="nav-link-item logout" onclick="logout()">Cikis Yap</a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <section class="topbar-card">
+                <div>
+                    <p class="title-eyebrow">Sistem Ayarları</p>
+                    <h1 class="page-title">Oda Tipi ve Hizmet Yönetimi</h1>
+                </div>
+                <div class="session-pill" id="kullaniciRol">Oturum açık</div>
+            </section>
+
+            <section class="content-card mt-4">
+                <h3 class="section-title">Oda tipi ayarları</h3>
+                <p class="section-subtitle">Oda tipi fiyat ve kapasite bilgilerini günceller.</p>
+                <form id="odaAyarlariFormu">
+                    <div class="table-responsive">
+                        <table class="hotel-table">
+                            <thead>
+                                <tr>
+                                    <th>Oda Tipi</th>
+                                    <th>Fiyat</th>
+                                    <th>Kapasite</th>
+                                </tr>
+                            </thead>
+                            <tbody id="odaAyarlariGovdesi"></tbody>
+                        </table>
+                    </div>
+                    <div class="action-row">
+                        <button type="submit" class="primary-btn px-4 py-3">Oda ayarlarını kaydet</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="content-card mt-4">
+                <h3 class="section-title">Ek hizmet katalogu</h3>
+                <p class="section-subtitle">Frontend hizmet listesi ve varsa backend hizmet fiyatlari birlikte guncellenir.</p>
+                <form id="hizmetAyarlariFormu">
+                    <div class="table-responsive">
+                        <table class="hotel-table">
+                            <thead>
+                                <tr>
+                                    <th>Hizmet</th>
+                                    <th>Fiyat</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hizmetAyarlariGovdesi"></tbody>
+                        </table>
+                    </div>
+                    <div class="action-row">
+                        <button type="submit" class="primary-btn px-4 py-3">Hizmet fiyatlarını kaydet</button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/common.js"></script>
+    <script src="js/ayarlar.js"></script>
+</body>
+</html>
