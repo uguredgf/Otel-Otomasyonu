@@ -7,7 +7,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     hizmetleriYukle();
 
     const params = parseQuery();
-    await Promise.all([aktifMisafirleriYukle(params.get("reservationId")), odalariYukle(), bekleyenOdemeleriYukle()]);
+    
+    // 1. DÜZELTME: Tüm verilerin aynı anda ve tamamen yüklenmesini bekliyoruz
+    await Promise.all([
+        aktifMisafirleriYukle(params.get("reservationId")), 
+        odalariYukle(), 
+        bekleyenOdemeleriYukle()
+    ]);
+
+    // Bütün veriler eksiksiz geldi, artık faturayı güvenle çizebiliriz!
+    faturaGoster();
 
     const misafirSecimi = document.getElementById("aktifMisafirSecimi");
     if (misafirSecimi) {
@@ -51,7 +60,7 @@ async function aktifMisafirleriYukle(selectedReservationId) {
         select.value = selectedReservationId;
     }
 
-    faturaGoster();
+    // 2. DÜZELTME: Buradaki faturaGoster() çağrısı silindi (artık yukarıda Promise.all sonrasında çağrılıyor)
 }
 
 async function odalariYukle() {
@@ -157,7 +166,6 @@ async function faturaGoster() {
     const extras = await apiIstekAt(`/rezervasyonlar/${guest.reservationId}/hizmetler`) || [];
     
     extras.forEach((item) => {
-        // DİKKAT: item.adet yerine veritabanından gelen item.hizmet_adet yazıldı
         const miktar = Number(item.hizmet_adet || 1);
         const kalemToplam = Number(item.hizmet_birim_fiyat || 0) * miktar;
         
@@ -195,7 +203,6 @@ async function cikisYapVeFaturaKes() {
 
     const paymentMethod = document.getElementById("odemeYontemi")?.value || "Nakit";
     
-    // 1. Önce Faturayı Kes ve Ödemeyi Al
     const endpoint = `/finans/fatura-kes/${guest.reservationId}?odeme_yontemi=${encodeURIComponent(paymentMethod)}`;
     const result = await apiIstekAt(endpoint, "POST");
     if (!result) return;
@@ -206,7 +213,6 @@ async function cikisYapVeFaturaKes() {
     };
     await apiIstekAt("/rezervasyonlar/durum", "PUT", durumVerisi);
 
-    // 3. Frontend tarafındaki görsel güncellemeleri yap
     markReservationCheckedOut(guest);
     setRoomOverride(guest.roomNo, "Temizlikte");
 
@@ -243,7 +249,6 @@ async function ekstraHizmetiSil(rezervasyonId, hizmetId) {
     
     if (result) {
         alert("Hizmet faturadan başarıyla kaldırıldı.");
-        // Tabloyu veritabanındaki güncel durumu çekerek saniyesinde yeniliyoruz!
         await faturaGoster();
     }
 }
