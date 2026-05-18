@@ -103,7 +103,7 @@ def dashboard_verilerini_getir():
         bugun_cikis_sonuc = cursor.fetchone()
         bugun_cikis = bugun_cikis_sonuc["cikis_sayisi"] if bugun_cikis_sonuc else 0
 
-        # 4. KUSURSUZ EŞLEŞTİRME BÖLÜMÜ (Frontend'e gidecek standart paket)
+        # 4. Eşleştirme bölümü(Frontend'e gidecek standart paket)
         sonuc = {
             "dolu_oda_sayisi": gercek_dolu_oda,
             "bos_oda_sayisi": gercek_bos_oda,
@@ -159,9 +159,8 @@ def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = N
         for result in cursor.stored_results():
             musait_odalar = result.fetchall()
 
-        # 🎯 NOKTA ATIŞI FİLTRELEME:
         # Prosedürün döndürdüğü 'tip' sütunu ile frontend'den gelen 'oda_tipi' metnini
-        # boşlukları temizleyerek ve küçük harfe çevirerek kusursuzca eşleştiriyoruz.
+        # boşlukları temizleyerek ve küçük harfe çevirerek  eşleştiriyoruz.
         if oda_tipi:
             musait_odalar = [
                 oda for oda in musait_odalar 

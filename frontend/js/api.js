@@ -20,7 +20,7 @@ async function apiIstekAt(endpoint, method = "GET", bodyData = null) {
         const response = await fetch(`${BASE_URL}${endpoint}`, ayarlar);
         const data = await response.json();
         
-        // Backend'den 400, 422, 500 gibi bir hata gelirse yakala
+        
         if (!response.ok) {
             throw new Error(data.detail || "İşlem başarısız oldu.");
         }

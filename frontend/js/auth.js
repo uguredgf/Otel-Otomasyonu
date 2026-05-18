@@ -8,7 +8,7 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const kullaniciAdi = document.getElementById("kullaniciAdi").value;
     const sifre = document.getElementById("sifre").value;
 
-    // Backend'in PersonelGiris modeline uygun obje oluştur
+    
     const loginVerisi = {
         kullanici_adi: kullaniciAdi,
         sifre: sifre

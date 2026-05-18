@@ -9,7 +9,7 @@ CREATE PROCEDURE sp_YeniRezervasyonEkle(
     IN p_tc CHAR(11),
     IN p_tel VARCHAR(15),
     IN p_mail VARCHAR(100),
-    IN p_oda_turu_adi VARCHAR(50), -- Ece'nin formundan gelen 'Ekonomik', 'Kral Dairesi' gibi metin
+    IN p_oda_turu_adi VARCHAR(50), 
     IN p_giris DATE,
     IN p_cikis DATE
 )
