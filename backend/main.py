@@ -286,13 +286,32 @@ def aktif_misafirleri_getir():
 @app.get("/finans/odeme-bekleyenler")
 def odeme_bekleyenleri_getir():
     conn = get_db_connection()
+    if not conn:
+        return []
+        
     try:
         cursor = conn.cursor(dictionary=True)
-        cursor.execute(queries.GET_FATURA_BEKLEYENLER)
+        
+        sorgu = """
+            SELECT 
+                CONCAT(am.musteri_adi, ' ', am.musteri_soyadi, ' (Oda ', am.oda_no, ')') AS musteri_adi,
+                (DATEDIFF(am.rezerve_cikis_tarihi, am.rezerve_giris_tarihi) * od.fiyat) AS tutar
+            FROM vw_aktif_musteriler am
+            JOIN vw_oda_detaylari od ON am.oda_no = od.odaNumarasi
+            WHERE am.rezerve_giris_tarihi <= CURDATE() AND am.rezerve_cikis_tarihi >= CURDATE()
+            ORDER BY tutar DESC
+        """
+        
+        cursor.execute(sorgu)
         return cursor.fetchall()
+        
+    except Exception as e:
+        print("Bekleyen Ödeme Hatası:", str(e))
+        return []
     finally:
-        conn.close()
-
+        if conn and conn.is_connected():
+            cursor.close()
+            conn.close()
 
 @app.post("/finans/fatura-kes/{rezervasyon_id}")
 def fatura_kes(rezervasyon_id: int, odeme_yontemi: str):
