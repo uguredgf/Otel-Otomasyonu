@@ -35,6 +35,8 @@ GET_ODA_DETAYLARI = """
     ) am ON od.odaNumarasi = am.oda_no
 """
 
+GET_AKTIF_BORCLAR = "SELECT * FROM vw_aktif_borclar"
+
 # --- STORED PROCEDURE ÇAĞRILARI ---
 # sp_YeniRezervasyonEkle
 # sp_FaturaKes

@@ -291,20 +291,9 @@ def odeme_bekleyenleri_getir():
         
     try:
         cursor = conn.cursor(dictionary=True)
-        
-        sorgu = """
-            SELECT 
-                CONCAT(am.musteri_adi, ' ', am.musteri_soyadi, ' (Oda ', am.oda_no, ')') AS musteri_adi,
-                (DATEDIFF(am.rezerve_cikis_tarihi, am.rezerve_giris_tarihi) * od.fiyat) AS tutar
-            FROM vw_aktif_musteriler am
-            JOIN vw_oda_detaylari od ON am.oda_no = od.odaNumarasi
-            WHERE am.rezerve_giris_tarihi <= CURDATE() AND am.rezerve_cikis_tarihi >= CURDATE()
-            ORDER BY tutar DESC
-        """
-        
-        cursor.execute(sorgu)
+        # Artık veritabanındaki hazır View'ı çağırıyoruz
+        cursor.execute(queries.GET_AKTIF_BORCLAR)
         return cursor.fetchall()
-        
     except Exception as e:
         print("Bekleyen Ödeme Hatası:", str(e))
         return []
