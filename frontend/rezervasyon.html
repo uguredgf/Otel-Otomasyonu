@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mirage Coast Hotel | Yeni Rezervasyon</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body style="background: linear-gradient(135deg, #f8f9fa 0%, #e2e8f0 100%); min-height: 100vh;">
+    
+    <nav class="navbar navbar-dark bg-dark mb-4">
+        <div class="container d-flex justify-content-between align-items-center">
+            <span class="navbar-brand fw-bold mb-0 h1">Mirage Coast Hotel</span>
+            <a href="index.html" class="btn btn-outline-light btn-sm rounded-pill px-3">Ana Sayfaya Dön</a>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="row mb-4">
+            <div class="col">
+                <h1 class="fw-bold" style="color: #1e293b;">Yeni Rezervasyon</h1>
+                <p class="text-muted">Lütfen konaklama detaylarınızı ve oda tercihinizi seçin.</p>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-5 d-flex">
+                <div class="card shadow-lg border-0 rounded-4 w-100">
+                    <div class="card-body p-4 p-md-5">
+                        <form id="yeniRezervasyonFormu">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold" style="font-size: 0.9rem;">Giriş Tarihi</label>
+                                    <input type="date" id="resCheckIn" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold" style="font-size: 0.9rem;">Çıkış Tarihi</label>
+                                    <input type="date" id="resCheckOut" class="form-control" required>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-4">
+                                <label class="form-label fw-bold" style="font-size: 0.9rem;">Oda Tipi ve Manzara</label>
+                                <select id="resRoomType" class="form-select" required>
+                                    <option value="" disabled selected>Oda tipini seçiniz</option>
+                                    <option value="Tüm Odalar" class="fw-bold text-primary">Tüm Odalar (Genel Müsaitlik)</option>
+                                    <optgroup label="Ekonomik Odalar">
+                                        <option value="Ekonomik Oda - Arka Cephe">Ekonomik Oda - Arka Cephe</option>
+                                        <option value="Ekonomik Oda - Bahçe ve Havuz Manzaralı">Ekonomik Oda - Bahçe ve Havuz Manzaralı</option>
+                                        <option value="Ekonomik Oda - Deniz Manzaralı">Ekonomik Oda - Deniz Manzaralı</option>
+                                    </optgroup>
+                                    <optgroup label="Standart Tek Kişilik">
+                                        <option value="Standart Tek Kişilik - Arka Cephe">Standart Tek Kişilik - Arka Cephe</option>
+                                        <option value="Standart Tek Kişilik - Bahçe ve Havuz Manzaralı">Standart Tek Kişilik - Bahçe ve Havuz Manzaralı</option>
+                                        <option value="Standart Tek Kişilik - Deniz Manzaralı">Standart Tek Kişilik - Deniz Manzaralı</option>
+                                    </optgroup>
+                                    <optgroup label="Standart Çift Kişilik">
+                                        <option value="Standart Çift Kişilik - Arka Cephe">Standart Çift Kişilik - Arka Cephe</option>
+                                        <option value="Standart Çift Kişilik - Bahçe ve Havuz Manzaralı">Standart Çift Kişilik - Bahçe ve Havuz Manzaralı</option>
+                                        <option value="Standart Çift Kişilik - Deniz Manzaralı">Standart Çift Kişilik - Deniz Manzaralı</option>
+                                    </optgroup>
+                                    <optgroup label="Aile Odaları">
+                                        <option value="Aile Süiti - Arka Cephe">Aile Süiti - Arka Cephe</option>
+                                        <option value="Aile Süiti - Deniz Manzaralı">Aile Süiti - Deniz Manzaralı</option>
+                                    </optgroup>
+                                    <optgroup label="Lüks & VIP Süitler">
+                                        <option value="Balayı Süiti - Arka Cephe">Balayı Süiti - Arka Cephe</option>
+                                        <option value="Balayı Süiti - Jakuzili ve Deniz Manzaralı">Balayı Süiti - Jakuzili ve Deniz Manzaralı</option>
+                                        <option value="Kral Dairesi - Arka Cephe">Kral Dairesi - Arka Cephe</option>
+                                        <option value="Kral Dairesi - Deniz Manzaralı">Kral Dairesi - Deniz Manzaralı</option>
+                                        <option value="Kral Dairesi - Özel Havuzlu ve Deniz Manzaralı">Kral Dairesi - Özel Havuzlu ve Deniz Manzaralı</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+
+                            <button type="button" id="btnSorgula" class="btn btn-outline-primary w-100 py-2 mb-2 fw-bold rounded-3">Müsaitlik Sorgula</button>
+                            <div id="sorguSonucu" class="text-center fw-bold mb-4" style="min-height: 24px; font-size: 0.9rem;"></div>
+                            
+                            <hr class="mb-4 text-muted">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" style="font-size: 0.9rem;">T.C. Kimlik No</label>
+                                <input type="text" id="resTc" class="form-control" maxlength="11" required>
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold" style="font-size: 0.9rem;">Ad</label>
+                                    <input type="text" id="resName" class="form-control" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold" style="font-size: 0.9rem;">Soyad</label>
+                                    <input type="text" id="resSurname" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold" style="font-size: 0.9rem;">Telefon</label>
+                                <input type="tel" id="resPhone" class="form-control" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label fw-bold" style="font-size: 0.9rem;">E-Posta</label>
+                                <input type="email" id="resEmail" class="form-control" required>
+                            </div>
+                            
+                            <button type="submit" id="btnRezervasyon" class="btn btn-primary w-100 py-3 fw-bold fs-5 rounded-3 shadow-sm" disabled>Rezervasyonu Tamamla</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 d-flex">
+                <div id="vitrinAlan" class="w-100 d-flex flex-column gap-3">
+                    <div id="vitrinBos" class="w-100" style="flex-grow: 1; min-height: 400px;">
+                        <div class="card border-0 shadow-sm rounded-4 h-100 w-100 bg-white d-flex align-items-center justify-content-center">
+                            <div class="text-center text-muted p-5">
+                                <i class="fa-regular fa-image mb-3" style="font-size: 64px; color: #cbd5e1;"></i>
+                                <h4 class="fw-bold" style="color: #64748b;">Oda Görseli</h4>
+                                <p>Lütfen vitrinde görmek için sol taraftan bir oda tipi seçiniz.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="vitrinDoluOda" class="card border-0 shadow-lg rounded-4 overflow-hidden position-relative" style="display: none; flex: 2; min-height: 250px;">
+                        <img id="vitrinGorsel" src="" alt="Oda Görseli" class="w-100 h-100" style="object-fit: cover; position: absolute; top: 0; left: 0;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);">
+                            <h3 id="vitrinOdaIsmi" class="text-white fw-bold mb-1"></h3>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-primary">Seçiminiz Uygulandı</span>
+                                <span id="vitrinFiyat" class="badge bg-success fs-6 fw-bold"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="vitrinDoluManzara" class="card border-0 shadow-lg rounded-4 overflow-hidden position-relative" style="display: none; flex: 1.2; min-height: 180px;">
+                        <img id="vitrinManzara" src="" alt="Manzara Görseli" class="w-100 h-100" style="object-fit: cover; position: absolute; top: 0; left: 0;">
+                        <div class="position-absolute bottom-0 start-0 w-100 p-3" style="background: linear-gradient(to top, rgba(15, 23, 42, 0.9), transparent);">
+                            <p id="vitrinManzaraIsmi" class="text-white fw-bold mb-0"><i class="fa-solid fa-eye me-2"></i>Oda Manzarası</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="imageModal" class="room-image-modal" style="display: none;">
+        <span class="close-modal">&times;</span>
+        <img class="modal-content" id="modalImage">
+        <div id="modalCaption"></div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/rezervasyon.js"></script>
+</body>
+</html>
