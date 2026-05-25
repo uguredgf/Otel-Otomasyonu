@@ -1,4 +1,5 @@
--- oda durum detaylarını çekmek için oluşturulan view
+DROP VIEW IF EXISTS vw_oda_detaylari;
+
 CREATE VIEW vw_oda_detaylari AS
 SELECT 
     o.oda_id,
@@ -16,4 +17,5 @@ SELECT
         ELSE 'oda-bos'
     END AS durumSinifi
 FROM Odalar o
-JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id;
+JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
+ORDER BY o.oda_id ASC; -- İŞTE EKLENEN SİHİRLİ SATIR BURASI!

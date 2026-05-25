@@ -1,13 +1,18 @@
 USE otel_otomasyonu;
 
--- 1. Oda Türleri (6 Çeşit)
+-- 1. Oda Türleri (Manzara ve Cephelere Göre 11 Çeşit)
 INSERT INTO Oda_Turleri (odaTur_id, odaTur_adi, odaTur_kapasite, odaTur_taban_fiyat, odaTur_aciklama) VALUES
-(1, 'Ekonomik Oda', 1, 800.00, 'Arka cephe, temel ihtiyaçlar için uygun ekonomik oda.'),
-(2, 'Standart Tek Kişilik', 1, 1200.00, 'Şehir manzaralı standart tek kişilik oda.'),
-(3, 'Standart Çift Kişilik', 2, 1800.00, 'Doğa manzaralı çift kişilik rahat oda.'),
-(4, 'Aile Süiti', 4, 3500.00, 'Çocuklu aileler için birbirine geçmeli 2 odalı süit.'),
-(5, 'Balayı Süiti', 2, 5000.00, 'Deniz manzaralı, özel dekorasyonlu balayı odası.'),
-(6, 'Kral Dairesi', 2, 9500.00, 'Özel jakuzili, teraslı, deniz manzaralı ultra lüks daire.');
+(1, 'Ekonomik Oda - Arka Cephe', 1, 800.00, 'Arka cephe, temel ihtiyaçlar için uygun ekonomik oda.'),
+(2, 'Ekonomik Oda - Havuz Manzaralı', 1, 1000.00, 'Havuz manzaralı, standart ekonomik oda.'),
+(3, 'Standart Tek Kişilik - Arka Cephe', 1, 1200.00, 'Şehir manzaralı standart tek kişilik oda.'),
+(4, 'Standart Tek Kişilik - Deniz Manzaralı', 1, 1600.00, 'Deniz manzaralı premium tek kişilik oda.'),
+(5, 'Standart Çift Kişilik - Arka Cephe', 2, 1800.00, 'Arka cephe rahat çift kişilik oda.'),
+(6, 'Standart Çift Kişilik - Deniz Manzaralı', 2, 2500.00, 'Deniz manzaralı çift kişilik premium oda.'),
+(7, 'Aile Süiti - Doğa Manzaralı', 4, 3500.00, 'Orman manzaralı, birbirine geçmeli 2 odalı süit.'),
+(8, 'Aile Süiti - Deniz Manzaralı', 4, 4500.00, 'Deniz manzaralı, geniş aile süiti.'),
+(9, 'Balayı Süiti - Standart', 2, 5000.00, 'Özel dekorasyonlu, doğa manzaralı balayı odası.'),
+(10, 'Balayı Süiti - Jakuzili ve Teraslı', 2, 6500.00, 'Geniş teraslı, deniz manzaralı lüks balayı odası.'),
+(11, 'Kral Dairesi', 2, 9500.00, 'Özel jakuzili, teraslı, deniz manzaralı ultra lüks daire.');
 
 -- 2. Müşteriler (15 Kişi)
 INSERT INTO Musteriler (musteri_id, musteri_adi, musteri_soyadi, musteri_tc_no, musteri_telefon, musteri_email) VALUES
@@ -50,38 +55,38 @@ INSERT INTO Hizmetler (hizmet_id, hizmet_adi, hizmet_birim_fiyat) VALUES
 (009, 'Otopark ve Vale', 100.00),
 (010, 'Geç Çıkış (Late Check-out)', 500.00);
 
--- 5. Odalar (10 Kat 10 oda her kata ilk yedi kat karışık 8. kat lüks ve son iki kat kral dairesi)
+-- 5. Odalar (10 Kat 10 oda. İlk 7 kat karışık, 8-9 Balayı, 10 Kral Dairesi)
 INSERT INTO Odalar (oda_id, oda_no, oda_kat, odaTur_id, oda_durumu) VALUES
--- 1. KAT
-(1, '101', 1, 1, 'Boş'), (2, '102', 1, 4, 'Boş'), (3, '103', 1, 2, 'Boş'), (4, '104', 1, 4, 'Boş'), (5, '105', 1, 3, 'Boş'),
-(6, '106', 1, 1, 'Boş'), (7, '107', 1, 4, 'Boş'), (8, '108', 1, 2, 'Boş'), (9, '109', 1, 3, 'Boş'), (10, '110', 1, 4, 'Boş'),
+-- 1. KAT (Karışık Dağılım)
+(1, '101', 1, 1, 'Boş'), (2, '102', 1, 2, 'Boş'), (3, '103', 1, 3, 'Boş'), (4, '104', 1, 4, 'Boş'), (5, '105', 1, 5, 'Boş'),
+(6, '106', 1, 6, 'Boş'), (7, '107', 1, 7, 'Boş'), (8, '108', 1, 8, 'Boş'), (9, '109', 1, 5, 'Boş'), (10, '110', 1, 6, 'Boş'),
 -- 2. KAT
-(11, '201', 2, 4, 'Boş'), (12, '202', 2, 2, 'Boş'), (13, '203', 2, 3, 'Boş'), (14, '204', 2, 1, 'Boş'), (15, '205', 2, 4, 'Boş'),
-(16, '206', 2, 2, 'Boş'), (17, '207', 2, 3, 'Boş'), (18, '208', 2, 4, 'Boş'), (19, '209', 2, 1, 'Boş'), (20, '210', 2, 2, 'Boş'),
+(11, '201', 2, 8, 'Boş'), (12, '202', 2, 7, 'Boş'), (13, '203', 2, 6, 'Boş'), (14, '204', 2, 5, 'Boş'), (15, '205', 2, 4, 'Boş'),
+(16, '206', 2, 3, 'Boş'), (17, '207', 2, 2, 'Boş'), (18, '208', 2, 1, 'Boş'), (19, '209', 2, 6, 'Boş'), (20, '210', 2, 5, 'Boş'),
 -- 3. KAT
-(21, '301', 3, 4, 'Boş'), (22, '302', 3, 2, 'Boş'), (23, '303', 3, 1, 'Boş'), (24, '304', 3, 4, 'Boş'), (25, '305', 3, 3, 'Boş'),
-(26, '306', 3, 2, 'Boş'), (27, '307', 3, 1, 'Boş'), (28, '308', 3, 4, 'Boş'), (29, '309', 3, 3, 'Boş'), (30, '310', 3, 2, 'Boş'),
+(21, '301', 3, 1, 'Boş'), (22, '302', 3, 2, 'Boş'), (23, '303', 3, 3, 'Boş'), (24, '304', 3, 4, 'Boş'), (25, '305', 3, 5, 'Boş'),
+(26, '306', 3, 6, 'Boş'), (27, '307', 3, 7, 'Boş'), (28, '308', 3, 8, 'Boş'), (29, '309', 3, 5, 'Boş'), (30, '310', 3, 6, 'Boş'),
 -- 4. KAT
-(31, '401', 4, 3, 'Boş'), (32, '402', 4, 2, 'Boş'), (33, '403', 4, 1, 'Boş'), (34, '404', 4, 4, 'Boş'), (35, '405', 4, 3, 'Boş'),
-(36, '406', 4, 2, 'Boş'), (37, '407', 4, 1, 'Boş'), (38, '408', 4, 3, 'Boş'), (39, '409', 4, 3, 'Boş'), (40, '410', 4, 1, 'Boş'),
+(31, '401', 4, 5, 'Boş'), (32, '402', 4, 6, 'Boş'), (33, '403', 4, 3, 'Boş'), (34, '404', 4, 4, 'Boş'), (35, '405', 4, 7, 'Boş'),
+(36, '406', 4, 8, 'Boş'), (37, '407', 4, 1, 'Boş'), (38, '408', 4, 2, 'Boş'), (39, '409', 4, 6, 'Boş'), (40, '410', 4, 5, 'Boş'),
 -- 5. KAT
-(41, '501', 5, 1, 'Boş'), (42, '502', 5, 2, 'Boş'), (43, '503', 5, 4, 'Boş'), (44, '504', 5, 4, 'Boş'), (45, '505', 5, 1, 'Boş'),
-(46, '506', 5, 2, 'Boş'), (47, '507', 5, 3, 'Boş'), (48, '508', 5, 4, 'Boş'), (49, '509', 5, 1, 'Boş'), (50, '510', 5, 2, 'Boş'),
+(41, '501', 5, 2, 'Boş'), (42, '502', 5, 4, 'Boş'), (43, '503', 5, 6, 'Boş'), (44, '504', 5, 8, 'Boş'), (45, '505', 5, 1, 'Boş'),
+(46, '506', 5, 3, 'Boş'), (47, '507', 5, 5, 'Boş'), (48, '508', 5, 7, 'Boş'), (49, '509', 5, 6, 'Boş'), (50, '510', 5, 5, 'Boş'),
 -- 6. KAT
-(51, '601', 6, 1, 'Boş'), (52, '602', 6, 2, 'Boş'), (53, '603', 6, 4, 'Boş'), (54, '604', 6, 4, 'Boş'), (55, '605', 6, 1, 'Boş'),
-(56, '606', 6, 2, 'Boş'), (57, '607', 6, 3, 'Boş'), (58, '608', 6, 4, 'Boş'), (59, '609', 6, 1, 'Boş'), (60, '610', 6, 2, 'Boş'),
+(51, '601', 6, 8, 'Boş'), (52, '602', 6, 7, 'Boş'), (53, '603', 6, 6, 'Boş'), (54, '604', 6, 5, 'Boş'), (55, '605', 6, 4, 'Boş'),
+(56, '606', 6, 3, 'Boş'), (57, '607', 6, 2, 'Boş'), (58, '608', 6, 1, 'Boş'), (59, '609', 6, 6, 'Boş'), (60, '610', 6, 5, 'Boş'),
 -- 7. KAT
-(61, '701', 7, 1, 'Boş'), (62, '702', 7, 2, 'Boş'), (63, '703', 7, 4, 'Boş'), (64, '704', 7, 4, 'Boş'), (65, '705', 7, 1, 'Boş'),
-(66, '706', 7, 2, 'Boş'), (67, '707', 7, 3, 'Boş'), (68, '708', 7, 4, 'Boş'), (69, '709', 7, 1, 'Boş'), (70, '710', 7, 2, 'Boş'),
--- 8. KAT (Lüks Odalar - Balayı Süitleri)
-(71, '801', 8, 5, 'Boş'), (72, '802', 8, 5, 'Boş'), (73, '803', 8, 5, 'Boş'), (74, '804', 8, 5, 'Boş'), (75, '805', 8, 5, 'Boş'),
-(76, '806', 8, 5, 'Boş'), (77, '807', 8, 5, 'Boş'), (78, '808', 8, 5, 'Boş'), (79, '809', 8, 5, 'Boş'), (80, '810', 8, 5, 'Boş'),
--- 9. KAT (Lüks odalar - Balayı Süitleri )
-(81, '901', 9, 5, 'Boş'), (82, '902', 9, 5, 'Boş'), (83, '903', 9, 5, 'Boş'), (84, '904', 9, 5, 'Boş'), (85, '905', 9, 5, 'Boş'),
-(86, '906', 9, 5, 'Boş'), (87, '907', 9, 5, 'Boş'), (88, '908', 9, 5, 'Boş'), (89, '909', 9, 5, 'Boş'), (90, '910', 9, 5, 'Boş'),
--- 10. KAT (Kral Daireleri)
-(91, '1001', 10, 6, 'Boş'), (92, '1002', 10, 6, 'Boş'), (93, '1003', 10, 6, 'Boş'), (94, '1004', 10, 6, 'Boş'), (95, '1005', 10, 6, 'Boş'),
-(96, '1006', 10, 6, 'Boş'), (97, '1007', 10, 6, 'Boş'), (98, '1008', 10, 6, 'Boş'), (99, '1009', 10, 6, 'Boş'), (100, '1010', 10, 6, 'Boş');
+(61, '701', 7, 1, 'Boş'), (62, '702', 7, 2, 'Boş'), (63, '703', 7, 3, 'Boş'), (64, '704', 7, 4, 'Boş'), (65, '705', 7, 5, 'Boş'),
+(66, '706', 7, 6, 'Boş'), (67, '707', 7, 7, 'Boş'), (68, '708', 7, 8, 'Boş'), (69, '709', 7, 6, 'Boş'), (70, '710', 7, 5, 'Boş'),
+-- 8. KAT (Balayı Süitleri: İlk 5 standart, Son 5 jakuzili/teraslı)
+(71, '801', 8, 9, 'Boş'), (72, '802', 8, 9, 'Boş'), (73, '803', 8, 9, 'Boş'), (74, '804', 8, 9, 'Boş'), (75, '805', 8, 9, 'Boş'),
+(76, '806', 8, 10, 'Boş'), (77, '807', 8, 10, 'Boş'), (78, '808', 8, 10, 'Boş'), (79, '809', 8, 10, 'Boş'), (80, '810', 8, 10, 'Boş'),
+-- 9. KAT (Balayı Süitleri: İlk 5 standart, Son 5 jakuzili/teraslı)
+(81, '901', 9, 9, 'Boş'), (82, '902', 9, 9, 'Boş'), (83, '903', 9, 9, 'Boş'), (84, '904', 9, 9, 'Boş'), (85, '905', 9, 9, 'Boş'),
+(86, '906', 9, 10, 'Boş'), (87, '907', 9, 10, 'Boş'), (88, '908', 9, 10, 'Boş'), (89, '909', 9, 10, 'Boş'), (90, '910', 9, 10, 'Boş'),
+-- 10. KAT (Kral Daireleri - Tek Tip)
+(91, '1001', 10, 11, 'Boş'), (92, '1002', 10, 11, 'Boş'), (93, '1003', 10, 11, 'Boş'), (94, '1004', 10, 11, 'Boş'), (95, '1005', 10, 11, 'Boş'),
+(96, '1006', 10, 11, 'Boş'), (97, '1007', 10, 11, 'Boş'), (98, '1008', 10, 11, 'Boş'), (99, '1009', 10, 11, 'Boş'), (100, '1010', 10, 11, 'Boş');
 
 -- 6. Rezervasyonlar 
 INSERT INTO Rezervasyonlar (rezervasyon_id, musteri_id, oda_id, rezerve_giris_tarihi, rezerve_cikis_tarihi, rezerve_durumu) VALUES
