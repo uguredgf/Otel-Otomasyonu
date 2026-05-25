@@ -18,4 +18,4 @@ SELECT
     END AS durumSinifi
 FROM Odalar o
 JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
-ORDER BY o.oda_id ASC; -- İŞTE EKLENEN SİHİRLİ SATIR BURASI!
+ORDER BY o.oda_id ASC; 

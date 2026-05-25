@@ -1,18 +1,29 @@
 USE otel_otomasyonu;
 
--- 1. Oda Türleri (Manzara ve Cephelere Göre 11 Çeşit)
+-- 1. Oda Türleri (Kat ve Cephe Planına Uygun 16 Çeşit)
 INSERT INTO Oda_Turleri (odaTur_id, odaTur_adi, odaTur_kapasite, odaTur_taban_fiyat, odaTur_aciklama) VALUES
-(1, 'Ekonomik Oda - Arka Cephe', 1, 800.00, 'Arka cephe, temel ihtiyaçlar için uygun ekonomik oda.'),
-(2, 'Ekonomik Oda - Havuz Manzaralı', 1, 1000.00, 'Havuz manzaralı, standart ekonomik oda.'),
-(3, 'Standart Tek Kişilik - Arka Cephe', 1, 1200.00, 'Şehir manzaralı standart tek kişilik oda.'),
-(4, 'Standart Tek Kişilik - Deniz Manzaralı', 1, 1600.00, 'Deniz manzaralı premium tek kişilik oda.'),
-(5, 'Standart Çift Kişilik - Arka Cephe', 2, 1800.00, 'Arka cephe rahat çift kişilik oda.'),
-(6, 'Standart Çift Kişilik - Deniz Manzaralı', 2, 2500.00, 'Deniz manzaralı çift kişilik premium oda.'),
-(7, 'Aile Süiti - Doğa Manzaralı', 4, 3500.00, 'Orman manzaralı, birbirine geçmeli 2 odalı süit.'),
-(8, 'Aile Süiti - Deniz Manzaralı', 4, 4500.00, 'Deniz manzaralı, geniş aile süiti.'),
-(9, 'Balayı Süiti - Standart', 2, 5000.00, 'Özel dekorasyonlu, doğa manzaralı balayı odası.'),
-(10, 'Balayı Süiti - Jakuzili ve Teraslı', 2, 6500.00, 'Geniş teraslı, deniz manzaralı lüks balayı odası.'),
-(11, 'Kral Dairesi', 2, 9500.00, 'Özel jakuzili, teraslı, deniz manzaralı ultra lüks daire.');
+-- Ekonomik Odalar (Arka, Deniz, Bahçe/Havuz)
+(1, 'Ekonomik Oda - Arka Cephe', 1, 800.00, 'Arka cephe, temel ihtiyaçlar.'),
+(2, 'Ekonomik Oda - Bahçe ve Havuz Manzaralı', 1, 1000.00, 'Giriş katında havuza ve bahçeye bakan ekonomik oda.'),
+(3, 'Ekonomik Oda - Deniz Manzaralı', 1, 1100.00, 'Üst katlarda deniz manzaralı ekonomik oda.'),
+-- Standart Tek Kişilik Odalar
+(4, 'Standart Tek Kişilik - Arka Cephe', 1, 1200.00, 'Arka cephe, sessiz standart oda.'),
+(5, 'Standart Tek Kişilik - Bahçe ve Havuz Manzaralı', 1, 1400.00, 'Giriş katında havuz gören standart tek oda.'),
+(6, 'Standart Tek Kişilik - Deniz Manzaralı', 1, 1600.00, 'Deniz manzaralı premium tek kişilik oda.'),
+-- Standart Çift Kişilik Odalar
+(7, 'Standart Çift Kişilik - Arka Cephe', 2, 1800.00, 'Arka cephe geniş yataklı rahat çift kişilik oda.'),
+(8, 'Standart Çift Kişilik - Bahçe ve Havuz Manzaralı', 2, 2100.00, 'Giriş katında havuza ve bahçeye bakan çift kişilik oda.'),
+(9, 'Standart Çift Kişilik - Deniz Manzaralı', 2, 2500.00, 'Kesintisiz deniz manzaralı, lüks çift kişilik oda.'),
+-- Aile Odaları
+(10, 'Aile Süiti - Arka Cephe', 4, 3500.00, 'Arka cepheye bakan, 2 odalı geniş aile süiti.'),
+(11, 'Aile Süiti - Deniz Manzaralı', 4, 4500.00, 'Deniz manzaralı, geniş ve balkonlu aile süiti.'),
+-- Balayı Süitleri (8. ve 9. Katlar)
+(12, 'Balayı Süiti - Arka Cephe', 2, 4000.00, 'Arka cepheye bakan standart balayı süiti.'),
+(13, 'Balayı Süiti - Jakuzili ve Deniz Manzaralı', 2, 6500.00, 'Deniz manzaralı, odanın içinde özel jakuzisi bulunan lüks süit.'),
+-- Kral Daireleri (10. Kat)
+(14, 'Kral Dairesi - Arka Cephe', 2, 8000.00, 'Arka cepheye bakan geniş lüks daire.'),
+(15, 'Kral Dairesi - Deniz Manzaralı', 2, 11000.00, 'Panoramik deniz manzaralı lüks daire.'),
+(16, 'Kral Dairesi - Özel Havuzlu ve Deniz Manzaralı', 2, 15000.00, 'Kendine ait sonsuzluk havuzu olan, deniz manzaralı VIP daire.');
 
 -- 2. Müşteriler (15 Kişi)
 INSERT INTO Musteriler (musteri_id, musteri_adi, musteri_soyadi, musteri_tc_no, musteri_telefon, musteri_email) VALUES
@@ -55,38 +66,38 @@ INSERT INTO Hizmetler (hizmet_id, hizmet_adi, hizmet_birim_fiyat) VALUES
 (009, 'Otopark ve Vale', 100.00),
 (010, 'Geç Çıkış (Late Check-out)', 500.00);
 
--- 5. Odalar (10 Kat 10 oda. İlk 7 kat karışık, 8-9 Balayı, 10 Kral Dairesi)
+-- 5. Odalar
 INSERT INTO Odalar (oda_id, oda_no, oda_kat, odaTur_id, oda_durumu) VALUES
--- 1. KAT (Karışık Dağılım)
-(1, '101', 1, 1, 'Boş'), (2, '102', 1, 2, 'Boş'), (3, '103', 1, 3, 'Boş'), (4, '104', 1, 4, 'Boş'), (5, '105', 1, 5, 'Boş'),
-(6, '106', 1, 6, 'Boş'), (7, '107', 1, 7, 'Boş'), (8, '108', 1, 8, 'Boş'), (9, '109', 1, 5, 'Boş'), (10, '110', 1, 6, 'Boş'),
--- 2. KAT
-(11, '201', 2, 8, 'Boş'), (12, '202', 2, 7, 'Boş'), (13, '203', 2, 6, 'Boş'), (14, '204', 2, 5, 'Boş'), (15, '205', 2, 4, 'Boş'),
-(16, '206', 2, 3, 'Boş'), (17, '207', 2, 2, 'Boş'), (18, '208', 2, 1, 'Boş'), (19, '209', 2, 6, 'Boş'), (20, '210', 2, 5, 'Boş'),
--- 3. KAT
-(21, '301', 3, 1, 'Boş'), (22, '302', 3, 2, 'Boş'), (23, '303', 3, 3, 'Boş'), (24, '304', 3, 4, 'Boş'), (25, '305', 3, 5, 'Boş'),
-(26, '306', 3, 6, 'Boş'), (27, '307', 3, 7, 'Boş'), (28, '308', 3, 8, 'Boş'), (29, '309', 3, 5, 'Boş'), (30, '310', 3, 6, 'Boş'),
--- 4. KAT
-(31, '401', 4, 5, 'Boş'), (32, '402', 4, 6, 'Boş'), (33, '403', 4, 3, 'Boş'), (34, '404', 4, 4, 'Boş'), (35, '405', 4, 7, 'Boş'),
-(36, '406', 4, 8, 'Boş'), (37, '407', 4, 1, 'Boş'), (38, '408', 4, 2, 'Boş'), (39, '409', 4, 6, 'Boş'), (40, '410', 4, 5, 'Boş'),
--- 5. KAT
-(41, '501', 5, 2, 'Boş'), (42, '502', 5, 4, 'Boş'), (43, '503', 5, 6, 'Boş'), (44, '504', 5, 8, 'Boş'), (45, '505', 5, 1, 'Boş'),
-(46, '506', 5, 3, 'Boş'), (47, '507', 5, 5, 'Boş'), (48, '508', 5, 7, 'Boş'), (49, '509', 5, 6, 'Boş'), (50, '510', 5, 5, 'Boş'),
--- 6. KAT
-(51, '601', 6, 8, 'Boş'), (52, '602', 6, 7, 'Boş'), (53, '603', 6, 6, 'Boş'), (54, '604', 6, 5, 'Boş'), (55, '605', 6, 4, 'Boş'),
-(56, '606', 6, 3, 'Boş'), (57, '607', 6, 2, 'Boş'), (58, '608', 6, 1, 'Boş'), (59, '609', 6, 6, 'Boş'), (60, '610', 6, 5, 'Boş'),
--- 7. KAT
-(61, '701', 7, 1, 'Boş'), (62, '702', 7, 2, 'Boş'), (63, '703', 7, 3, 'Boş'), (64, '704', 7, 4, 'Boş'), (65, '705', 7, 5, 'Boş'),
-(66, '706', 7, 6, 'Boş'), (67, '707', 7, 7, 'Boş'), (68, '708', 7, 8, 'Boş'), (69, '709', 7, 6, 'Boş'), (70, '710', 7, 5, 'Boş'),
--- 8. KAT (Balayı Süitleri: İlk 5 standart, Son 5 jakuzili/teraslı)
-(71, '801', 8, 9, 'Boş'), (72, '802', 8, 9, 'Boş'), (73, '803', 8, 9, 'Boş'), (74, '804', 8, 9, 'Boş'), (75, '805', 8, 9, 'Boş'),
-(76, '806', 8, 10, 'Boş'), (77, '807', 8, 10, 'Boş'), (78, '808', 8, 10, 'Boş'), (79, '809', 8, 10, 'Boş'), (80, '810', 8, 10, 'Boş'),
--- 9. KAT (Balayı Süitleri: İlk 5 standart, Son 5 jakuzili/teraslı)
-(81, '901', 9, 9, 'Boş'), (82, '902', 9, 9, 'Boş'), (83, '903', 9, 9, 'Boş'), (84, '904', 9, 9, 'Boş'), (85, '905', 9, 9, 'Boş'),
-(86, '906', 9, 10, 'Boş'), (87, '907', 9, 10, 'Boş'), (88, '908', 9, 10, 'Boş'), (89, '909', 9, 10, 'Boş'), (90, '910', 9, 10, 'Boş'),
--- 10. KAT (Kral Daireleri - Tek Tip)
-(91, '1001', 10, 11, 'Boş'), (92, '1002', 10, 11, 'Boş'), (93, '1003', 10, 11, 'Boş'), (94, '1004', 10, 11, 'Boş'), (95, '1005', 10, 11, 'Boş'),
-(96, '1006', 10, 11, 'Boş'), (97, '1007', 10, 11, 'Boş'), (98, '1008', 10, 11, 'Boş'), (99, '1009', 10, 11, 'Boş'), (100, '1010', 10, 11, 'Boş');
+-- 1. KAT: Sadece Havuz ve Bahçeye Bakanlar (Ekonomik, Tek, Çift)
+(1, '101', 1, 2, 'Boş'), (2, '102', 1, 2, 'Boş'), (3, '103', 1, 2, 'Boş'), (4, '104', 1, 5, 'Boş'), (5, '105', 1, 5, 'Boş'),
+(6, '106', 1, 8, 'Boş'), (7, '107', 1, 8, 'Boş'), (8, '108', 1, 8, 'Boş'), (9, '109', 1, 5, 'Boş'), (10, '110', 1, 2, 'Boş'),
+-- 2. KAT: Deniz ve Arka Cephe Karışık (Ekonomik, Standart, Aile)
+(11, '201', 2, 1, 'Boş'), (12, '202', 2, 3, 'Boş'), (13, '203', 2, 4, 'Boş'), (14, '204', 2, 6, 'Boş'), (15, '205', 2, 7, 'Boş'),
+(16, '206', 2, 9, 'Boş'), (17, '207', 2, 10, 'Boş'), (18, '208', 2, 11, 'Boş'), (19, '209', 2, 1, 'Boş'), (20, '210', 2, 9, 'Boş'),
+-- 3. KAT: Deniz ve Arka Cephe Karışık (Ekonomik, Standart, Aile)
+(21, '301', 3, 3, 'Boş'), (22, '302', 3, 1, 'Boş'), (23, '303', 3, 6, 'Boş'), (24, '304', 3, 4, 'Boş'), (25, '305', 3, 9, 'Boş'),
+(26, '306', 3, 7, 'Boş'), (27, '307', 3, 11, 'Boş'), (28, '308', 3, 10, 'Boş'), (29, '309', 3, 9, 'Boş'), (30, '310', 3, 3, 'Boş'),
+-- 4. KAT: Deniz ve Arka Cephe Karışık (Ekonomik, Standart, Aile)
+(31, '401', 4, 11, 'Boş'), (32, '402', 4, 10, 'Boş'), (33, '403', 4, 1, 'Boş'), (34, '404', 4, 3, 'Boş'), (35, '405', 4, 4, 'Boş'),
+(36, '406', 4, 6, 'Boş'), (37, '407', 4, 7, 'Boş'), (38, '408', 4, 9, 'Boş'), (39, '409', 4, 11, 'Boş'), (40, '410', 4, 1, 'Boş'),
+-- 5. KAT: Deniz ve Arka Cephe Karışık (Ağırlıklı Aile ve Standart)
+(41, '501', 5, 11, 'Boş'), (42, '502', 5, 10, 'Boş'), (43, '503', 5, 9, 'Boş'), (44, '504', 5, 7, 'Boş'), (45, '505', 5, 6, 'Boş'),
+(46, '506', 5, 4, 'Boş'), (47, '507', 5, 3, 'Boş'), (48, '508', 5, 1, 'Boş'), (49, '509', 5, 11, 'Boş'), (50, '510', 5, 9, 'Boş'),
+-- 6. KAT: Deniz ve Arka Cephe Karışık (Ağırlıklı Aile ve Standart)
+(51, '601', 6, 9, 'Boş'), (52, '602', 6, 7, 'Boş'), (53, '603', 6, 11, 'Boş'), (54, '604', 6, 10, 'Boş'), (55, '605', 6, 6, 'Boş'),
+(56, '606', 6, 4, 'Boş'), (57, '607', 6, 1, 'Boş'), (58, '608', 6, 3, 'Boş'), (59, '609', 6, 11, 'Boş'), (60, '610', 6, 7, 'Boş'),
+-- 7. KAT: Deniz ve Arka Cephe Karışık (Ağırlıklı Aile ve Standart)
+(61, '701', 7, 10, 'Boş'), (62, '702', 7, 11, 'Boş'), (63, '703', 7, 7, 'Boş'), (64, '704', 7, 9, 'Boş'), (65, '705', 7, 4, 'Boş'),
+(66, '706', 7, 6, 'Boş'), (67, '707', 7, 1, 'Boş'), (68, '708', 7, 3, 'Boş'), (69, '709', 7, 10, 'Boş'), (70, '710', 7, 11, 'Boş'),
+-- 8. KAT: Balayı Süitleri (Arka Cephe, Deniz Manzaralı ve Jakuzili)
+(71, '801', 8, 12, 'Boş'), (72, '802', 8, 12, 'Boş'), (73, '803', 8, 12, 'Boş'), (74, '804', 8, 12, 'Boş'), (75, '805', 8, 13, 'Boş'),
+(76, '806', 8, 13, 'Boş'), (77, '807', 8, 13, 'Boş'), (78, '808', 8, 13, 'Boş'), (79, '809', 8, 13, 'Boş'), (80, '810', 8, 13, 'Boş'),
+-- 9. KAT: Balayı Süitleri (Arka Cephe, Deniz Manzaralı ve Jakuzili)
+(81, '901', 9, 12, 'Boş'), (82, '902', 9, 12, 'Boş'), (83, '903', 9, 12, 'Boş'), (84, '904', 9, 13, 'Boş'), (85, '905', 9, 13, 'Boş'),
+(86, '906', 9, 13, 'Boş'), (87, '907', 9, 13, 'Boş'), (88, '908', 9, 13, 'Boş'), (89, '909', 9, 13, 'Boş'), (90, '910', 9, 13, 'Boş'),
+-- 10. KAT: Kral Daireleri (Arka Cephe, Deniz Manzaralı, Havuzlu ve Deniz Manzaralı)
+(91, '1001', 10, 14, 'Boş'), (92, '1002', 10, 14, 'Boş'), (93, '1003', 10, 15, 'Boş'), (94, '1004', 10, 15, 'Boş'), (95, '1005', 10, 15, 'Boş'),
+(96, '1006', 10, 15, 'Boş'), (97, '1007', 10, 16, 'Boş'), (98, '1008', 10, 16, 'Boş'), (99, '1009', 10, 16, 'Boş'), (100, '1010', 10, 16, 'Boş');
 
 -- 6. Rezervasyonlar 
 INSERT INTO Rezervasyonlar (rezervasyon_id, musteri_id, oda_id, rezerve_giris_tarihi, rezerve_cikis_tarihi, rezerve_durumu) VALUES
