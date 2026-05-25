@@ -138,17 +138,6 @@
 
             <div style="display: flex; flex-direction: column; gap: 22px; margin-top: 1.5rem;">
                 
-                <aside class="highlight-card">
-                    <p class="title-eyebrow">Anlık Bilgi</p>
-                    <h3 class="section-title">Müsaitlik ve Süreç</h3>
-                    <p class="section-subtitle">Buradaki sonuçlar bilgi amaçlıdır. Kesin rezervasyon onayı yetkili ekip tarafından verilir.</p>
-                    <div id="availabilityResult" class="mini-grid">
-                        <div class="mini-card">
-                            <strong>Hazır</strong>
-                            <span>Tarih ve oda tipinizi seçerek müsaitlik sonucunu görün.</span>
-                        </div>
-                    </div>
-                </aside>
 
                 <article class="content-card">
                     <p class="title-eyebrow">Online Rezervasyon</p>
@@ -178,16 +167,42 @@
                                 <input type="email" id="guestEmail" class="form-control" required>
                             </div>
                             <div>
-                                <label class="form-label" for="guestRoomType">Oda Tipi</label>
-                                <select id="guestRoomType" class="form-select" required>
-                                    <option value="Ekonomik Oda">Ekonomik Oda</option>
-                                    <option value="Standart Tek Kişilik">Standart Tek Kişilik</option>
-                                    <option value="Standart Çift Kişilik">Standart Çift Kişilik</option>
-                                    <option value="Aile Süiti">Aile Süiti</option>
-                                    <option value="Balayı Süiti">Balayı Süiti</option>
-                                    <option value="Kral Dairesi">Kral Dairesi</option>
-                                </select>
-                            </div>
+                               <select id="guestRoomType" class="form-select" required>
+    <option value="" disabled selected>Oda Tipi ve Manzara Seçin</option>
+    <option value="Tüm Odalar" class="fw-bold text-primary">Tüm Odalar (Sadece Müsaitlik Sorgusu İçin)</option>
+    
+    <optgroup label="Ekonomik Odalar">
+        <option value="Ekonomik Oda - Arka Cephe">Ekonomik Oda - Arka Cephe</option>
+        <option value="Ekonomik Oda - Bahçe ve Havuz Manzaralı">Ekonomik Oda - Bahçe ve Havuz</option>
+        <option value="Ekonomik Oda - Deniz Manzaralı">Ekonomik Oda - Deniz Manzaralı</option>
+    </optgroup>
+    
+    <optgroup label="Standart Tek Kişilik">
+        <option value="Standart Tek Kişilik - Arka Cephe">Standart Tek - Arka Cephe</option>
+        <option value="Standart Tek Kişilik - Bahçe ve Havuz Manzaralı">Standart Tek - Bahçe ve Havuz</option>
+        <option value="Standart Tek Kişilik - Deniz Manzaralı">Standart Tek - Deniz Manzaralı</option>
+    </optgroup>
+    
+    <optgroup label="Standart Çift Kişilik">
+        <option value="Standart Çift Kişilik - Arka Cephe">Standart Çift - Arka Cephe</option>
+        <option value="Standart Çift Kişilik - Bahçe ve Havuz Manzaralı">Standart Çift - Bahçe ve Havuz</option>
+        <option value="Standart Çift Kişilik - Deniz Manzaralı">Standart Çift - Deniz Manzaralı</option>
+    </optgroup>
+    
+    <optgroup label="Aile Odaları">
+        <option value="Aile Süiti - Arka Cephe">Aile Süiti - Arka Cephe</option>
+        <option value="Aile Süiti - Deniz Manzaralı">Aile Süiti - Deniz Manzaralı</option>
+    </optgroup>
+    
+    <optgroup label="Lüks & VIP Süitler">
+        <option value="Balayı Süiti - Arka Cephe">Balayı Süiti - Arka Cephe</option>
+        <option value="Balayı Süiti - Jakuzili ve Deniz Manzaralı">Balayı Süiti - Jakuzili ve Deniz</option>
+        <option value="Kral Dairesi - Arka Cephe">Kral Dairesi - Arka Cephe</option>
+        <option value="Kral Dairesi - Deniz Manzaralı">Kral Dairesi - Panoramik Deniz</option>
+        <option value="Kral Dairesi - Özel Havuzlu ve Deniz Manzaralı">Kral Dairesi - Özel Havuzlu VIP</option>
+    </optgroup>
+</select>
+
                             <div>
                                 <label class="form-label" for="guestCheckIn">Giriş Tarihi</label>
                                 <input type="date" id="guestCheckIn" class="form-control" required>
@@ -204,6 +219,17 @@
                         </div>
                     </form>
                 </article>
+                <aside class="highlight-card">
+                    <p class="title-eyebrow">Anlık Bilgi</p>
+                    <h3 class="section-title">Müsaitlik ve Süreç</h3>
+                    <p class="section-subtitle">Buradaki sonuçlar bilgi amaçlıdır. Kesin rezervasyon onayı yetkili ekip tarafından verilir.</p>
+                    <div id="availabilityResult" class="mini-grid">
+                        <div class="mini-card">
+                            <strong>Hazır</strong>
+                            <span>Tarih ve oda tipinizi seçerek müsaitlik sonucunu görün.</span>
+                        </div>
+                    </div>
+                </aside>
 
             </div>
         </section>
