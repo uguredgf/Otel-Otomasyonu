@@ -136,14 +136,14 @@ INSERT INTO Faturalar (fatura_id, rezervasyon_id, fatura_toplam_tutar, fatura_od
 (6, 6, 18500.00, '2026-05-04 14:00:00', 'Kredi Kartı'), 
 (7, 9, 40800.00, '2026-05-06 12:00:00', 'Nakit'); 
 
--- 9. İşlem Kayıtları (Loglar)
+-- 9. İşlem Kayıtları (Loglar) - Personel ID hataları düzeltildi
 INSERT INTO Islem_Kayitlari (kayit_id, personel_id, kayit_islem_tipi, kayit_islem_tarihi, kayit_aciklama) VALUES
 (1, 7, 'Rezervasyon Onayı', '2026-04-25 10:00:00', '1 numaralı Ahmet Yılmaz rezervasyonu onaylandı.'),
-(2, 10, 'Giriş İşlemi', '2026-05-02 14:00:00', '2 numaralı Ayşe Demir otele giriş yaptı.'),
+(2, 7, 'Giriş İşlemi', '2026-05-02 14:00:00', '2 numaralı Ayşe Demir otele giriş yaptı.'),
 (3, 1, 'Sistem Ayarı', '2026-04-20 09:30:00', 'Uğur tarafından oda taban fiyatları güncellendi.'),
 (4, 7, 'Rezervasyon İptali', '2026-05-07 11:15:00', '15 numaralı rezervasyon müşteri talebiyle iptal edildi.'),
 (5, 2, 'Fatura Kesimi', '2026-05-05 10:30:00', '1 numaralı rezervasyonun çıkış faturası kesildi.'),
-(6, 10, 'Giriş İşlemi', '2026-05-04 12:45:00', '6 numaralı (Zeynep Öztürk) rezervasyon için giriş yapıldı.'),
+(6, 7, 'Giriş İşlemi', '2026-05-04 12:45:00', '6 numaralı (Zeynep Öztürk) rezervasyon için giriş yapıldı.'),
 (7, 7, 'Çıkış İşlemi', '2026-05-07 09:10:00', '2 numaralı rezervasyon sahibi Ayşe Demir otelden ayrıldı.'),
 (8, 3, 'Veritabanı Bakımı', '2026-05-08 02:00:00', 'Hilal tarafından sistem yedeklemesi ve oda optimizasyonu yapıldı.'),
 (9, 6, 'Oda Durum Güncellemesi', '2026-05-06 08:00:00', '408 numaralı oda arıza nedeniyle kullanıma kapatıldı.'),
