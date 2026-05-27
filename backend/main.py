@@ -1,8 +1,8 @@
+from datetime import date
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from database import get_db_connection
-import mysql.connector
 import queries
 
 app = FastAPI(title="Otel Otomasyonu API")
@@ -63,6 +63,48 @@ class OdaDurumVerisi(BaseModel):
     yeni_durum: str
 
 
+def parse_iso_date(value: str, field_name: str) -> date:
+    try:
+        return date.fromisoformat(value)
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=f"{field_name} YYYY-AA-GG formatinda olmalidir.") from exc
+
+
+def close_db(conn, cursor=None):
+    if cursor:
+        cursor.close()
+    if conn and conn.is_connected():
+        conn.close()
+
+
+def normalize_text(value: str) -> str:
+    if not value:
+        return ""
+    translation = str.maketrans({
+        "ç": "c", "Ç": "c",
+        "ğ": "g", "Ğ": "g",
+        "ı": "i", "İ": "i",
+        "ö": "o", "Ö": "o",
+        "ş": "s", "Ş": "s",
+        "ü": "u", "Ü": "u",
+    })
+    return " ".join(value.translate(translation).lower().split())
+
+
+def resolve_room_type_name(requested_type: str, db_room_types: list[str]) -> str | None:
+    requested_normalized = normalize_text(requested_type)
+    if not requested_normalized:
+        return None
+
+    # Yalnizca tam eslesmeye izin veriyoruz.
+    # (Aksi durumda "Deniz Manzarali" secimi baska bir tipe kayip ayni sayilari verebiliyor.)
+    for room_type in db_room_types:
+        if normalize_text(room_type) == requested_normalized:
+            return room_type
+
+    return None
+
+
 @app.get("/")
 def ana_sayfa():
     return {"mesaj": "Otel Otomasyonu Backend Sistemi Calisiyor!"}
@@ -73,7 +115,7 @@ def dashboard_verilerini_getir():
     conn = get_db_connection()
     if not conn:
         return {"dolu_oda_sayisi": 0, "bos_oda_sayisi": 0, "toplam_ciro": 0, "bugun_cikis_yapacaklar": 0}
-        
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         
@@ -122,135 +164,229 @@ def dashboard_verilerini_getir():
         print("Dashboard Hatası:", str(e))
         return {"dolu_oda_sayisi": 0, "bos_oda_sayisi": 0, "toplam_ciro": 0, "bugun_cikis_yapacaklar": 0}
     finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
+        close_db(conn, cursor)
 
 
 @app.get("/odalar/detayli")
 def tum_oda_detaylarini_getir():
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(queries.GET_ODA_DETAYLARI)
         return cursor.fetchall()
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.get("/odalar/musait")
-def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = None, kisi_sayisi: int = 1):
+def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = "all"):
+    giris = parse_iso_date(giris_tarihi, "giris_tarihi")
+    cikis = parse_iso_date(cikis_tarihi, "cikis_tarihi")
+    if cikis <= giris:
+        raise HTTPException(status_code=422, detail="cikis_tarihi giris_tarihi'nden sonra olmalidir.")
+
     conn = get_db_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
+    try:
+        cursor = conn.cursor(dictionary=True)
+        secili_oda_tipi = oda_tipi
 
+        if oda_tipi != "all":
+            cursor.execute("SELECT odaTur_adi FROM Oda_Turleri")
+            tum_tipler = [item["odaTur_adi"] for item in cursor.fetchall()]
+            eslesen_tip = resolve_room_type_name(oda_tipi, tum_tipler)
+            if not eslesen_tip:
+                return {
+                    "bos_oda_sayisi": 0,
+                    "musait_oda_sayisi": 0,
+                    "istenen_oda_tipi": oda_tipi,
+                    "eslesen_oda_tipi": None
+                }
+            secili_oda_tipi = eslesen_tip
+        
+        # O tarihlerde bos olan odalarin listesini getiriyoruz.
+        sorgu = """
+            SELECT o.oda_no, ot.odaTur_adi AS oda_tipi
+            FROM Odalar o
+            JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
+            WHERE o.oda_durumu != 'Arızalı'
+            AND o.oda_id NOT IN (
+                SELECT oda_id FROM Rezervasyonlar
+                WHERE rezerve_durumu NOT IN ('İptal Edildi', 'Tamamlandı')
+                AND (rezerve_giris_tarihi < %s AND rezerve_cikis_tarihi > %s)
+            )
+        """
+        parametreler = [cikis_tarihi, giris_tarihi]
+
+        # Eğer spesifik bir oda tipi seçildiyse (all değilse), sorguya şartı ekle
+        if oda_tipi != "all":
+            sorgu += " AND ot.odaTur_adi = %s"
+            parametreler.append(secili_oda_tipi)
+
+        sorgu += " ORDER BY o.oda_no ASC"
+        cursor.execute(sorgu, tuple(parametreler))
+        odalar = cursor.fetchall() or []
+        sayi = len(odalar)
+        # Frontend hem bos_oda_sayisi hem musait_oda_sayisi alanini kullanabiliyor
+        return {
+            "bos_oda_sayisi": sayi,
+            "musait_oda_sayisi": sayi,
+            "odalar": odalar,
+            "istenen_oda_tipi": oda_tipi,
+            "eslesen_oda_tipi": secili_oda_tipi if oda_tipi != "all" else "all"
+        }
+    finally:
+        close_db(conn, cursor)
+
+
+@app.post("/rezervasyonlar")
+def rezervasyon_olustur(veri: YeniRezervasyon):
+    giris = parse_iso_date(veri.giris_tarihi, "giris_tarihi")
+    cikis = parse_iso_date(veri.cikis_tarihi, "cikis_tarihi")
+    if cikis <= giris:
+        raise HTTPException(status_code=422, detail="cikis_tarihi giris_tarihi'nden sonra olmalidir.")
+
+    conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         
-        # Orijinal Prosedür Çağrısı (Tarihe göre boş odaları getirir)
-        try:
-            cursor.callproc("sp_MusaitOdaAra", (giris_tarihi, cikis_tarihi, kisi_sayisi))
-        except Exception as procedure_error:
-            if "expected 2, got 3" not in str(procedure_error):
-                raise
-            cursor.callproc("sp_MusaitOdaAra", (giris_tarihi, cikis_tarihi))
-
-        musait_odalar = []
-        for result in cursor.stored_results():
-            musait_odalar = result.fetchall()
-
-        # Prosedürün döndürdüğü 'tip' sütunu ile frontend'den gelen 'oda_tipi' metnini
-        # boşlukları temizleyerek ve küçük harfe çevirerek  eşleştiriyoruz.
-        if oda_tipi:
-            musait_odalar = [
-                oda for oda in musait_odalar 
-                if str(oda.get('tip', '')).strip().lower() == oda_tipi.strip().lower()
-            ]
-
-        return {"musait_oda_sayisi": len(musait_odalar), "odalar": musait_odalar}
+        # 1. Adım: Bu TC kimlik ile daha önce gelmiş mi?
+        cursor.execute("SELECT musteri_id FROM Musteriler WHERE musteri_tc_no = %s", (veri.tc_kimlik,))
+        musteri = cursor.fetchone()
         
-    except Exception as e:
-        print("REZERVASYON HATASI YAKALANDI:", str(e))
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
-
-
-@app.post("/rezervasyonlar", status_code=201)
-def rezervasyon_olustur(veri: YeniRezervasyon):
-    conn = get_db_connection()
-    try:
-        cursor = conn.cursor()
-        parametreler = (
-            veri.ad,
-            veri.soyad,
-            veri.tc_kimlik,
-            veri.telefon,
-            veri.email,
-            veri.oda_tipi,
-            veri.giris_tarihi,
-            veri.cikis_tarihi,
+        if musteri:
+            musteri_id = musteri["musteri_id"]
+        else:
+            # Yeni müşteri, veritabanına ekle
+            cursor.execute(
+                "INSERT INTO Musteriler (musteri_adi, musteri_soyadi, musteri_tc_no, musteri_telefon, musteri_email) VALUES (%s, %s, %s, %s, %s)",
+                (veri.ad, veri.soyad, veri.tc_kimlik, veri.telefon, veri.email)
+            )
+            musteri_id = cursor.lastrowid
+            
+        # 2. Adım: İstediği oda tipinde ve tarihlerde boş olan BİR oda bul
+        sorgu_oda = """
+            SELECT o.oda_id 
+            FROM Odalar o
+            JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
+            WHERE ot.odaTur_adi = %s AND o.oda_durumu != 'Arızalı'
+            AND o.oda_id NOT IN (
+                SELECT oda_id FROM Rezervasyonlar
+                WHERE rezerve_durumu NOT IN ('İptal Edildi', 'Tamamlandı')
+                AND (rezerve_giris_tarihi < %s AND rezerve_cikis_tarihi > %s)
+            )
+            LIMIT 1
+        """
+        cursor.execute(sorgu_oda, (veri.oda_tipi, veri.cikis_tarihi, veri.giris_tarihi))
+        oda = cursor.fetchone()
+        
+        if not oda:
+            raise HTTPException(status_code=409, detail="Secilen tarihlerde bu oda tipinde bos yer kalmamistir.")
+            
+        # 3. Adım: Odayı bulduk, rezervasyonu oluştur
+        cursor.execute(
+            "INSERT INTO Rezervasyonlar (musteri_id, oda_id, rezerve_giris_tarihi, rezerve_cikis_tarihi, rezerve_durumu) VALUES (%s, %s, %s, %s, 'Onaylandı')",
+            (musteri_id, oda["oda_id"], veri.giris_tarihi, veri.cikis_tarihi)
         )
-        cursor.callproc("sp_YeniRezervasyonEkle", parametreler)
+        
+        # Tüm işlemleri veritabanına mühürle!
         conn.commit()
-        return {"mesaj": "Rezervasyon basariyla olusturuldu, musaitlik kontrol edildi."}
+        return {"basarili": True, "mesaj": "Rezervasyon başarıyla onaylandı!"}
+        
+    except HTTPException:
+        conn.rollback()
+        raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Bir hata olursa yarım kalan verileri sil (Rollback)
+        conn.rollback()
+        print("Rezervasyon Kayıt Hatası:", str(e))
+        error_text = str(e)
+        if "Hata: Çıkış tarihi" in error_text or "Üzgünüz" in error_text:
+            raise HTTPException(status_code=400, detail=error_text)
+        raise HTTPException(status_code=500, detail="Sistemsel bir hata olustu.")
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.get("/rezervasyonlar")
 def tum_rezervasyonlari_getir():
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(queries.GET_REZERVASYON_LISTESI)
         return cursor.fetchall()
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.post("/rezervasyonlar/hizmet-ekle")
 def harcama_ekle(veri: HizmetEkleme):
+    if veri.adet < 1:
+        raise HTTPException(status_code=422, detail="adet en az 1 olmalidir")
+
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.callproc("sp_HizmetEkle", (veri.rezervasyon_id, veri.hizmet_id, veri.adet))
         conn.commit()
         return {"mesaj": "Harcama basariyla eklendi."}
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.put("/rezervasyonlar/durum")
 def rezervasyon_durum_guncelle(veri: RezervasyonDurum):
+    izinli_durumlar = {"Beklemede", "Onaylandı", "Tamamlandı", "İptal Edildi"}
+    if veri.yeni_durum not in izinli_durumlar:
+        raise HTTPException(status_code=422, detail="Gecersiz rezervasyon durumu")
+
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.callproc("sp_RezervasyonDurumGuncelle", (veri.rezervasyon_id, veri.yeni_durum))
         conn.commit()
         return {"mesaj": f"Rezervasyon durumu '{veri.yeni_durum}' olarak guncellendi."}
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.put("/ayarlar/oda-fiyat")
 def oda_fiyati_guncelle(veri: FiyatGuncelleme):
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.callproc("sp_OdaTuruGuncelle", (veri.oda_turu_adi, veri.yeni_fiyat, veri.yeni_kapasite))
         conn.commit()
         return {"mesaj": "Oda turu fiyati basariyla guncellendi."}
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 @app.get("/musteriler")
 def tum_musterileri_getir():
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
 
@@ -261,25 +397,28 @@ def tum_musterileri_getir():
                 m.musteri_email AS email, 
                 m.musteri_telefon AS telefon 
             FROM vw_aktif_musteriler v
-            JOIN rezervasyonlar r ON v.rezervasyon_id = r.rezervasyon_id
-            JOIN musteriler m ON r.musteri_id = m.musteri_id
+            JOIN Rezervasyonlar r ON v.rezervasyon_id = r.rezervasyon_id
+            JOIN Musteriler m ON r.musteri_id = m.musteri_id
             WHERE v.rezerve_giris_tarihi <= CURDATE() AND v.rezerve_cikis_tarihi >= CURDATE()
         """
         cursor.execute(sorgu)
         musteriler = cursor.fetchall()
         return {"musteri_sayisi": len(musteriler), "musteriler": musteriler}
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 @app.get("/aktif-misafirler")
 def aktif_misafirleri_getir():
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(queries.GET_AKTIF_MUSTERILER)
         return cursor.fetchall()
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.get("/finans/odeme-bekleyenler")
@@ -287,7 +426,7 @@ def odeme_bekleyenleri_getir():
     conn = get_db_connection()
     if not conn:
         return []
-        
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         # Artık veritabanındaki hazır View'ı çağırıyoruz
@@ -297,13 +436,18 @@ def odeme_bekleyenleri_getir():
         print("Bekleyen Ödeme Hatası:", str(e))
         return []
     finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
+        close_db(conn, cursor)
 
 @app.post("/finans/fatura-kes/{rezervasyon_id}")
 def fatura_kes(rezervasyon_id: int, odeme_yontemi: str):
+    izinli_odeme_yontemleri = {"Nakit", "Kredi Kartı"}
+    if odeme_yontemi not in izinli_odeme_yontemleri:
+        raise HTTPException(status_code=422, detail="odeme_yontemi sadece 'Nakit' veya 'Kredi Kartı' olabilir")
+
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.callproc("sp_FaturaKes", (rezervasyon_id, odeme_yontemi))
@@ -312,7 +456,7 @@ def fatura_kes(rezervasyon_id: int, odeme_yontemi: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 
 @app.post("/login")
@@ -320,7 +464,7 @@ def sisteme_giris_yap(bilgiler: PersonelGiris):
     conn = get_db_connection()
     if not conn:
         raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
-
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         cursor.execute(queries.GET_PERSONEL_GIRIS, (bilgiler.kullanici_adi, bilgiler.sifre))
@@ -333,63 +477,98 @@ def sisteme_giris_yap(bilgiler: PersonelGiris):
             }
 
         raise HTTPException(status_code=401, detail="Gecersiz kullanici adi veya sifre")
+    except HTTPException:
+        raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
-        if conn and conn.is_connected():
-            cursor.close()
-            conn.close()
+        close_db(conn, cursor)
 
 
 @app.put("/ayarlar/hizmet-fiyat")
 def hizmet_fiyati_guncelle(veri: HizmetFiyatGuncelleme):
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         cursor.callproc("sp_HizmetFiyatGuncelle", (veri.hizmet_adi, veri.yeni_fiyat))
         conn.commit()
         return {"mesaj": f"{veri.hizmet_adi} hizmetinin fiyati basariyla guncellendi."}
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 @app.delete("/rezervasyonlar/hizmet-sil")
 def hizmet_sil(veri: HizmetSilVerisi):
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         # Veritabanından o rezervasyona ait o hizmeti (sadece 1 tanesini) sil
-        sorgu = "DELETE FROM rezervasyon_hizmetleri WHERE rezervasyon_id = %s AND hizmet_id = %s LIMIT 1"
+        sorgu = "DELETE FROM Rezervasyon_Hizmetleri WHERE rezervasyon_id = %s AND hizmet_id = %s LIMIT 1"
         cursor.execute(sorgu, (veri.rezervasyon_id, veri.hizmet_id))
         conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Silinecek hizmet kaydi bulunamadi")
         return {"mesaj": "Hizmet faturadan başarıyla silindi."}
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 @app.get("/rezervasyonlar/{rezervasyon_id}/hizmetler")
 def rezervasyon_hizmetlerini_getir(rezervasyon_id: int):
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
         sorgu = """
             SELECT rh.hizmet_id, h.hizmet_adi, h.hizmet_birim_fiyat, rh.hizmet_adet
-            FROM rezervasyon_hizmetleri rh
-            JOIN hizmetler h ON rh.hizmet_id = h.hizmet_id
+            FROM Rezervasyon_Hizmetleri rh
+            JOIN Hizmetler h ON rh.hizmet_id = h.hizmet_id
             WHERE rh.rezervasyon_id = %s
         """
         cursor.execute(sorgu, (rezervasyon_id,))
         return cursor.fetchall()
     finally:
-        conn.close()
+        close_db(conn, cursor)
 
 @app.put("/odalar/durum")
 def oda_durumunu_guncelle(veri: OdaDurumVerisi):
+    izinli_oda_durumlari = {"Boş", "Dolu", "Temizlikte", "Arızalı"}
+    if veri.yeni_durum not in izinli_oda_durumlari:
+        raise HTTPException(status_code=422, detail="Gecersiz oda durumu")
+
     conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
     try:
         cursor = conn.cursor()
         # Gerçek sütun isimlerine göre odayı 'Boş' veya istenen duruma çeken SQL sorgusu
-        sorgu = "UPDATE odalar SET oda_durumu = %s WHERE oda_no = %s"
+        sorgu = "UPDATE Odalar SET oda_durumu = %s WHERE oda_no = %s"
         cursor.execute(sorgu, (veri.yeni_durum, veri.oda_no))
         conn.commit()
+        if cursor.rowcount == 0:
+            raise HTTPException(status_code=404, detail="Belirtilen oda bulunamadi")
         return {"mesaj": f"{veri.oda_no} numaralı oda durumu '{veri.yeni_durum}' olarak güncellendi."}
     finally:
-        conn.close()
+        close_db(conn, cursor)
+
+@app.get("/odalar/fiyatlar")
+def oda_fiyatlarini_getir():
+    conn = get_db_connection()
+    if not conn:
+        return []
+    cursor = None
+    try:
+        cursor = conn.cursor(dictionary=True)
+        # Oda_Turleri tablosundan isimleri ve taban fiyatları çekiyoruz
+        sorgu = "SELECT odaTur_adi AS oda_tipi, odaTur_taban_fiyat AS fiyat FROM Oda_Turleri"
+        cursor.execute(sorgu)
+        return cursor.fetchall()
+    finally:
+        close_db(conn, cursor)
