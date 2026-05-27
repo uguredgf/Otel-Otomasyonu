@@ -23,20 +23,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (vitrinManzara) vitrinManzara.style.cursor = "pointer";
 
     const odaResimleri = {
-        "Ekonomik Oda": "img/ekonomikoda.jpg",
-        "Standart Tek Kişilik": "img/tekkisilikoda.jpg",
-        "Standart Çift Kişilik": "img/çiftkisilikoda.jpeg",
-        "Aile Süiti": "img/ailesuiti.jpeg",
-        "Balayı Süiti": "img/balayısuiti.jpg",
-        "Kral Dairesi": "img/kraldairesi.jpg"
+
+        "Ekonomik Oda": "img/ekonomikoda.png",
+        "Standart Tek Kişilik": "img/tekkisi.png",
+        "Standart Çift Kişilik": "img/ciftkisi.png",
+        "Aile Süiti": "img/aileodasi.png",
+        "Balayı Süiti": "img/balayisuiti.png",
+        "Kral Dairesi": "img/kral.png"
     };
 
     const manzaraResimleri = {
-        "Arka Cephe": "img/arka_cephe.jpg",
-        "Bahçe ve Havuz": "img/bahce_havuz.jpg",
-        "Deniz Manzaralı": "img/deniz_manzarasi.jpg",
-        "Jakuzili": "img/jakuzili_deniz.jpg",
-        "Özel Havuzlu": "img/havuzlu_deniz.jpg"
+        "Arka Cephe": "img/sehirmanz.png",
+        "Bahçe ve Havuz": "img/bahcehavuz.png",
+        "Deniz Manzaralı": "img/denizmanzarası.png",
+        "Jakuzili": "img/jakuzili_deniz.png",
+        "Özel Havuzlu": "img/havuzlu_deniz.png"
     };
 
     let odaFiyatlari = {};
