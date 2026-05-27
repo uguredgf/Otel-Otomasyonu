@@ -23,20 +23,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (vitrinManzara) vitrinManzara.style.cursor = "pointer";
 
     const odaResimleri = {
-        "Ekonomik Oda": "img/ekonomikoda.png",
-        "Standart Tek Kişilik": "img/tekkisi.png",
-        "Standart Çift Kişilik": "img/ciftkisi.png",
-        "Aile Süiti": "img/aileodasi.png",
-        "Balayı Süiti": "img/balayisuiti.png",
-        "Kral Dairesi": "img/kral.png"
+        "Ekonomik Oda": "img/ekonomikoda.jpg",
+        "Standart Tek Kişilik": "img/tekkisilikoda.jpg",
+        "Standart Çift Kişilik": "img/çiftkisilikoda.jpeg",
+        "Aile Süiti": "img/ailesuiti.jpeg",
+        "Balayı Süiti": "img/balayısuiti.jpg",
+        "Kral Dairesi": "img/kraldairesi.jpg"
     };
 
     const manzaraResimleri = {
-        "Arka Cephe": "img/sehirmanz.png",
-        "Bahçe ve Havuz": "img/bahcehavuz.png",
-        "Deniz Manzaralı": "img/denizmanzarası.png",
-        "Jakuzili": "img/jakuzili_deniz.png",
-        "Özel Havuzlu": "img/havuzlu_deniz.png"
+        "Arka Cephe": "img/arka_cephe.jpg",
+        "Bahçe ve Havuz": "img/bahce_havuz.jpg",
+        "Deniz Manzaralı": "img/deniz_manzarasi.jpg",
+        "Jakuzili": "img/jakuzili_deniz.jpg",
+        "Özel Havuzlu": "img/havuzlu_deniz.jpg"
     };
 
     let odaFiyatlari = {};
@@ -64,7 +64,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (secilenDeger === "Tüm Odalar") {
                 vitrinBos.style.display = "none";
-                vitrinGorsel.src = "img/otelindisii.png";
+                vitrinGorsel.src = "img/otelindisi.jpg";
                 vitrinOdaIsmi.textContent = "Genel Otel Müsaitliği";
                 vitrinDoluOda.style.display = "block";
                 vitrinDoluManzara.style.display = "none";
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function kilitleriSifirla() {
         btnRezervasyon.disabled = true;
-        sorguSonucu.textContent = "";
+        sorguSonucu.innerHTML = "";
     }
 
     if (checkInInput) checkInInput.addEventListener("change", kilitleriSifirla);
@@ -181,17 +181,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             const odaSayisi = result?.musait_oda_sayisi || (result?.odalar ? result.odalar.length : 0);
 
             if (odaSayisi > 0) {
+                let listeHTML = "";
+                if (result.odalar && Array.isArray(result.odalar) && result.odalar.length > 0) {
+                    listeHTML += `<div class="mt-3 text-start">
+                        <p class="text-muted mb-2 fw-bold" style="font-size: 0.85rem;">Müsait Odalar Listesi:</p>
+                        <ul class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 160px;">`;
+                    
+                    result.odalar.forEach(oda => {
+                        const odaNo = oda.oda_no || oda.roomNo || "-";
+                        const odaTipi = oda.oda_tipi || oda.type || oda.odaTur_adi || "Belirtilmemiş";
+                        listeHTML += `
+                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3" style="font-size: 0.85rem;">
+                                <span><i class="fa-solid fa-door-open text-primary me-2"></i><span class="fw-bold">${odaNo}</span></span>
+                                <span class="badge bg-light text-dark border text-wrap text-end" style="max-width: 65%;">${odaTipi}</span>
+                            </li>`;
+                    });
+                    
+                    listeHTML += `</ul></div>`;
+                }
+
                 let mesajMetni = roomType === "Tüm Odalar" 
                     ? `Seçilen tarihlerde otelimizde toplam <strong>${odaSayisi} adet</strong> boş oda bulunuyor!` 
                     : `Seçilen tarihlerde bu oda tipinden <strong>${odaSayisi} adet</strong> boş yerimiz var!`;
                     
-                sorguSonucu.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${mesajMetni}`;
+                sorguSonucu.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${mesajMetni} ${listeHTML}`;
                 sorguSonucu.style.color = "#16a34a";
                 
                 if (roomType !== "Tüm Odalar") {
                     btnRezervasyon.disabled = false;
                 } else {
-                    sorguSonucu.innerHTML += `<br><span style="font-size: 0.8rem; color: #64748b;">Rezervasyon yapmak için spesifik bir oda tipi seçmelisiniz.</span>`;
+                    sorguSonucu.innerHTML += `<div class="mt-2"><span style="font-size: 0.8rem; color: #64748b;">Rezervasyon yapmak için spesifik bir oda tipi seçmelisiniz.</span></div>`;
                     btnRezervasyon.disabled = true;
                 }
             } else {
@@ -218,9 +237,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
 
             const result = await apiIstekAt("/rezervasyonlar", "POST", payload);
-            if (!result) return;
-
-            alert("Rezervasyon talebiniz başarıyla alındı! Yetkili onayına düşmüştür.");
+            
+            if (!result) {
+                alert("Uyarı: Uğur'un backend API'si henüz hazır değil. Ancak Frontend form verilerini başarıyla topladı ve buton tıkır tıkır çalışıyor!");
+            } else {
+                alert("Rezervasyon talebiniz başarıyla alındı! Yetkili onayına düşmüştür.");
+            }
             
             form.reset();
             kilitleriSifirla();
