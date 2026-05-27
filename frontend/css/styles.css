@@ -893,79 +893,124 @@ a {
         gap: 30px;
     }
 }
-/* Oda Fotoğrafı Modal (Lightbox) Stilleri */
+/* Oda Fotoğrafı Modal (Lightbox) - Tamamen İyileştirilmiş */
 .room-image-modal {
+    display: flex; /* İçeriği ortalamak için */
+    align-items: center;
+    justify-content: center;
     position: fixed;
-    z-index: 2000; /* Çok üstte kalsın */
-    padding-top: 50px;
+    z-index: 2000;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto;
-    background-color: rgba(15, 23, 42, 0.9); /* Koyu arka plan */
+    overflow: hidden; /* Scroll'u devre dışı bırak */
+    background-color: rgba(15, 23, 42, 0.93); /* Daha yumuşak, mavi-siyah koyu arka plan */
+}
+
+.modal-content-container {
+    background-color: #f8fafc; /* Beyazımsı iç kart */
+    border-radius: 12px; /* Yumuşak köşeler */
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5); /* Derin gölge, havada asılı hissi */
+    padding: 20px;
+    max-width: 90%;
+    max-height: 90vh; /* Ekran yüksekliğinin %90'ını geçmesin */
+    width: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    animation: zoomIn 0.3s ease-out; /* Giriş animasyonu */
 }
 
 .modal-content {
-    margin: auto;
+    margin: 0;
     display: block;
-    max-width: 90%;
-    max-height: 80vh; /* Ekran yüksekliğinin %80'ini geçmesin */
-    border-radius: 8px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    max-width: 100%;
+    max-height: calc(90vh - 100px); /* Konteyner yüksekliğinin çoğunu kaplasın */
+    border-radius: 8px; /* Resmin kendi köşelerini de yumuşat */
+    object-fit: contain; /* Resmin en boy oranını koru */
 }
 
 #modalCaption {
-    margin: auto;
-    display: block;
-    width: 80%;
-    max-width: 700px;
+    margin-top: 15px;
     text-align: center;
-    color: #f8fafc;
+    color: #1e293b; /* Koyu mavi-siyah metin */
     font-family: 'Poppins', sans-serif;
     font-weight: 700;
-    font-size: 1.5rem;
-    margin-top: 20px;
-}
-
-/* Animasyon */
-.modal-content, #modalCaption {
-    animation-name: zoom;
-    animation-duration: 0.3s;
-}
-
-@keyframes zoom {
-    from {transform:scale(0)}
-    to {transform:scale(1)}
+    font-size: 1.25rem;
+    padding-bottom: 5px;
 }
 
 /* Kapat Butonu */
 .close-modal {
     position: absolute;
-    top: 15px;
-    right: 35px;
-    color: #f1f5f9;
-    font-size: 40px;
+    top: 20px;
+    right: 25px;
+    color: #f1f5f9; /* Beyazımsı simge */
+    font-size: 24px;
     font-weight: bold;
-    transition: 0.3s;
     cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.5); /* Hafif siyah arka plan */
+    width: 44px;
+    height: 44px;
+    border-radius: 50%; /* Yuvarlak */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    border: none;
+    outline: none;
 }
 
-.close-modal:hover,
-.close-modal:focus {
-    color: #3b82f6; /* Accent rengimiz */
-    text-decoration: none;
-    cursor: pointer;
+.close-modal:hover {
+    background-color: #3b82f6; /* Accent rengimiz */
+    color: #fff;
+    transform: rotate(90deg); /* Hafif dönüş efekti */
 }
 
-/* Küçük ekranlar için ayar */
-@media only screen and (max-width: 700px){
-    .modal-content {
-        width: 100%;
+/* Giriş Animasyonu */
+@keyframes zoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
     }
-    .close-modal {
-        right: 20px;
-        top: 10px;
-        font-size: 30px;
+    to {
+        opacity: 1;
+        transform: scale(1);
     }
+}
+/* Hizmetler Bölümü Yatay Kaydırma Ayarları */
+.services-horizontal-scroll {
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 15px; /* Alt kısımdaki çubuğun kartlara yapışmaması için */
+    scroll-snap-type: x mandatory; /* Kaydırırken kartın tık diye ekrana oturması için */
+    -webkit-overflow-scrolling: touch; /* Mobil tarayıcılarda pürüzsüz kaydırma */
+    scrollbar-width: thin; /* Firefox desteği */
+    scrollbar-color: #cbd5e1 transparent;
+}
+
+/* Kartların genişliğinin daralmasını önleme */
+.services-horizontal-scroll .public-room-card {
+    flex: 0 0 300px; /* Kartların ekrandaki sabit genişliği */
+    max-width: 300px;
+    scroll-snap-align: start; /* Hizalama noktası */
+}
+
+/* Modern, ince ve yuvarlatılmış kaydırma çubuğu tasarımı (Chrome, Safari, Edge) */
+.services-horizontal-scroll::-webkit-scrollbar {
+    height: 6px; /* Çubuğun yüksekliği/kalınlığı */
+}
+
+.services-horizontal-scroll::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.services-horizontal-scroll::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+
+.services-horizontal-scroll::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
 }

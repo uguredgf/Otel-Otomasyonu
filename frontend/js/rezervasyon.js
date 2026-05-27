@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
+    // 1. Form ve Arayüz Elementlerinin Tanımlanması
     const roomSelect = document.getElementById("resRoomType");
     const checkInInput = document.getElementById("resCheckIn");
     const checkOutInput = document.getElementById("resCheckOut");
@@ -14,6 +15,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnSorgula = document.getElementById("btnSorgula");
     const btnRezervasyon = document.getElementById("btnRezervasyon");
     const sorguSonucu = document.getElementById("sorguSonucu");
+    
+    // Modal Elementleri
     const modal = document.getElementById("imageModal");
     const modalImg = document.getElementById("modalImage");
     const captionText = document.getElementById("modalCaption");
@@ -23,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (vitrinManzara) vitrinManzara.style.cursor = "pointer";
 
     const odaResimleri = {
-
         "Ekonomik Oda": "img/ekonomikoda.png",
         "Standart Tek Kişilik": "img/tekkisi.png",
         "Standart Çift Kişilik": "img/ciftkisi.png",
@@ -31,7 +33,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         "Balayı Süiti": "img/balayisuiti.png",
         "Kral Dairesi": "img/kral.png"
     };
-
     const manzaraResimleri = {
         "Arka Cephe": "img/sehirmanz.png",
         "Bahçe ve Havuz": "img/bahcehavuz.png",
@@ -39,9 +40,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         "Jakuzili": "img/jakuzili_deniz.png",
         "Özel Havuzlu": "img/havuzlu_deniz.png"
     };
-
     let odaFiyatlari = {};
 
+    // 2. Fiyatları API'den Çekme
     async function fiyatlariVeritabanindanCek() {
         const veriler = await apiIstekAt("/odalar/fiyatlar");
         if (veriler && Array.isArray(veriler)) {
@@ -57,6 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await fiyatlariVeritabanindanCek();
 
+    // 3. VİTRİN GÜNCELLEME (Değişim Dinleyicisi) - Önce bu hazır olmalı!
     if (roomSelect) {
         roomSelect.addEventListener("change", function() {
             const secilenDeger = this.value;
@@ -111,41 +113,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (vitrinGorsel && modal && modalImg) {
-        vitrinGorsel.addEventListener("click", () => {
-            modal.style.display = "block";
-            modalImg.src = vitrinGorsel.src;
+    // Modal (Lightbox) İşlemleri
+    if (vitrinGorsel && modal && modalImg && closeBtn) {
+        vitrinGorsel.addEventListener("click", function() {
+            modal.style.display = "flex";
+            modalImg.src = this.src;
             captionText.textContent = vitrinOdaIsmi.textContent;
         });
     }
 
-    if (vitrinManzara && modal && modalImg) {
-        vitrinManzara.addEventListener("click", () => {
-            modal.style.display = "block";
-            modalImg.src = vitrinManzara.src;
-            captionText.textContent = "Oda Manzarası";
+    if (vitrinManzara && modal && modalImg && closeBtn) {
+        vitrinManzara.addEventListener("click", function() {
+            modal.style.display = "flex";
+            modalImg.src = this.src;
+            captionText.textContent = vitrinManzaraIsmi.textContent.replace(/\s+/g, ' ').trim();
         });
     }
 
-    if (closeBtn) {
-        closeBtn.addEventListener("click", () => {
-            modal.style.display = "none";
-        });
-    }
-
-    if (modal) {
-        modal.addEventListener("click", (event) => {
-            if (event.target === modal) {
-                modal.style.display = "none";
-            }
-        });
-    }
-
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && modal && modal.style.display === "block") {
-            modal.style.display = "none";
-        }
-    });
+    if (closeBtn) closeBtn.addEventListener("click", () => modal.style.display = "none");
+    if (modal) modal.addEventListener("click", (e) => { if (e.target === modal) modal.style.display = "none"; });
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && modal && modal.style.display === "flex") modal.style.display = "none"; });
 
     function kilitleriSifirla() {
         btnRezervasyon.disabled = true;
@@ -156,6 +143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (checkOutInput) checkOutInput.addEventListener("change", kilitleriSifirla);
     if (roomSelect) roomSelect.addEventListener("change", kilitleriSifirla);
 
+    // Müsaitlik Sorgulama İşlemleri
     if (btnSorgula) {
         btnSorgula.addEventListener("click", async () => {
             const checkIn = checkInInput.value;
@@ -184,27 +172,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (odaSayisi > 0) {
                 let listeHTML = "";
                 if (result.odalar && Array.isArray(result.odalar) && result.odalar.length > 0) {
-                    listeHTML += `<div class="mt-3 text-start">
-                        <p class="text-muted mb-2 fw-bold" style="font-size: 0.85rem;">Müsait Odalar Listesi:</p>
-                        <ul class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 160px;">`;
-                    
+                    listeHTML += `<div class="mt-3 text-start"><p class="text-muted mb-2 fw-bold" style="font-size: 0.85rem;">Müsait Odalar Listesi:</p><ul class="list-group list-group-flush border rounded-3 overflow-auto" style="max-height: 160px;">`;
                     result.odalar.forEach(oda => {
                         const odaNo = oda.oda_no || oda.roomNo || "-";
                         const odaTipi = oda.oda_tipi || oda.type || oda.odaTur_adi || "Belirtilmemiş";
-                        listeHTML += `
-                            <li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3" style="font-size: 0.85rem;">
-                                <span><i class="fa-solid fa-door-open text-primary me-2"></i><span class="fw-bold">${odaNo}</span></span>
-                                <span class="badge bg-light text-dark border text-wrap text-end" style="max-width: 65%;">${odaTipi}</span>
-                            </li>`;
+                        listeHTML += `<li class="list-group-item d-flex justify-content-between align-items-center py-2 px-3" style="font-size: 0.85rem;"><span><i class="fa-solid fa-door-open text-primary me-2"></i><span class="fw-bold">${odaNo}</span></span><span class="badge bg-light text-dark border text-wrap text-end" style="max-width: 65%;">${odaTipi}</span></li>`;
                     });
-                    
                     listeHTML += `</ul></div>`;
                 }
 
-                let mesajMetni = roomType === "Tüm Odalar" 
-                    ? `Seçilen tarihlerde otelimizde toplam <strong>${odaSayisi} adet</strong> boş oda bulunuyor!` 
-                    : `Seçilen tarihlerde bu oda tipinden <strong>${odaSayisi} adet</strong> boş yerimiz var!`;
-                    
+                let mesajMetni = roomType === "Tüm Odalar" ? `Seçilen tarihlerde otelimizde toplam <strong>${odaSayisi} adet</strong> boş oda bulunuyor!` : `Seçilen tarihlerde bu oda tipinden <strong>${odaSayisi} adet</strong> boş yerimiz var!`;
                 sorguSonucu.innerHTML = `<i class="fa-solid fa-check-circle"></i> ${mesajMetni} ${listeHTML}`;
                 sorguSonucu.style.color = "#16a34a";
                 
@@ -222,6 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Rezervasyon Formunu Gönderme İşlemi
     if (form) {
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
@@ -251,5 +229,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             vitrinDoluOda.style.display = "none";
             vitrinDoluManzara.style.display = "none";
         });
+    }
+
+    // =========================================================================
+    // 4. ANA SAYFADAN GELEN URL PARAMETRESİNİ YAKALAMA (En sonda olmalı!)
+    // =========================================================================
+    const urlParams = new URLSearchParams(window.location.search);
+    const gelenOdaTipi = urlParams.get('oda');
+
+    if (gelenOdaTipi && roomSelect) {
+        for (let i = 0; i < roomSelect.options.length; i++) {
+            if (roomSelect.options[i].value.includes(gelenOdaTipi)) {
+                roomSelect.selectedIndex = i; 
+                
+                // Vitrin dinleyicisi artık hazır, tetikleyebiliriz!
+                roomSelect.dispatchEvent(new Event('change'));
+
+                // Kullanıcıya manzara değiştirebileceğini belirten uyarı kutusu
+                const bilgiKutusu = document.createElement("div");
+                bilgiKutusu.className = "mt-2 p-2 rounded bg-light border-start border-4 border-info shadow-sm";
+                bilgiKutusu.innerHTML = `<i class="fa-solid fa-circle-info text-info me-2"></i><span style="font-size: 0.85rem; color: #475569;">Oda tercihiniz aktarıldı. Dilerseniz yukarıdaki menüden <strong>farklı bir manzara seçeneği</strong> belirleyebilirsiniz.</span>`;
+                
+                roomSelect.parentNode.appendChild(bilgiKutusu);
+                break; 
+            }
+        }
     }
 });
