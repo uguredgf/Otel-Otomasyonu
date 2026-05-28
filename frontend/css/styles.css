@@ -84,10 +84,12 @@ a {
     letter-spacing: -0.02em;
 }
 
+/* Sidebar açıklama yazısının sayfalara göre menüyü aşağı itmesini engelleme */
 .brand p {
     margin: 8px 0 0;
     color: rgba(255, 255, 255, 0.62);
     font-size: 0.95rem;
+    min-height: 65px; /* SİHİRLİ KOD: Yazı 1 satır da olsa 3 satır da olsa her zaman aynı yeri kaplar */
 }
 
 .nav-menu {
@@ -434,12 +436,6 @@ a {
     flex-wrap: wrap;
 }
 
-.room-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 18px;
-}
-
 .room-card {
     border-radius: var(--radius-lg);
     padding: 22px;
@@ -668,12 +664,6 @@ a {
     font-size: 0.92rem;
 }
 
-.modal-content {
-    border: 0;
-    border-radius: 24px;
-    overflow: hidden;
-}
-
 .modal-header {
     border-bottom: 0;
     padding: 20px 24px 14px;
@@ -735,7 +725,6 @@ a {
 
 @media (max-width: 1200px) {
     .overview-grid,
-    .room-grid,
     .public-room-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -778,7 +767,6 @@ a {
 
 @media (max-width: 640px) {
     .overview-grid,
-    .room-grid,
     .form-grid,
     .public-room-grid {
         grid-template-columns: 1fr;
@@ -1013,4 +1001,124 @@ a {
 
 .services-horizontal-scroll::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+/* Kat Sekmeleri (Tabs) */
+.floor-tabs {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 10px;
+}
+.floor-tab {
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+    background: #f1f5f9;
+    font-weight: bold;
+    color: #64748b;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+.floor-tab.active {
+    background: #3b82f6;
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+}
+
+/* Oda Izgarası (Sinema Koltuğu Düzeni) */
+.room-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(65px, 1fr));
+    gap: 12px;
+    justify-content: center;
+    margin-top: 15px;
+}
+.room-box {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: not-allowed;
+    background: #cbd5e1; /* Dolu odalar için gri */
+    color: #fff;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+.room-box.available {
+    background: #fff; /* Boş odalar için beyaz */
+    color: #3b82f6;
+    border: 2px solid #3b82f6;
+    cursor: pointer;
+}
+.room-box.available:hover {
+    background: #eff6ff;
+    transform: translateY(-2px);
+}
+.room-box.selected {
+    background: #10b981; /* Seçilen oda için yeşil */
+    color: #fff;
+    border: 2px solid #059669;
+    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Açıklama (Legend) Kısmı */
+.room-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #475569;
+}
+.legend-item { display: flex; align-items: center; gap: 5px; }
+.legend-box { width: 20px; height: 20px; border-radius: 4px; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.1); }
+.legend-available { background: #fff; border: 2px solid #3b82f6; }
+.legend-booked { background: #cbd5e1; }
+.legend-selected { background: #10b981; border: 2px solid #059669; }
+/* Admin Paneli Oda Durumları İçin Özel Geniş Grid */
+.admin-oda-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+/* ==========================================================================
+   TİTREME VE KAYMAYI KESİN ENGELLEYEN NÜKLEER ÇÖZÜM
+   ========================================================================== */
+
+/* 1. Geçiş animasyonlarında boyut değişimini tamamen iptal ediyoruz */
+.form-control, .form-select {
+    transition: background-color 0.2s, box-shadow 0.2s, border-color 0.2s !important; 
+    /* Yükseklik, padding veya margin'in anime olmasını yasakladık */
+}
+
+/* 2. Focus (Tıklanma) anında kutu modelini ZORLA kilitliyoruz */
+.form-control:focus, 
+.form-select:focus {
+    border-width: 1px !important; /* Kenarlık kalınlaşmasını engeller */
+    border-style: solid !important;
+    border-color: var(--blue-accent) !important;
+    padding-top: 14px !important;
+    padding-bottom: 14px !important;
+    margin: 0 !important; /* Gizli dış boşlukları ezer */
+    transform: none !important;
+}
+
+/* 3. Açılır menüdeki (Select) ok işaretinin yarattığı boşluk problemini sabitleme */
+select.form-select {
+    padding-right: 40px !important; 
+}
+select.form-select:focus {
+    padding-right: 40px !important;
 }

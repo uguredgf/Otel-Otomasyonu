@@ -35,20 +35,41 @@ function renderHistory(filtreKelimesi = "") {
     if (!filtrelenmisLoglar.length) {
         target.innerHTML = `
             <div class='empty-state text-center py-5 text-muted'>
+                <i class="fa-solid fa-magnifying-glass mb-3" style="font-size: 2rem; color: #cbd5e1;"></i>
                 <h5>Sonuç Bulunamadı</h5>
-                <p>"${filtreKelimesi}" ile eşleşen bir işlem kaydı yok.</p>
+                <p>"${escapeHtml(filtreKelimesi)}" ile eşleşen bir işlem kaydı yok.</p>
             </div>`;
         return;
     }
 
-    target.innerHTML = filtrelenmisLoglar.map((log) => `
-        <article class="history-item border-bottom pb-3 mb-3">
-            <div class="history-meta d-flex justify-content-between mb-2">
-                <span class="badge bg-secondary">${escapeHtml(log.type)}</span>
-                <span class="text-muted small">${escapeHtml(formatDateTime(log.createdAt))}</span>
+    target.innerHTML = filtrelenmisLoglar.map((log) => {
+        
+        // İşlem tipine göre rozet rengini dinamik olarak belirleme
+        let rozetSinifi = "status-badge";
+        const tipStr = (log.type || "").toLowerCase();
+        
+        if (tipStr.includes("çıkış") || tipStr.includes("iptal")) {
+            rozetSinifi += " danger"; // Kırmızı (Tehlike/Bitiş)
+        } else if (tipStr.includes("ekstra") || tipStr.includes("ödeme")) {
+            rozetSinifi += " warning"; // Turuncu (Bekleyen/Ekstra)
+        } else if (tipStr.includes("rezervasyon") || tipStr.includes("giriş")) {
+            rozetSinifi += " "; // Standart Yeşil (Başarılı)
+        } else {
+            rozetSinifi = "badge bg-secondary px-3 py-2"; // Tanımsız ise Gri
+        }
+
+        // HTML Çıktısı (Şık kart tasarımı)
+        return `
+            <div class="history-item mb-3 p-3 border rounded shadow-sm bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <h4 class="m-0 text-primary fw-bold fs-6">${escapeHtml(log.title)}</h4>
+                    <span class="${rozetSinifi}">${escapeHtml(log.type)}</span>
+                </div>
+                <p class="mb-2 text-dark" style="font-size: 0.95rem;">${escapeHtml(log.details || "-")}</p>
+                <div class="history-meta text-muted mt-2" style="font-size: 0.85rem;">
+                    <span><i class="fa-regular fa-clock me-1"></i>${escapeHtml(formatDateTime(log.createdAt))}</span>
+                </div>
             </div>
-            <h4 class="fs-6 fw-bold mb-1">${escapeHtml(log.title)}</h4>
-            <p class="mb-0 text-secondary small">${escapeHtml(log.details || "-")}</p>
-        </article>
-    `).join("");
+        `;
+    }).join("");
 }
