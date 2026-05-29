@@ -252,28 +252,24 @@ def rezervasyon_olustur(veri: YeniRezervasyon):
         if not oda:
             raise HTTPException(status_code=404, detail=f"{veri.oda_no} numaralı oda bulunamadı veya arızalı.")
             
-        # 2. Adım: VERİTABANI PROSEDÜRÜNÜ ÇAĞIR
-        # Müşteri kaydı, çakışma kontrolü ve 'Beklemede' statüsü SQL tarafında hallediliyor!
+        # 2. Adım: HİLAL'İN VERİTABANI PROSEDÜRÜNÜ ÇAĞIR
         cursor.callproc(
             "sp_YeniRezervasyonEkle", 
             (veri.ad, veri.soyad, veri.tc_kimlik, veri.telefon, veri.email, oda["oda_id"], veri.giris_tarihi, veri.cikis_tarihi)
         )
         
         conn.commit()
-        # Froontend tarafına dönecek başarılı ve doğru yanıt:
         return {"basarili": True, "mesaj": f"{veri.oda_no} numaralı oda için rezervasyonunuz 'Beklemede' statüsüyle oluşturuldu."}
         
-    except mysql.connector.Error as err:
-        conn.rollback()
-        # SQL'den gelen özel çakışma hatasını (SIGNAL SQLSTATE) frontend ekranına fırlat
-        raise HTTPException(status_code=400, detail=str(err.msg))
     except HTTPException:
         conn.rollback()
         raise
     except Exception as e:
+        # Uğur'un orijinal tarzı: Hiçbir yeni import gerektirmez!
         conn.rollback()
-        print("Rezervasyon Kayıt Hatası:", str(e))
-        raise HTTPException(status_code=500, detail="Sistemsel bir hata olustu.")
+        hata_mesaji = str(e)
+        print("Rezervasyon Kayıt Hatası:", hata_mesaji)
+        raise HTTPException(status_code=400, detail=hata_mesaji)
     finally:
         close_db(conn, cursor)
 
