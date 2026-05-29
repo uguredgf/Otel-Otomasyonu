@@ -245,46 +245,28 @@ def rezervasyon_olustur(veri: YeniRezervasyon):
     try:
         cursor = conn.cursor(dictionary=True)
         
-        # 1. Adım: Bu TC kimlik ile müşteri kaydı kontrolü
-        cursor.execute("SELECT musteri_id FROM Musteriler WHERE musteri_tc_no = %s", (veri.tc_kimlik,))
-        musteri = cursor.fetchone()
-        
-        if musteri:
-            musteri_id = musteri["musteri_id"]
-        else:
-            cursor.execute(
-                "INSERT INTO Musteriler (musteri_adi, musteri_soyadi, musteri_tc_no, musteri_telefon, musteri_email) VALUES (%s, %s, %s, %s, %s)",
-                (veri.ad, veri.soyad, veri.tc_kimlik, veri.telefon, veri.email)
-            )
-            musteri_id = cursor.lastrowid
-            
-        # 2. Adım: Ece'nin seçtiği oda_no'nun müsaitliğini kontrol ediyoruz
-        sorgu_oda = """
-            SELECT o.oda_id 
-            FROM Odalar o
-            JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
-            WHERE o.oda_no = %s AND o.oda_durumu != 'Arızalı'
-            AND o.oda_id NOT IN (
-                SELECT oda_id FROM Rezervasyonlar
-                WHERE rezerve_durumu NOT IN ('İptal Edildi', 'Tamamlandı')
-                AND (rezerve_giris_tarihi < %s AND rezerve_cikis_tarihi > %s)
-            )
-        """
-        cursor.execute(sorgu_oda, (veri.oda_no, veri.cikis_tarihi, veri.giris_tarihi))
+        # 1. Adım: Frontend'den gelen oda_no'dan veritabanındaki oda_id'yi bul
+        cursor.execute("SELECT oda_id FROM Odalar WHERE oda_no = %s AND oda_durumu != 'Arızalı'", (veri.oda_no,))
         oda = cursor.fetchone()
         
         if not oda:
-            raise HTTPException(status_code=409, detail=f"{veri.oda_no} numaralı oda seçilen tarihlerde artık müsait değil.")
+            raise HTTPException(status_code=404, detail=f"{veri.oda_no} numaralı oda bulunamadı veya arızalı.")
             
-        # 3. Adım: Rezervasyonu tam o odaya kaydediyoruz
-        cursor.execute(
-            "INSERT INTO Rezervasyonlar (musteri_id, oda_id, rezerve_giris_tarihi, rezerve_cikis_tarihi, rezerve_durumu) VALUES (%s, %s, %s, %s, 'Onaylandı')",
-            (musteri_id, oda["oda_id"], veri.giris_tarihi, veri.cikis_tarihi)
+        # 2. Adım: VERİTABANI PROSEDÜRÜNÜ ÇAĞIR
+        # Müşteri kaydı, çakışma kontrolü ve 'Beklemede' statüsü SQL tarafında hallediliyor!
+        cursor.callproc(
+            "sp_YeniRezervasyonEkle", 
+            (veri.ad, veri.soyad, veri.tc_kimlik, veri.telefon, veri.email, oda["oda_id"], veri.giris_tarihi, veri.cikis_tarihi)
         )
         
         conn.commit()
-        return {"basarili": True, "mesaj": f"{veri.oda_no} numaralı odaya rezervasyon başarıyla onaylandı!"}
+        # Froontend tarafına dönecek başarılı ve doğru yanıt:
+        return {"basarili": True, "mesaj": f"{veri.oda_no} numaralı oda için rezervasyonunuz 'Beklemede' statüsüyle oluşturuldu."}
         
+    except mysql.connector.Error as err:
+        conn.rollback()
+        # SQL'den gelen özel çakışma hatasını (SIGNAL SQLSTATE) frontend ekranına fırlat
+        raise HTTPException(status_code=400, detail=str(err.msg))
     except HTTPException:
         conn.rollback()
         raise
