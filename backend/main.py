@@ -23,6 +23,7 @@ class YeniRezervasyon(BaseModel):
     telefon: str
     email: str
     oda_tipi: str
+    oda_no: str  # Ece'nin kat planından seçtiği spesifik oda numarası eklendi!
     giris_tarihi: str
     cikis_tarihi: str
 
@@ -57,6 +58,7 @@ class HizmetFiyatGuncelleme(BaseModel):
 class HizmetSilVerisi(BaseModel):
     rezervasyon_id: int
     hizmet_id: int
+
 
 class OdaDurumVerisi(BaseModel):
     oda_no: str
@@ -95,13 +97,9 @@ def resolve_room_type_name(requested_type: str, db_room_types: list[str]) -> str
     requested_normalized = normalize_text(requested_type)
     if not requested_normalized:
         return None
-
-    # Yalnizca tam eslesmeye izin veriyoruz.
-    # (Aksi durumda "Deniz Manzarali" secimi baska bir tipe kayip ayni sayilari verebiliyor.)
     for room_type in db_room_types:
         if normalize_text(room_type) == requested_normalized:
             return room_type
-
     return None
 
 
@@ -118,8 +116,6 @@ def dashboard_verilerini_getir():
     cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
-        
-        # 1. Dolu ve Boş Oda Sayısını Bulma
         cursor.execute(queries.GET_AKTIF_MUSTERILER)
         aktif_misafirler = cursor.fetchall()
         gercek_dolu_oda = len(aktif_misafirler)
@@ -129,12 +125,9 @@ def dashboard_verilerini_getir():
         toplam_oda = toplam_oda_sonuc["toplam"] if toplam_oda_sonuc else 0
         gercek_bos_oda = toplam_oda - gercek_dolu_oda
 
-        # 2. Ciro ve Özet Bilgisi
         cursor.execute(queries.GET_DASHBOARD_OZET)
         ozet = cursor.fetchone()
 
-        # 3. YENİ: Bugün Çıkış Yapacak Misafir Sayısı
-        # (Otomatik olarak bugünün tarihini kontrol eder)
         bugun_sorgusu = """
             SELECT COUNT(*) as cikis_sayisi 
             FROM Rezervasyonlar 
@@ -145,7 +138,6 @@ def dashboard_verilerini_getir():
         bugun_cikis_sonuc = cursor.fetchone()
         bugun_cikis = bugun_cikis_sonuc["cikis_sayisi"] if bugun_cikis_sonuc else 0
 
-        # 4. Eşleştirme bölümü(Frontend'e gidecek standart paket)
         sonuc = {
             "dolu_oda_sayisi": gercek_dolu_oda,
             "bos_oda_sayisi": gercek_bos_oda,
@@ -153,13 +145,11 @@ def dashboard_verilerini_getir():
             "toplam_ciro": 0.0
         }
 
-        # SQL'den dönen ciro kolonunun adı ne olursa olsun yakalıyoruz
         if ozet:
             ciro_degeri = ozet.get("toplam_ciro") or ozet.get("ciro") or ozet.get("toplam_tutar") or 0
             sonuc["toplam_ciro"] = float(ciro_degeri)
 
         return sonuc
-
     except Exception as e:
         print("Dashboard Hatası:", str(e))
         return {"dolu_oda_sayisi": 0, "bos_oda_sayisi": 0, "toplam_ciro": 0, "bugun_cikis_yapacaklar": 0}
@@ -209,7 +199,6 @@ def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = "
                 }
             secili_oda_tipi = eslesen_tip
         
-        # O tarihlerde bos olan odalarin listesini getiriyoruz.
         sorgu = """
             SELECT o.oda_no, ot.odaTur_adi AS oda_tipi
             FROM Odalar o
@@ -223,7 +212,6 @@ def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = "
         """
         parametreler = [cikis_tarihi, giris_tarihi]
 
-        # Eğer spesifik bir oda tipi seçildiyse (all değilse), sorguya şartı ekle
         if oda_tipi != "all":
             sorgu += " AND ot.odaTur_adi = %s"
             parametreler.append(secili_oda_tipi)
@@ -232,7 +220,6 @@ def musait_odalari_getir(giris_tarihi: str, cikis_tarihi: str, oda_tipi: str = "
         cursor.execute(sorgu, tuple(parametreler))
         odalar = cursor.fetchall() or []
         sayi = len(odalar)
-        # Frontend hem bos_oda_sayisi hem musait_oda_sayisi alanini kullanabiliyor
         return {
             "bos_oda_sayisi": sayi,
             "musait_oda_sayisi": sayi,
@@ -258,59 +245,52 @@ def rezervasyon_olustur(veri: YeniRezervasyon):
     try:
         cursor = conn.cursor(dictionary=True)
         
-        # 1. Adım: Bu TC kimlik ile daha önce gelmiş mi?
+        # 1. Adım: Bu TC kimlik ile müşteri kaydı kontrolü
         cursor.execute("SELECT musteri_id FROM Musteriler WHERE musteri_tc_no = %s", (veri.tc_kimlik,))
         musteri = cursor.fetchone()
         
         if musteri:
             musteri_id = musteri["musteri_id"]
         else:
-            # Yeni müşteri, veritabanına ekle
             cursor.execute(
                 "INSERT INTO Musteriler (musteri_adi, musteri_soyadi, musteri_tc_no, musteri_telefon, musteri_email) VALUES (%s, %s, %s, %s, %s)",
                 (veri.ad, veri.soyad, veri.tc_kimlik, veri.telefon, veri.email)
             )
             musteri_id = cursor.lastrowid
             
-        # 2. Adım: İstediği oda tipinde ve tarihlerde boş olan BİR oda bul
+        # 2. Adım: Ece'nin seçtiği oda_no'nun müsaitliğini kontrol ediyoruz
         sorgu_oda = """
             SELECT o.oda_id 
             FROM Odalar o
             JOIN Oda_Turleri ot ON o.odaTur_id = ot.odaTur_id
-            WHERE ot.odaTur_adi = %s AND o.oda_durumu != 'Arızalı'
+            WHERE o.oda_no = %s AND o.oda_durumu != 'Arızalı'
             AND o.oda_id NOT IN (
                 SELECT oda_id FROM Rezervasyonlar
                 WHERE rezerve_durumu NOT IN ('İptal Edildi', 'Tamamlandı')
                 AND (rezerve_giris_tarihi < %s AND rezerve_cikis_tarihi > %s)
             )
-            LIMIT 1
         """
-        cursor.execute(sorgu_oda, (veri.oda_tipi, veri.cikis_tarihi, veri.giris_tarihi))
+        cursor.execute(sorgu_oda, (veri.oda_no, veri.cikis_tarihi, veri.giris_tarihi))
         oda = cursor.fetchone()
         
         if not oda:
-            raise HTTPException(status_code=409, detail="Secilen tarihlerde bu oda tipinde bos yer kalmamistir.")
+            raise HTTPException(status_code=409, detail=f"{veri.oda_no} numaralı oda seçilen tarihlerde artık müsait değil.")
             
-        # 3. Adım: Odayı bulduk, rezervasyonu oluştur
+        # 3. Adım: Rezervasyonu tam o odaya kaydediyoruz
         cursor.execute(
             "INSERT INTO Rezervasyonlar (musteri_id, oda_id, rezerve_giris_tarihi, rezerve_cikis_tarihi, rezerve_durumu) VALUES (%s, %s, %s, %s, 'Onaylandı')",
             (musteri_id, oda["oda_id"], veri.giris_tarihi, veri.cikis_tarihi)
         )
         
-        # Tüm işlemleri veritabanına mühürle!
         conn.commit()
-        return {"basarili": True, "mesaj": "Rezervasyon başarıyla onaylandı!"}
+        return {"basarili": True, "mesaj": f"{veri.oda_no} numaralı odaya rezervasyon başarıyla onaylandı!"}
         
     except HTTPException:
         conn.rollback()
         raise
     except Exception as e:
-        # Bir hata olursa yarım kalan verileri sil (Rollback)
         conn.rollback()
         print("Rezervasyon Kayıt Hatası:", str(e))
-        error_text = str(e)
-        if "Hata: Çıkış tarihi" in error_text or "Üzgünüz" in error_text:
-            raise HTTPException(status_code=400, detail=error_text)
         raise HTTPException(status_code=500, detail="Sistemsel bir hata olustu.")
     finally:
         close_db(conn, cursor)
@@ -381,6 +361,7 @@ def oda_fiyati_guncelle(veri: FiyatGuncelleme):
     finally:
         close_db(conn, cursor)
 
+
 @app.get("/musteriler")
 def tum_musterileri_getir():
     conn = get_db_connection()
@@ -389,7 +370,6 @@ def tum_musterileri_getir():
     cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
-
         sorgu = """
             SELECT 
                 v.*, 
@@ -406,6 +386,7 @@ def tum_musterileri_getir():
         return {"musteri_sayisi": len(musteriler), "musteriler": musteriler}
     finally:
         close_db(conn, cursor)
+
 
 @app.get("/aktif-misafirler")
 def aktif_misafirleri_getir():
@@ -429,7 +410,6 @@ def odeme_bekleyenleri_getir():
     cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
-        # Artık veritabanındaki hazır View'ı çağırıyoruz
         cursor.execute(queries.GET_AKTIF_BORCLAR)
         return cursor.fetchall()
     except Exception as e:
@@ -437,6 +417,7 @@ def odeme_bekleyenleri_getir():
         return []
     finally:
         close_db(conn, cursor)
+
 
 @app.post("/finans/fatura-kes/{rezervasyon_id}")
 def fatura_kes(rezervasyon_id: int, odeme_yontemi: str):
@@ -452,7 +433,7 @@ def fatura_kes(rezervasyon_id: int, odeme_yontemi: str):
         cursor = conn.cursor()
         cursor.callproc("sp_FaturaKes", (rezervasyon_id, odeme_yontemi))
         conn.commit()
-        return {"mesaj": f"{rezervasyon_id} ID'li rezervasyonun faturasi kesildi ve oda temizlige alindi."}
+        return {"mesaj": f"{rezervasyon_id} ID'li rezervasyonun faturasi kesildi ogrenildi."}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     finally:
@@ -475,7 +456,6 @@ def sisteme_giris_yap(bilgiler: PersonelGiris):
                 "token": f"fake-jwt-token-{personel['personel_id']}",
                 "role": personel["personel_rol"],
             }
-
         raise HTTPException(status_code=401, detail="Gecersiz kullanici adi veya sifre")
     except HTTPException:
         raise
@@ -499,6 +479,7 @@ def hizmet_fiyati_guncelle(veri: HizmetFiyatGuncelleme):
     finally:
         close_db(conn, cursor)
 
+
 @app.delete("/rezervasyonlar/hizmet-sil")
 def hizmet_sil(veri: HizmetSilVerisi):
     conn = get_db_connection()
@@ -507,7 +488,6 @@ def hizmet_sil(veri: HizmetSilVerisi):
     cursor = None
     try:
         cursor = conn.cursor()
-        # Veritabanından o rezervasyona ait o hizmeti (sadece 1 tanesini) sil
         sorgu = "DELETE FROM Rezervasyon_Hizmetleri WHERE rezervasyon_id = %s AND hizmet_id = %s LIMIT 1"
         cursor.execute(sorgu, (veri.rezervasyon_id, veri.hizmet_id))
         conn.commit()
@@ -516,6 +496,7 @@ def hizmet_sil(veri: HizmetSilVerisi):
         return {"mesaj": "Hizmet faturadan başarıyla silindi."}
     finally:
         close_db(conn, cursor)
+
 
 @app.get("/rezervasyonlar/{rezervasyon_id}/hizmetler")
 def rezervasyon_hizmetlerini_getir(rezervasyon_id: int):
@@ -536,6 +517,7 @@ def rezervasyon_hizmetlerini_getir(rezervasyon_id: int):
     finally:
         close_db(conn, cursor)
 
+
 @app.put("/odalar/durum")
 def oda_durumunu_guncelle(veri: OdaDurumVerisi):
     izinli_oda_durumlari = {"Boş", "Dolu", "Temizlikte", "Arızalı"}
@@ -548,7 +530,6 @@ def oda_durumunu_guncelle(veri: OdaDurumVerisi):
     cursor = None
     try:
         cursor = conn.cursor()
-        # Gerçek sütun isimlerine göre odayı 'Boş' veya istenen duruma çeken SQL sorgusu
         sorgu = "UPDATE Odalar SET oda_durumu = %s WHERE oda_no = %s"
         cursor.execute(sorgu, (veri.yeni_durum, veri.oda_no))
         conn.commit()
@@ -558,6 +539,7 @@ def oda_durumunu_guncelle(veri: OdaDurumVerisi):
     finally:
         close_db(conn, cursor)
 
+
 @app.get("/odalar/fiyatlar")
 def oda_fiyatlarini_getir():
     conn = get_db_connection()
@@ -566,9 +548,23 @@ def oda_fiyatlarini_getir():
     cursor = None
     try:
         cursor = conn.cursor(dictionary=True)
-        # Oda_Turleri tablosundan isimleri ve taban fiyatları çekiyoruz
         sorgu = "SELECT odaTur_adi AS oda_tipi, odaTur_taban_fiyat AS fiyat FROM Oda_Turleri"
         cursor.execute(sorgu)
+        return cursor.fetchall()
+    finally:
+        close_db(conn, cursor)
+
+
+# Ece'nin İstediği Yeni Log Getirme Endpoint'i
+@app.get("/islem-kayitlari")
+def islem_kayitlarini_getir():
+    conn = get_db_connection()
+    if not conn:
+        raise HTTPException(status_code=500, detail="Veritabani baglantisi kurulamadi")
+    cursor = None
+    try:
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(queries.GET_ISLEM_KAYITLARI)
         return cursor.fetchall()
     finally:
         close_db(conn, cursor)

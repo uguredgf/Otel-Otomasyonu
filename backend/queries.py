@@ -7,7 +7,7 @@ GET_PERSONEL_GIRIS = """
     WHERE personel_kullanici_adi = %s AND personel_sifre = %s
 """
 
-# --- HİLAL'İN VIEW YAPILARI, GÜNCELLEMELER
+# --- HİLAL'İN VIEW YAPILARI, GÜNCELLEMELER ---
 GET_AKTIF_MUSTERILER = "SELECT * FROM vw_aktif_musteriler WHERE rezerve_giris_tarihi <= CURDATE() AND rezerve_cikis_tarihi >= CURDATE()"
 GET_FATURA_BEKLEYENLER = "SELECT * FROM vw_fatura_bekleyenler"
 GET_DASHBOARD_OZET = "SELECT * FROM vw_dashboard_ozet"
@@ -37,10 +37,15 @@ GET_ODA_DETAYLARI = """
 
 GET_AKTIF_BORCLAR = "SELECT * FROM vw_aktif_borclar"
 
-# --- STORED PROCEDURE ÇAĞRILARI ---
-# sp_YeniRezervasyonEkle
-# sp_FaturaKes
-# sp_HizmetEkle
-# sp_RezervasyonDurumGuncelle
-# sp_OdaTuruGuncelle
-# sp_HizmetFiyatGuncelle
+# Ece'nin Renkli Rozetleri İçin İşlem Logları Sorgusu
+# (Kayıt tipini direkt 'type' takma adıyla dönüyoruz ki frontend anında tanısın)
+GET_ISLEM_KAYITLARI = """
+    SELECT 
+        kayit_id, 
+        personel_id, 
+        kayit_islem_tipi AS type, 
+        kayit_aciklama AS aciklama, 
+        kayit_islem_tarihi AS tarih 
+    FROM Islem_Kayitlari 
+    ORDER BY kayit_islem_tarihi DESC
+"""
