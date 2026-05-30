@@ -37,8 +37,7 @@ GET_ODA_DETAYLARI = """
 
 GET_AKTIF_BORCLAR = "SELECT * FROM vw_aktif_borclar"
 
-# Ece'nin Renkli Rozetleri İçin İşlem Logları Sorgusu
-# (Kayıt tipini direkt 'type' takma adıyla dönüyoruz ki frontend anında tanısın)
+# Frontendin Renkli Rozetleri İçin İşlem Logları Sorgusu
 GET_ISLEM_KAYITLARI = """
     SELECT 
         kayit_id, 

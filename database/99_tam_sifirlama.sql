@@ -24,8 +24,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 7. database/04c_sanalTablo_vw_dashboard_ozet.sql
 -- 8. database/04d_sanalTablo_vw_rezervasyon_listesi.sql
 -- 9. database/04e_sanalTablo_vw_oda_detaylari.sql
--- 10. database/05a_sanalMethod_fatura_hesapla.sql
--- 11. database/05b_sanalMethod_hizmet_ekleme.sql
--- 12. database/05c_sanalMethod_yeni_rezervasyon_ekle.sql
--- 13. database/05d_sanalMethod_musait_oda_Ara.sql
--- 14. database/05e_sanalMethod_rezervasyon_durum_guncelle.sql
+-- 10. database/04f_sanalTablo_vw_aktif_borclar.sql
+-- 11. database/05a_sanalMethod_fatura_hesapla.sql
+-- 12. database/05b_sanalMethod_hizmet_ekleme.sql
+-- 13. database/05c_sanalMethod_yeni_rezervasyon_ekle.sql
+-- 14. database/05d_sanalMethod_musait_oda_Ara.sql
+-- 15. database/05e_sanalMethod_rezervasyon_durum_guncelle.sql
+-- 16. database/05f_sanalMethod_oda_turu_fiyat_guncelle.sql
+-- 17. database/05g_sanalMethod_hizmet_fiyat_guncelle.sql

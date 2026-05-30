@@ -1,4 +1,4 @@
--- Rezervasyon Durumu Değiştiğinde Oda Durumunu OtomatikGüncelleyen Tetikleyici
+-- Rezervasyon Durumu Değiştiğinde Oda Durumunu Otomatik Güncelleyen Tetikleyici
 DROP TRIGGER IF EXISTS trg_oda_durumu_guncelle;
 
 DELIMITER //

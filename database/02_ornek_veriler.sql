@@ -43,7 +43,7 @@ INSERT INTO Musteriler (musteri_id, musteri_adi, musteri_soyadi, musteri_tc_no, 
 (014, 'Deniz', 'Tekin', '15151515151', '05335006677', 'deniz.tekin@email.com'),
 (015, 'Burak', 'Şen', '16161616161', '05446007788', 'burak.sen@email.com');
 
--- 3. Personeller (Mutfak ve Şoför silindi, sadece sisteme girecek yetkililer bırakıldı)
+-- 3. Personeller (Sadece sisteme girecek yetkililer bulunuyor.)
 INSERT INTO Personeller (personel_id , personel_adi, personel_soyadi, personel_rol, personel_kullanici_adi, personel_sifre) VALUES
 (001, 'Uğur', 'Erdoğan', 'Admin', 'backend_admin_ugur', 'ugur2026'),
 (002, 'Ecenur', 'Eke', 'Admin', 'frontend_admin_ece', 'ece2026'),
@@ -136,7 +136,7 @@ INSERT INTO Faturalar (fatura_id, rezervasyon_id, fatura_toplam_tutar, fatura_od
 (6, 6, 18500.00, '2026-05-04 14:00:00', 'Kredi Kartı'), 
 (7, 9, 40800.00, '2026-05-06 12:00:00', 'Nakit'); 
 
--- 9. İşlem Kayıtları (Loglar) - Personel ID hataları düzeltildi
+-- 9. İşlem Kayıtları (Loglar) 
 INSERT INTO Islem_Kayitlari (kayit_id, personel_id, kayit_islem_tipi, kayit_islem_tarihi, kayit_aciklama) VALUES
 (1, 7, 'Rezervasyon Onayı', '2026-04-25 10:00:00', '1 numaralı Ahmet Yılmaz rezervasyonu onaylandı.'),
 (2, 7, 'Giriş İşlemi', '2026-05-02 14:00:00', '2 numaralı Ayşe Demir otele giriş yaptı.'),
