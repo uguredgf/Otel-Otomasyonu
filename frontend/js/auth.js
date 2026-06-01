@@ -18,12 +18,9 @@ document.getElementById("loginForm").addEventListener("submit", async function(e
     const sonuc = await apiIstekAt("/login", "POST", loginVerisi);
 
     // Eğer backend'den başarılı yanıt döndüyse (null değilse)
-    // Eğer backend'den başarılı yanıt döndüyse
     if (sonuc) {
         localStorage.setItem("rol", sonuc.role);
         localStorage.setItem("token", sonuc.token);
-        
-        // ŞU SATIRIN BAŞINDAKİ ÇİFT SLAŞI SİLDİK:
         window.location.href = "dashboard.html"; 
     }
 });

@@ -23,7 +23,7 @@ class YeniRezervasyon(BaseModel):
     telefon: str
     email: str
     oda_tipi: str
-    oda_no: str  # Ece'nin kat planından seçtiği spesifik oda numarası eklendi!
+    oda_no: str 
     giris_tarihi: str
     cikis_tarihi: str
 
@@ -245,14 +245,14 @@ def rezervasyon_olustur(veri: YeniRezervasyon):
     try:
         cursor = conn.cursor(dictionary=True)
         
-        # 1. Adım: Frontend'den gelen oda_no'dan veritabanındaki oda_id'yi bul
+        # Frontend'den gelen oda_no'dan veritabanındaki oda_id'yi bul
         cursor.execute("SELECT oda_id FROM Odalar WHERE oda_no = %s AND oda_durumu != 'Arızalı'", (veri.oda_no,))
         oda = cursor.fetchone()
         
         if not oda:
             raise HTTPException(status_code=404, detail=f"{veri.oda_no} numaralı oda bulunamadı veya arızalı.")
             
-        # 2. Adım: HİLAL'İN VERİTABANI PROSEDÜRÜNÜ ÇAĞIR
+        #VERİTABANI PROSEDÜRÜNÜ ÇAĞIR
         cursor.callproc(
             "sp_YeniRezervasyonEkle", 
             (veri.ad, veri.soyad, veri.tc_kimlik, veri.telefon, veri.email, oda["oda_id"], veri.giris_tarihi, veri.cikis_tarihi)
@@ -265,7 +265,6 @@ def rezervasyon_olustur(veri: YeniRezervasyon):
         conn.rollback()
         raise
     except Exception as e:
-        # Uğur'un orijinal tarzı: Hiçbir yeni import gerektirmez!
         conn.rollback()
         hata_mesaji = str(e)
         print("Rezervasyon Kayıt Hatası:", hata_mesaji)
@@ -533,7 +532,7 @@ def oda_fiyatlarini_getir():
         close_db(conn, cursor)
 
 
-# Ece'nin İstediği Yeni Log Getirme Endpoint'i
+#   Log Getirme Endpoint'i
 @app.get("/islem-kayitlari")
 def islem_kayitlarini_getir():
     conn = get_db_connection()

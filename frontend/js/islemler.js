@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         bekleyenOdemeleriYukle()
     ]);
 
-    // Bütün veriler eksiksiz geldi, artık faturayı güvenle çizebiliriz!
+    // Bütün veriler eksiksiz geldi, artık faturayı güvenle çizebiliriz
     faturaGoster();
 
     const misafirSecimi = document.getElementById("aktifMisafirSecimi");
@@ -59,8 +59,6 @@ async function aktifMisafirleriYukle(selectedReservationId) {
     if (selectedReservationId) {
         select.value = selectedReservationId;
     }
-
-    // 2. DÜZELTME: Buradaki faturaGoster() çağrısı silindi (artık yukarıda Promise.all sonrasında çağrılıyor)
 }
 
 async function odalariYukle() {

@@ -5,7 +5,6 @@ document.addEventListener("DOMContentLoaded", () => {
     applyShell();
     gecmisiYukle();
 
-    // ARAMA MOTORUNU DİNLEYEN SİHİRLİ KOD
     const aramaKutusu = document.getElementById("aramaKutusu");
     if (aramaKutusu) {
         aramaKutusu.addEventListener("input", (e) => {
@@ -58,7 +57,7 @@ function renderHistory(filtreKelimesi = "") {
             rozetSinifi = "badge bg-secondary px-3 py-2"; // Tanımsız ise Gri
         }
 
-        // HTML Çıktısı (Şık kart tasarımı)
+        // HTML Çıktısı
         return `
             <div class="history-item mb-3 p-3 border rounded shadow-sm bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-2">

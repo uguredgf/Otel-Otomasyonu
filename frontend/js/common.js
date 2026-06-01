@@ -69,7 +69,7 @@ function applyShell(roleElementId = "kullaniciRol", roleTextId = "kullaniciRolMe
 
     // --- 1. RESEPSİYONİST KONTROLÜ ---
     if (role === "Resepsiyonist") {
-        // Ayarlar sayfasına girmeye çalışıyorsa geri şutla
+        // Ayarlar sayfasına girmeye çalışıyorsa engelle
         if (mevcutSayfa === "ayarlar.html") {
             alert("Ayarlar sayfasına erişim yetkiniz bulunmamaktadır!");
             window.location.href = "dashboard.html";

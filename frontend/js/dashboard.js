@@ -8,7 +8,7 @@ async function dashboardOzetiniGetir() {
     const veri = await apiIstekAt("/dashboard/ozet");
     if (!veri) return;
 
-    // Backend'den gelen veriler elementlere yazılıyor
+    // Backend'den gelen veriler elementlere yazdırılıyor, eğer veri yoksa 0 veya uygun varsayılan değer gösterilir
     metinYaz("k_toplam_misafir", veri.dolu_oda_sayisi || 0);
     metinYaz("k_musait_oda", veri.bos_oda_sayisi || 0);
     metinYaz("k_bekleyen_fatura", `${paraFormatla(veri.toplam_ciro || 0)} TL`);

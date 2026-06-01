@@ -14,8 +14,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     hizmetleriYukle();
 });
 
-// ... (dosyanın geri kalanı aynı kalacak) ...
-
 async function odaTipleriniYukle() {
     const tbody = document.getElementById("odaAyarlariGovdesi");
     if (!tbody) return;

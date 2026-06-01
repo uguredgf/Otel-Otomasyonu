@@ -180,7 +180,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     function odalariCiz(katNo) {
                         odaGridAlani.innerHTML = "";
                         
-                        // BURASI DEĞİŞTİ: 12 yerine 10 oda döngüsü yapıyoruz
                         for(let i = 1; i <= 10; i++) {
                             const odaNo = `${katNo}${i.toString().padStart(2, '0')}`;
                             const isMusait = musaitNumaralar.includes(odaNo);

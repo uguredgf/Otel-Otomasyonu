@@ -24,15 +24,13 @@ async function odalariGetir() {
             if (typeof mergeRoomStatus === "function") {
                 oda = mergeRoomStatus(oda);
             }
-            
-            // 3. ASIL ÇÖZÜM: common.js'nin acımasızca kırptığı o uzun manzara ismini,
-            // backend'den gelen orijinal ham veriyle (odaTur_adi) eziyoruz!
+        
             oda.type = rawOda.odaTur_adi || rawOda.oda_tipi || rawOda.type || oda.type;
             
             return oda;
         });
 
-        // 4. Odaları numarasına göre küçükten büyüğe sıralıyoruz (101, 102, 103...)
+        //  Odaları numarasına göre küçükten büyüğe sıralıyoruz (101, 102, 103...)
         tumOdalarData.sort((a, b) => parseInt(a.roomNo) - parseInt(b.roomNo));
 
         odalariEkranaBas(tumOdalarData);

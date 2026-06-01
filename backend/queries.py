@@ -1,13 +1,13 @@
 # backend/queries.py
 
-# --- TEMEL TABLO SORGULARI ---
+# TEMEL TABLO SORGULARI
 GET_PERSONEL_GIRIS = """
     SELECT personel_id, personel_rol 
     FROM Personeller 
     WHERE personel_kullanici_adi = %s AND personel_sifre = %s
 """
 
-# --- HİLAL'İN VIEW YAPILARI, GÜNCELLEMELER ---
+# VIEW YAPILARI, GÜNCELLEMELER
 GET_AKTIF_MUSTERILER = "SELECT * FROM vw_aktif_musteriler WHERE rezerve_giris_tarihi <= CURDATE() AND rezerve_cikis_tarihi >= CURDATE()"
 GET_FATURA_BEKLEYENLER = "SELECT * FROM vw_fatura_bekleyenler"
 GET_DASHBOARD_OZET = "SELECT * FROM vw_dashboard_ozet"
