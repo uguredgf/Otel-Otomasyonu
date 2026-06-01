@@ -511,8 +511,8 @@ a {
 .login-hero {
     padding: 54px;
     background:
-        linear-gradient(180deg, rgba(32, 50, 70, 0.92), rgba(32, 50, 70, 0.74)),
-        url("https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=80") center/cover;
+        linear-gradient(180deg, rgba(32, 50, 70, 0.92), rgba(32, 50, 70, 0.74));
+
     color: var(--white);
     display: flex;
     flex-direction: column;
