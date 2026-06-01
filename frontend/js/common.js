@@ -7,16 +7,16 @@ const STORAGE_KEYS = {
 };
 
 const DEFAULT_SERVICE_CATALOG = [
-    { id: 1, ad: "Açık Büfe Kahvaltı", fiyat: 300 },
-    { id: 2, ad: "SPA & Masaj", fiyat: 1200 },
-    { id: 3, ad: "Minibar Kullanımı", fiyat: 250 },
-    { id: 4, ad: "Havaalanı VIP Transfer", fiyat: 800 },
-    { id: 5, ad: "Oda Servisi (Akşam Yemeği)", fiyat: 600 },
-    { id: 6, ad: "Kuru Temizleme", fiyat: 150 },
-    { id: 7, ad: "Ütü Hizmeti", fiyat: 100 },
-    { id: 8, ad: "Kapalı Havuz Girişi", fiyat: 200 },
-    { id: 9, ad: "Otopark ve Vale", fiyat: 100 },
-    { id: 10, ad: "Geç Çıkış (Late Check-out)", fiyat: 500 }
+    { id: 1, ad: "Açık Büfe Kahvaltı"},
+    { id: 2, ad: "SPA & Masaj", },
+    { id: 3, ad: "Minibar Kullanımı" },
+    { id: 4, ad: "Havaalanı VIP Transfer" },
+    { id: 5, ad: "Oda Servisi (Akşam Yemeği)"} ,
+    { id: 6, ad: "Kuru Temizleme" },
+    { id: 7, ad: "Ütü Hizmeti" },
+    { id: 8, ad: "Kapalı Havuz Girişi" },
+    { id: 9, ad: "Otopark ve Vale" },
+    { id: 10, ad: "Geç Çıkış (Late Check-out)" }
 ];
 
 function requireAuth() {
